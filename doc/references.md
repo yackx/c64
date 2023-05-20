@@ -64,6 +64,10 @@
 - [Stable raster routine](https://codebase64.org/doku.php?id=base:stable_raster_routine)
 - [Memory locations used by VIC](https://github.com/wizofwor/C64-Notes/blob/master/notes/Memory-locations-used-by-VIC.md)
 
+## SID
+
+- [linusakesson.net](https://www.linusakesson.net/music/sidstuff/index.php) - See also his [SID finder](https://www.linusakesson.net/themes/)
+
 ## Emulators
 
 ### VICE
