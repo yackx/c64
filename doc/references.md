@@ -96,7 +96,6 @@
 ## Special
 
 - [Resurrection](https://codebase64.org/doku.php?id=projects:resurrection)
-- Verbose but lots of links https://github.com/spiroharvey/c64/blob/main/asm/C64%20Assembly%20Coding%20Guide.md
 - [Cadaver](https://cadaver.github.io/rants/crossdev.html) - Introduction to C64 crossdevelopment by Cadaver
 - [Pokefinder](http://ftp.pokefinder.org/) - Search engine
 - [ktuukkan/c64-asm](https://github.com/ktuukkan/c64-asm) - Examples in ACME
