@@ -67,6 +67,7 @@
 ## SID
 
 - [linusakesson.net](https://www.linusakesson.net/music/sidstuff/index.php) - See also his [SID finder](https://www.linusakesson.net/themes/)
+- [High Voltage SID Collection](https://www.hvsc.c64.org/downloads)
 
 ## Emulators
 
