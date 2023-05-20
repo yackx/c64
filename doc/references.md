@@ -7,7 +7,7 @@
 - [pagetable.com](https://www.pagetable.com/c64ref/6502/) - Instruction set, KERNAL API, ROM dissasembly, memory map, PETSCII chartset
 - [sta.c64.org](https://sta.c64.org/cbm64disp.html) - Display modes
 - [oxyron.de](http://www.oxyron.de/html/opcodes02.html) - Simple table, illegal opcodes, bugs
-- [AAY Helpfiles](http://www.the-dreams.de/aay.html) - Opcodes, VIC/SID/CIA-registers, ROM-Listing, zeropage, memory maps... (HTML + ASCII formats)
+- [AAY Helpfiles](http://www.the-dreams.de/aay.html) - Opcodes, VIC/SID/CIA-registers, ROM-Listing, zeropage, memory maps... (HTML + ASCII formats) [mirror](http://unusedino.de/ec64/technical/aay/c64/)
 - [ChibiAkumas](https://www.chibiakumas.com/6502/c64.php) - Cheatsheet
 
 ## Programming websites
