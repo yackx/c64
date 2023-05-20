@@ -1,0 +1,283 @@
+// @TODO WiP
+
+; Soft RTL text scroll demo.
+;
+; This program uses the horizontal scroll of the screen control register
+; to move one pixel at a time. When the maximum of 7 bits scroll
+; is reached, we hard scroll by rewriting the text line, shifted
+; by one character.
+;
+; The screen is set to 38 cols to hide the scroll motion taking place
+; on the leftmost column.
+
+        ;ACME 0.97
+        !cpu 6510
+        * = $0810
+
+        !src <common/pseudo-reg.a>
+
+        ; current scroll register mask (bits #2 to #0)
+        !addr ZP_SCROLL_COUNT = $2a
+
+        !addr SCR_0_LOC = $0400
+        !addr SCR_1_LOC = $0c00
+        SCR_0_MASK = %0001xxxx
+        SCR_1_MASK = %0011xxxx
+
+        RASTER_SCROLL_PIXEL = 0
+        RASTER_SCROLL_CHAR = 100
+
+
+; ---------------------------------------------------------------------------
+; PROGRAM
+; ---------------------------------------------------------------------------
+
+main:
+        jsr init
+        jsr set_raster_irq
+        jmp *                   ; wait for IRQ
+
+
+init:
+        lda #0                  ; will trigger hard scroll
+        sta ZP_SCROLL_COUNT     ; on 1st IRQ
+
+        lda #<marquee
+        sta R1
+        lda #>marquee
+        sta R2
+
+        jsr $ff81               ; clear screen
+
+        lda $d016               ; screen control register
+        and #%11110111          ; screen 38 cols
+        sta $d016
+
+        rts
+
+
+set_raster_irq:
+        sei
+
+        lda #%01111111
+        sta $dc0d
+        
+        and $d011
+        sta $d011
+
+        lda #RASTER_SCROLL_PIXEL
+        sta $d012
+
+        lda #<irq_scroll_pixel
+        sta $0314
+        lda #>irq_scroll_pixel
+        sta $0315
+        
+        lda #%00000001
+        sta $d01a
+
+        cli
+
+        rts
+
+
+scroll_screen:
+        ldx NB_LINES
+-       jsr scroll_scr_line
+        dex
+        bpl -
+
+        jsr switch_scr
+
+        rts
+
+
+switch_scr:
+        lda $d018
+        and %00001111
+
+        ldx SCR_IDX
+        beq +
+
+        ; Switch to screen #0
+        ora #SCR_0_MASK
+        sta $d018
+        lda #0
+        sta SCR_IDX
+        lda #<SCR_1_LOC
+        sta <SCR_LOC
+        lda #>SCR_1_LOC
+        sta >SCR_LOC
+        rts
++
+        ; Switch to screen #1
+        ora #SCR_1_MASK
+        sta $d018
+        lda #1
+        sta SCR_IDX
+        lda #<SCR_0_LOC
+        sta <SCR_LOC
+        lda #>SCR_0_LOC
+        sta >SCR_LOC
+        rts
+
+
+scroll_scr_line:
+        lda #0
+        sta R1
+        lda LINE
+        stx R2
+
+        tay
+        lda scr_start_of_lines,y
+        sta R3
+        lda scr_start_of_lines+1,y
+        sta R4
+
+        ldy #0
+-       lda (R1),y
+        sta (R3),y
+        dey
+        bpl -
+
+        lda #<irq_scroll_pixel
+        sta $0314
+        lda #>irq_scroll_pixel
+        sta $0315
+        lda #RASTER_SCROLL_PIXEL
+        sta $d012
+
+        LDA #3
+        STA 53280
+
+
+
+
+irq_scroll_pixel:
+        ; One less pixel on the scroll.
+        ; If count goes below 0, go back to 7 pixels and hardscroll.
+        ; Do not hardscroll when scroll = 0, it would be too early
+        ; and cause a glitch.
+
+        LDA #1
+        STA 53280
+
+        dec ZP_SCROLL_COUNT
+        bpl + 
+        
+        ; Wrap scroll pixel count from 0 to 7.
+        ; Trigger hard scroll.
+        lda #7
+        sta ZP_SCROLL_COUNT
+
+        lda #<irq_scroll_char
+        sta $0314
+        lda #>irq_scroll_char
+        sta $0315
+        lda #RASTER_SCROLL_CHAR
+        sta $d012
+
++       ; Set horizontal scroll (bits #2-#0)
+        lda $d016
+        and #%11111000          ; masks for scr ctrl reg
+        ora ZP_SCROLL_COUNT     ; set how many scroll pixels
+        sta $d016
+.done:
+        LDA #2
+        STA 53280
+
+        asl $d019               ; ACK IRQ
+        jmp $ea81               ; KERNAL shorter routine
+
+
+irq_scroll_char:
+        lda #0
+        ;STA 53280
+        sta R1
+        lda LINE
+        sta R2
+
+        tay
+        lda scr_start_of_lines,y
+        sta R3
+        lda scr_start_of_lines+1,y
+        sta R4
+
+        ldy #0
+-       lda (R1),y
+        sta (R3),y
+        dey
+        bpl -
+
+        lda #<irq_scroll_pixel
+        sta $0314
+        lda #>irq_scroll_pixel
+        sta $0315
+        lda #RASTER_SCROLL_PIXEL
+        sta $d012
+
+        LDA #3
+        STA 53280
+
+        asl $d019               ; ACK IRQ
+        jmp $ea81               ; KERNAL shorter routine
+
+
+
+; ---------------------------------------------------------------------------
+; DATA
+; ---------------------------------------------------------------------------
+
+LINE:
+        !byte 0
+STR_OFFSET:
+        !byte 0
+SCR_IDX:
+        !byte0
+SCR_LOC:
+        !word SCR_1_LOC
+
+
+        !align $ff, 0, 0
+marquee:
+        !for .x, 0, 7 {
+        !scr "00000000000000000000000000000000"
+        !scr "00000000000000000000000000000000"
+        !scr "00000000000000000000000000000000"
+        !scr "00000000000000000000000000000000"
+        !scr "00000000000000000000000000000000"
+        !scr "00000000000000000000000000000000"
+        !scr "00000000000000000000000000000000"
+        !scr "0000000000000000000000000000000"
+
+        !scr "01234567890123456789012345678901"
+        !scr "01234567890123456789012345678901"
+        !scr "01234567890123456789012345678901"
+        !scr "01234567890123456789012345678901"
+        !scr "01234567890123456789012345678901"
+        !scr "01234567890123456789012345678901"
+        !scr "01234567890123456789012345678901"
+        !scr "0123456789012345678901234567890"
+
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz      "
+        !scr "abcdefghijklmnopqrstuvwxyz     "
+        }
+
+        LINE_LENGTH = 255
+        NB_LINES = 1 ; 3*7
+
+marquee_idx:
+	!for .line, 0, NB_LINES-1 {
+            !word marquee + .line * LINE_LENGTH
+	}
+
+scr_start_of_lines:
+	!for .line, 0, NB_LINES-1 {
+            !word SCREEN + .line * 40
+	}

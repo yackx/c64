@@ -1,0 +1,79 @@
+; Pseudo-registers.
+;
+; Located in safe and unused ZP addresses,
+; and intended to circumvent the limited availability
+; of the A X Y registers.
+;
+; R1+R2 and R3+R4 are contiguous.
+
+!ifdef DEF_PSEUDO_REGISTERS !eof
+DEF_PSEUDO_REGISTERS = 1
+
+!addr {
+        R1 = $fb
+        R2 = $fc
+        R3 = $fd
+        R4 = $fe
+        R5 = $02
+        R6 = $2a
+}
+
+!macro push_r1 {
+        lda R1
+        pha        
+}
+
+!macro pull_r1 {
+        pla
+        sta R1
+}
+
+!macro push_r2 {
+        lda R2
+        pha        
+}
+
+!macro pull_r2 {
+        pla
+        sta R2
+}
+
+!macro push_r3 {
+        lda R3
+        pha        
+}
+
+!macro pull_r3 {
+        pla
+        sta R3
+}
+
+!macro push_r4 {
+        lda R4
+        pha        
+}
+
+!macro pull_r4 {
+        pla
+        sta R4
+}
+
+!macro push_r5 {
+        lda R5
+        pha        
+}
+
+!macro pull_r5 {
+        pla
+        sta R5
+}
+
+!macro push_r6 {
+        lda R6
+        pha        
+}
+
+!macro pull_r6 {
+        pla
+        sta R6
+}

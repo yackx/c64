@@ -1,0 +1,30 @@
+; Demo - Get a single keypress and print its code
+
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <common/m-print.a>
+
+
+main:
+            ; keyboard buffer size
+            lda #1
+            sta $0289
+
+            ; No key repeat
+            lda #$40
+            sta $028a
+-
+            ; KERNAL SCANKEY & GETIN
+            jsr $ff9f
+            jsr $ffe4
+            beq -           ; Wait for keypress
+
+            ; Print key code
+            jsr print_hex
+            +new_line
+
+            jmp -
+
+            !src <baseconv/print-hex.a>

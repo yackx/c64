@@ -1,0 +1,72 @@
+; Binary / BCD conversion
+
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+
+main:
+            jsr byte_to_bcd
+            jsr print_bcd
+            rts
+
+
+; Convert an 8 bit binary value to BCD
+;
+; Andrew Jacobs, 28-Feb-2004
+; https://codebase64.org/doku.php?id=base:more_hexadecimal_to_decimal_conversion
+;
+; IN       BINARY
+; OUT      BCD
+byte_to_bcd:
+            sed
+            lda #0
+            sta BCD+0
+            sta BCD+1
+            ldx #8                  ; number of bits
+-           asl BINARY
+            lda BCD+0
+            adc BCD+0
+            sta BCD+0
+            lda BCD+1
+            adc BCD+1
+            sta BCD+1
+            dex
+            bne -
+            cld
+            rts
+
+
+; Print BCD
+;
+; ex: BINARY 234 => BCD $34 $02
+; Converting a value to PETSCI requires adding $30
+;
+; IN       BCD
+print_bcd:
+            lda BCD+1               ; $02 => "2" (no need for mask or shift)
+            clc
+            adc #$30
+            jsr $ffd2
+
+            lda BCD+0               ; $34 => "3"
+            and #%11110000          ; $34 = %00110100 => %00110000
+            ror                     ; shift right 4 bits
+            ror
+            ror
+            ror
+            clc
+            adc #$30
+            jsr $ffd2
+            
+            lda BCD+0               ; $34 => "4"
+            and #%00001111          ; $34 = %00110100 => %00000100
+            clc
+            adc #$30
+            jsr $ffd2
+
+            rts
+
+
+BINARY:     !byte 234           ; example value
+BCD:        !fill 0, 2          ; will be $34 $02 after conversion

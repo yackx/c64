@@ -1,0 +1,38 @@
+; Demo - Italic character set
+
+        ;ACME 0.97
+        !cpu 6510
+        * = $c000
+    
+        !src <common/pseudo-reg.a>
+
+        !addr DEST = $3800
+        CHAR_PTR_BITMASK = $0e
+
+
+main:
+        ; Charset ptr vector
+        lda #<DEST
+        sta R3
+        lda #>DEST
+        sta R4
+
+        ; Char ROM to RAM
+        +push_r3
+        +push_r4
+        jsr cp_charset_to_ram
+
+        ; Point to charset
+        lda #CHAR_PTR_BITMASK
+        jsr set_charset_loc
+
+        ; Make italic
+        +pull_r4
+        +pull_r3
+        jsr make_italic
+
+        rts
+
+        !src <charset/cp-charset-rom.a>
+        !src <charset/reloc-charset.a>
+        !src <charset/italic.a>

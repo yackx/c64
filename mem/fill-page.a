@@ -1,0 +1,23 @@
+; Fill a memory page.
+; 
+; IN:   R2 Page MSB
+;       A  Fill-in character
+;
+; USE:  Y R1
+
+;!ifdef DEF_FILL_PAGE !eof
+;DEF_FILL_PAGE = 1
+
+                !cpu 6510
+                !src <common/pseudo-reg.a>
+
+!zone fill_page
+fill_page:
+                ldy #0
+                sty R1              ; Page LSB
+-
+                sta (R1),y
+                iny
+                bne -
+
+                rts

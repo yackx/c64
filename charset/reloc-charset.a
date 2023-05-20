@@ -1,0 +1,35 @@
+; Relocate the character set to RAM.
+;
+; Register A must contain the bitmask for bits #1-#3 at $d018.
+; 
+; Bits #1-#3: In text mode, pointer to character memory:
+; %000, 0: $0000-$07FF, 0-2047.
+; %001, 1: $0800-$0FFF, 2048-4095.
+; %010, 2: $1000-$17FF, 4096-6143.
+; %011, 3: $1800-$1FFF, 6144-8191.
+; %100, 4: $2000-$27FF, 8192-10239.
+; %101, 5: $2800-$2FFF, 10240-12287.
+; %110, 6: $3000-$37FF, 12288-14335.
+; %111, 7: $3800-$3FFF, 14336-16383.
+;
+; IN    A = Memory setup register mask (#1-#3 at $d018)
+; USE   A
+
+        ;ACME 0.97
+        !cpu 6510
+
+!zone z_set_charset_loc
+set_charset_loc:
+        sta .mask
+
+        sei
+
+        lda $d018
+        ora .mask 
+        sta $d018
+
+        cli
+        rts
+
+
+.mask   !byte 0

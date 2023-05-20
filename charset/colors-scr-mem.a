@@ -1,0 +1,97 @@
+; Print characters in color.
+;
+; We access the screen and the color memory directly.
+
+        ;ACME 0.97
+        !cpu 6510
+        * = $c000
+    
+        !src <common/pseudo-reg.a>
+
+
+        !addr SCR_MEM = $0400
+        !addr COLOR_RAM = $d800
+        !addr SCR_VECT = R1
+        !addr COLOR_RAM_VECT = R3
+
+main:
+        ; Clear screen
+        jsr $ff81
+
+        ; Background and border color
+        lda #0
+        sta $d020
+        sta $d021
+
+        ; Store screen memory vector in ZP
+        lda #<SCR_MEM
+        sta SCR_VECT
+        lda #>SCR_MEM
+        sta SCR_VECT+1
+
+        ; Store color RAM vector in ZP
+        lda #<COLOR_RAM
+        sta COLOR_RAM_VECT
+        lda #>COLOR_RAM
+        sta COLOR_RAM_VECT+1
+        
+        ; Starting index
+        ldy #0
+
+        ; Screen encoding as we access the screen memory directly
+        !ct scr
+
+        ; @-Z
+        lda #'@'
+        sta current_char
+        lda #'z'
+        sta stop_char
+        jsr print_chain
+
+        iny                     ; leave blank char
+
+        ; 0-9
+        lda #'0'
+        sta current_char
+        lda #'9'
+        sta stop_char
+        jsr print_chain
+
+        ; Blank lines
+        lda #$0d
+        jsr $ffd2
+        jsr $ffd2
+
+        rts
+
+
+print_chain:
+-
+        lda current_color
+        sta (COLOR_RAM_VECT),y  ; set color
+
+        lda current_char
+        sta (SCR_VECT),y        ; print char
+        
+        iny                     ; next screen byte
+        cmp stop_char
+        beq .done                   ; stop char reached?
+
+        inc current_char
+    
+        inc current_color       ; next color
+        lda current_color
+        and #%00001111
+        bne -               ; color back?
+        inc current_color       ; skip color
+        jmp -
+.done:
+        rts
+
+
+current_char:
+        !byte 0
+current_color:
+        !byte 1
+stop_char:
+        !byte 0

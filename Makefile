@@ -1,0 +1,34 @@
+# See instructions in README.md
+
+C1541 ?= c1541
+X64 ?= x64sc
+ASM ?= acme
+DCC6502 ?= dcc6502
+PETCAT ?= petcat
+START_PC ?= 0xc000
+D_SKIP_BYTES ?= 2
+
+.PRECIOUS: %
+
+all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
+
+%.prg: %.a
+	$(ASM) -v1 -I `pwd` --color --strict-segments --cpu 6510 --format cbm --vicelabels $<.sym --outfile $@ $<
+
+%.d64: %.a
+	$(C1541) -format foo,1 d64 `pwd`/$@ -write `pwd`/$<
+
+%.d: %.prg
+	$(DCC6502) -c -d -s $(D_SKIP_BYTES) -o $(START_PC) $< > $@
+
+run: $(TARGET).prg
+	$(X64) --args -autostart `pwd`/$(TARGET).prg -moncommands `pwd`/$(TARGET).a.sym
+
+bas: $(TARGET).bas
+	$(PETCAT) -w2 -o `pwd`/$(TARGET).prg `pwd`/$(TARGET).bas
+
+run-bas: $(TARGET).prg	
+	$(X64) --args -autostart `pwd`/$(TARGET).prg
+
+clean:
+	find -E . -type f -regex '.*\.(sym|prg|d64|d)' -exec rm {} \;

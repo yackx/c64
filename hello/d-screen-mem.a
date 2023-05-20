@@ -1,0 +1,13 @@
+; Display a message by accessing the screen memory
+;
+; The message is stored using the !scr pseudo-op
+; as opposed to !pet used with CHROUT.
+;
+; There are no instructions in this program, only data -
+; the data is the program.
+
+            ;ACME 0.97
+            !cpu 6510
+            
+            * = $0400               ; Start of Screen RAM
+            !scr "hello, world!"

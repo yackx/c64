@@ -1,0 +1,107 @@
+; Demo - Custom multicolor character set
+;
+; Use a sample character set to create multicolor patterns
+; (bricks, rings, etc.)
+
+                ;ACME 0.97
+                !cpu 6510
+                * = $c000
+        
+                !src <common/pseudo-reg.a>
+                !src <mem/m-copy-u8-bytes.a>
+
+                ; Charset location
+                !addr CHAR_SET_LOC = $3800
+                ; Charset offset '0'
+                IDX_OFFSET = $30 * 8
+                ; Custom charset start address
+                !addr CUST_CHARS = CHAR_SET_LOC + IDX_OFFSET
+                ; Mask for setting charset (depends on CHAR_SET_LOC)
+                CHAR_PTR_BITMASK = $0e
+
+
+main:
+                ; Clear screen
+                jsr $ff81
+
+                ; Blank charset memory
+                ; Most characters are blank
+                ldx #8
+                lda #>CHAR_SET_LOC
+                sta R2
+                lda #0
+                jsr fill_pages
+
+                ; Point to custom charset
+                lda #CHAR_PTR_BITMASK
+                jsr set_charset_loc
+
+                ; Multicolor mode
+                lda $d016
+                ora #%00010000
+                sta $d016
+
+                ; Multicolor characters
+                lda #BG_COLOR
+                sta $d020
+                sta $d021
+                lda #MULTI_COLOR_1
+                sta $d022
+                lda #MULTI_COLOR_2
+                sta $d023
+
+                ; Fill color RAM
+                lda #$d8
+                sta R2
+                ldx #4
+                lda #CHAR_COLOR
+                jsr fill_pages
+
+                ; Copy custom characters
+                +copy_u8_bytes characters, CUST_CHARS, NB_OF_CHARS*8
+
+                ; Fill screen with patterns
+                ldy #0                  ; char
+--
+                ldx #0                  ; column
+                tya
+                clc
+                adc #$30                ; char to PETSCII
+-
+                jsr $ffd2
+
+                inx
+                cpx #40 * 2             ; pattern: 2 lines / char
+                bne -
+
+                lda #$0d
+                jsr $ffd2               ; newline
+        
+                iny
+                cpy #NB_OF_CHARS
+                bne --
+
+                rts
+
+
+.includes:
+                !src <mem/fill-pages.a>
+                !src <charset/reloc-charset.a>
+
+
+                BG_COLOR = 0
+                CHAR_COLOR = 2
+                MULTI_COLOR_1 =  12
+                MULTI_COLOR_2 = 15
+
+                NB_OF_CHARS = 8
+
+characters:
+.wall_1:        !byte 127,127,85,247,247,85,127,127
+.wall_2:        !byte 85,127,127,85,247,247,85,127
+.wall_3:        !byte 127,85,247,247,85,127,127,85
+.ring:          !byte 20,130,65,65,65,65,130,20
+.wall_a:        !byte 238,170,187,170,238,170,187,170
+.wall_b:        !byte 238,170,187,170,238,170,187,170
+.weird:         !byte 170,130,85,125,125,85,130,170
+.diag:          !byte 108,27,198,177,108,27,198,177

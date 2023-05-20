@@ -1,0 +1,35 @@
+; Timer interrupt
+;
+; Change the top-left character on the screen periodically.
+;
+; CIA #1 Timer B is set to cause an IRQ interrupt
+; to occur every 1/60 second.
+
+        ;ACME 0.97
+        !cpu 6510
+        * = $c000
+
+        !addr SCREEN = $0400
+        DELAY = 60
+
+main:
+        sei
+        lda #<timer_irq
+        sta $314
+        lda #>timer_irq
+        sta $315
+        cli
+
+        rts
+
+; Update the top-left character every second.
+timer_irq:
+        dec delay
+        bne +
+        lda #DELAY
+        sta delay
+        inc SCREEN              ; top-left screen RAM
++       jmp $ea31               ; KERNAL std int routine
+
+
+delay:  !byte 60

@@ -1,0 +1,15 @@
+; Demo - Fill default screen memory $0400 first page
+
+        !cpu 6510
+        !src <common/pseudo-reg.a>
+        * = $c000
+
+main:
+        lda #$04
+        sta R2                  ; TEXT screen
+        lda #0                  ; "@"
+        jsr fill_page
+
+        rts
+
+        !src <mem/fill-page.a>

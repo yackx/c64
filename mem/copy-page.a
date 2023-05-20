@@ -1,0 +1,22 @@
+; Copy a memory page.
+;
+; IN:
+; R2 Source page MSB
+; R4 Destination page MSB
+;
+; USE:  R1 R3 Y A
+
+        !src <common/pseudo-reg.a>
+
+!zone copy_page
+copy_page:
+        ldy #0
+        sty R1                  ; src LSB
+        sty R3                  ; dest LSB
+-
+        lda (R1),y
+        sta (R3),y
+        iny
+        bne -
+        
+        rts

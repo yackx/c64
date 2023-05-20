@@ -1,0 +1,28 @@
+; Print a message using KERNAL CHROUT
+;
+; Message must be defined with !pet macro
+; and terminated by 0.
+;
+; R1+R2 contains the message address.
+;
+; IN:           R1 = msg LSB
+;               R2 = msg MSB
+; USES:         A Y
+; OUT:          A  = 0
+;               Y  = message length
+
+; @TODO Make more efficient
+
+                ;ACME 0.97
+                !cpu 6510
+
+
+strout:
+                ldy #0
+                beq +
+-               jsr $ffd2
+                iny
++               lda (R1),y
+                bne -
+                
+                rts

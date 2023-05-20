@@ -1,0 +1,8 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+!macro new_line {
+            lda #13
+            jsr $ffd2
+}

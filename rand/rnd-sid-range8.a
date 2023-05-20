@@ -1,0 +1,22 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+rnd_range_0_24:
+            ; Get a random number between 0 and 255 using SID.
+            ; Loop until result is between 0 and 24*x <= 255
+.gen        lda $d41b
+            cmp #249
+            bcs .gen
+            
+            tax
+            lda .values,x
+
+            rts
+
+
+.values     !for .x, 0, 10 {
+                !for .y, 0, 24 {
+                    !byte .y
+                }    
+            }

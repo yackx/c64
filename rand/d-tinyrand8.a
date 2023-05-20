@@ -1,0 +1,27 @@
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <common/upstart.a>
+            !src <common/pseudo-reg.a>
+            !src <common/m-strout.a>
+
+main:
+            jsr $ff81                   ; clear screen
+            
+            +m_strout .msg_intro
+-           jsr $ff9f                   ; SCANKEY
+            jsr $ffe4                   ; GETIN
+            beq -                       ; wait for key
+
+            lda $00a2
+            jsr set_seed
+
+            rts
+
+            !src "rand/tinyrand8.a"
+            !src <common/strout.a>
+
+.msg_intro  !pet "press any key to seed and generate", 13, 0
+.msg_seed   !pet "seed: ", 13, 0
+.msg_gen    !pet "generated: ", 13, 0

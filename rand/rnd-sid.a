@@ -1,0 +1,34 @@
+; SID random number seed
+;
+; Usage:
+; - Call 
+;
+; The SID chip is often used to generate random numbers.
+; The randomness properties are poor however but could be sufficient
+; for places where speed is of the essence.
+;
+; It can however be used as a seed for a PRNG.
+;
+; NOT SUITABLE FOR USE WITH EMULATOR
+; NOT TESTED ON REAL HARDWARE
+;
+; https://www.atarimagazines.com/compute/issue72/random_numbers.php
+
+            ;ACME 0.97
+            !cpu 6510
+
+
+; Generate random numbers using SID
+;
+; Usage:
+; - Call rnd_sid once to seed the PRNG (discard the result)
+; - Get $d41b to obtain a random value
+init_rnd_sid:
+            LDA #$FF  ; maximum frequency value
+            STA $D40E ; voice 3 frequency low byte
+            STA $D40F ; voice 3 frequency high byte
+            LDA #$80  ; noise waveform, gate bit off
+            STA $D412 ; voice 3 control register
+            lda $d41b ; random values appear in location $D41B
+                      ; DISCARD on first call
+            RTS

@@ -1,0 +1,18 @@
+; Demo copy page
+;
+; Copy 1st page of text screen on the 3rd page
+
+        !cpu 6510
+        !src <common/upstart.a>
+        !src <common/pseudo-reg.a>
+
+main:
+        lda #$04
+        sta R2                  ; TEXT screen
+        lda #$06
+        sta R4                  ; below on the text screen
+        jsr copy_page
+
+        rts
+
+        !src <mem/copy-page.a>

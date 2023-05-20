@@ -1,0 +1,27 @@
+; Copy X memory pages.
+;
+; This routine copies entire pages (xxx0-xxxFF).
+; Make sure to align the source and destination
+; to page boundaries.
+;
+; IN:
+; R2    Source 1st page MSB
+; R4    Destination 1st page MSB
+; X     Number of pages
+;
+; USE:  R1 R2 R3 R4 X Y A
+
+        !src <common/pseudo-reg.a>
+        !src <common/registers.a>
+
+!zone copy_pages
+copy_pages:
+-       jsr copy_page
+        inc R2
+        inc R4
+        dex
+        bne -
+
+        rts
+
+        !src <mem/copy-page.a>

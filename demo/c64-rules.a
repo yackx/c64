@@ -1,0 +1,578 @@
+; ===========================================================================
+; Lame demo screen
+; ===========================================================================
+;
+; 1. Commodore badge lines (5 colors)
+;
+; Text multicolor mode: 4 colors / char
+; $d021 - background color (shared by all chars)
+; $d022 - shared color #1
+; $d023 - shared color #2
+; unused - character own color in Color RAM
+;
+; Custom character set of 2 chars:
+; @ - double stripe (3 pixels stripe / 3 pixels blank / 2 pixels stripe)
+; A - single stripe (1 stripe / 3 blank / 3 stripe / 1 blank)
+; B - single stripe (2 blank / 3 stripe)
+;
+; Layout:
+; line 1 - @
+; line 2 - A
+; line 3 - B
+;
+; For a total of 5 stripes taken from the C64 badge.
+; We use 3 raster IRQs to change the shared colors.
+;
+; 2. Sprites
+; 
+; Forming the word "hello" and moving horizontally
+; on a sine function.
+;
+; 3. Credits
+;
+; Plain old text with a custom charset (Demo Maker A).
+; No need for IRQ, the text is output once on startup.
+; Single color text is set in another IRQ.
+;
+; 4. Text scroll
+;
+; Text scrolling horizontally.
+; 2 IRQ to avoid raster overrun: soft scroll and hard scroll.
+
+            ;ACME 0.97
+            !cpu 6510
+        
+            !src <common/upstart.a>
+            !src <common/pseudo-reg.a>
+            !src <common/math.a>
+            !src <mem/m-copy-u8-bytes.a>
+
+            ; Raster lines
+            RASTER_BADGE_OFFSET = 12
+            RASTER_BADGE_1 = 50 - 2  ; early
+            RASTER_BADGE_2 = RASTER_BADGE_1 + 2 + RASTER_BADGE_OFFSET
+            RASTER_BADGE_3 = RASTER_BADGE_1 + RASTER_BADGE_OFFSET*2
+            RASTER_HELLO = SPRITE_HELLO_Y - 2
+            RASTER_SOFT_SCROLL = 202
+            RASTER_HARD_SCROLL = 245
+
+
+!macro set_raster_irq @line, @vector {
+            lda #@line
+            sta $d012
+        
+            lda #<@vector
+            sta $0314
+            lda #>@vector
+            sta $0315
+}
+
+!macro ack_short_kernal {
+            asl $d019
+            jmp $ea71
+}
+
+!macro ack_full_kernal {
+            asl $d019
+            jmp $ea31
+}
+
+; For debugging purposes.
+; CAUTION - These instructions add cycles to the IRQ handler.
+!macro set_border_color @color {
+            ;lda #@color
+            ;sta $d020
+}
+
+
+main:
+            jsr init_scr
+            jsr init_scroll
+            jsr init_sprites
+            jsr init_charset
+            jsr init_text
+
+            jmp *
+
+
+; ---------------------------------------------------------------------------
+; INITIALIZATION
+; ---------------------------------------------------------------------------
+
+init_scr:
+            ; Clear screen
+            jsr $ff81
+
+            ; Background color
+            lda #0
+            sta $d020
+            sta $d021
+
+            rts
+
+
+init_charset:
+            ; Charset location
+            !addr CHAR_SET_LOC = $3800
+            ; Mask for setting charset (depends on CHAR_SET_LOC)
+            CHAR_PTR_BITMASK = $0e
+
+            ; Blank charset memory
+            ; (most characters are blank for the badge)
+            ldx #8
+            lda #>CHAR_SET_LOC
+            sta R2
+            lda #0
+            jsr fill_pages
+
+            ; Copy custom character set
+            ; (the one for the message)
+            lda #>charset
+            sta R2                      ; source       
+            lda #>CHAR_SET_LOC
+            sta R4                      ; destination
+            // @TODO Copy exactly 91*8 = 728 bytes
+            ldx #3                      ; 2 mem pages
+            jsr copy_pages
+
+            ; Copy custom characters for the stripes
+            ; starting at index 91 (=after 'Z' in lowercase charset)
+            +copy_u8_bytes stripes_chars, CHAR_SET_LOC + 91*8, 8*NB_OF_CHARS
+
+            ; Point to custom charset
+            lda #CHAR_PTR_BITMASK
+            jsr set_charset_loc
+
+            ; Print lines of the badge
+            ; starting at PETSCII $7b (123) (corresponds to index 91)
+            lda #$7b
+            jsr print_line
+            lda #$7c
+            jsr print_line
+            lda #$7d
+            jsr print_line
+            lda #$7e
+            jsr print_line
+
+            ; Enable 1st raster IRQ
+            sei
+            lda #%01111111
+            sta $dc0d
+            and $d011
+            sta $d011
+            +set_raster_irq RASTER_BADGE_1, irq_badge_1
+            lda #%00000001
+            sta $d01a
+            cli
+
+            rts
+
+            !src <mem/copy-pages.a>
+
+!macro print_fragment {
+-           jsr $ffd2
+            dex
+            bne -
+}
+
+; Print a line of the character stored in reg A.
+; Blank around the center to allow C= logo
+print_line:
+            ; Left
+            ldx #18
+            +print_fragment
+
+            ; Center: blank space
+            pha
+            lda #' '
+            ldx #4
+            +print_fragment
+
+            ; Right
+            pla
+            ldx #18
+            +print_fragment
+
+            rts
+
+
+init_sprites:
+            SPRITE_BLOCK = 13               
+            SPRITE_HELLO_X = 160
+            SPRITE_HELLO_Y = 90
+
+            ; copy data to sprite block
+            +copy_u8_bytes sprite_data, SPRITE_BLOCK*64, 64*3
+
+            ; sprite colors
+            lda #1
+            sta $d027               
+            sta $d028             
+            sta $d029             
+
+            ; sprites pointers
+            lda #SPRITE_BLOCK
+            sta $07f8               
+            lda #SPRITE_BLOCK+1
+            sta $07f9              
+            lda #SPRITE_BLOCK+2
+            sta $07fa              
+
+            ; activate sprites
+            lda #%00000111
+            sta $d015
+
+            ; sprite #0 position
+            lda #172
+            sta $d000
+            lda #53
+            sta $d001
+
+            ; sprite #1 position
+            lda #SPRITE_HELLO_X
+            sta $d002
+            lda #90
+            sta $d003
+
+            ; sprite #2 position
+            lda #SPRITE_HELLO_X + 24
+            sta $d004
+            lda #90
+            sta $d005
+
+            rts
+
+
+            !src <common/m-strout.a>
+
+!macro print_txt @struct {
+            lda @struct
+            sta $0286
+            clc
+            ldy @struct+1
+            ldx @struct+2
+            jsr $fff0                   ; set cursor position
+            +m_strout @struct+3
+}
+
+init_text:
+            ;lda #$0e                   ; Lower case font
+            ;jsr $ffd2
+            lda #$08                    ; Font case toggle disabled
+            jsr $ffd2
+
+            +print_txt .text1
+            +print_txt .text2
+            rts
+
+            !src <common/strout.a>
+
+text:
+.text1      !byte 14
+            !byte (44-.text2+.text1)/2
+            !byte 14
+            !pet "https://github.com/yackx/c64", 0
+.text2      !byte 14
+            !byte (44-.textx+.text2)/2
+            !byte 16
+            !pet "Youri Ackx - (C) 2023", 0
+.textx
+
+
+init_scroll:
+        lda $d016                       ; screen control register
+        and #%11110111                  ; screen 38 cols
+        sta $d016
+
+        rts
+
+scroll_count:                           ; will trigger hard scroll
+        !byte 1                         ; on 1st IRQ    
+scroll_frame_skip:                      ; do not skip 1st frame
+        !byte 1
+
+
+; ---------------------------------------------------------------------------
+; IRQ HANDLERS
+; ---------------------------------------------------------------------------
+
+irq_badge_1:
+            +set_border_color 1
+            +set_raster_irq RASTER_BADGE_2, irq_badge_2
+
+            ; Horizontal scroll off
+            lda #0
+            sta $d016
+
+            ; Multicolor mode
+            lda $d016
+            ora #%00010000
+            sta $d016
+
+            lda stripe_colors
+            sta $d022
+            lda stripe_colors+1
+            sta $d023
+
+            +set_border_color 0
+            +ack_short_kernal
+
+
+irq_badge_2:
+            +set_border_color 1
+            +set_raster_irq RASTER_BADGE_3, irq_badge_3
+
+            lda stripe_colors+2
+            sta $d022
+            lda stripe_colors+3
+            sta $d023
+
+            +set_border_color 0
+            +ack_short_kernal
+
+
+irq_badge_3:
+            +set_border_color 1
+            +set_raster_irq RASTER_HELLO, irq_hello
+
+            lda stripe_colors+4
+            sta $d022
+            sta $d023
+
+            +set_border_color 0
+            +ack_short_kernal
+
+
+irq_hello:
+            +set_border_color 1
+            +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
+
+            ldx sprite_hello_x_idx
+            lda sprite_hello_x_table, x
+            sta $d002
+            clc
+            adc #24
+            sta $d004 
+            inc sprite_hello_x_idx
+
+            ; Single color mode
+            lda $d016
+            and #%11101111
+            sta $d016
+
+            +set_border_color 0
+            +ack_short_kernal
+
+
+irq_soft_scroll:
+            SCROLL_SKIP_FRAMES = 5
+            SCROLL_SCR_MEM_START = $0400 + 24*40
+            +set_border_color 1
+            +set_raster_irq RASTER_HARD_SCROLL, irq_hard_scroll
+
+            ; Set horizontal scroll (bits #2-#0)
+            lda $d016
+            and #%11111000              ; masks for scr ctrl reg
+            ora scroll_count            ; set how many scroll pixels
+            sta $d016
+
+            ; One less pixel on the scroll.
+            ; If count goes below 0,
+            ; go back to 7 pixels to trigger hardscroll.
+            ; Do not hardscroll when scroll = 0, it would be too early
+            ; and cause a glitch.
+            dec scroll_count
+            bpl .soft_scroll_done
+        
+           ; Wrap scroll pixel count from 0 to 7
+           ; to trigger a hard scroll.
+           lda #7
+           sta scroll_count
+
+.soft_scroll_done:
+            +set_border_color 0
+            +ack_short_kernal
+
+
+; Hard scroll:
+; rewrite the screen line, shift 1 character
+irq_hard_scroll:
+            +set_border_color 1
+            +set_raster_irq RASTER_BADGE_1, irq_badge_1
+
+            lda scroll_count
+            cmp #7
+            bne .hard_scroll_done
+
+            ; Print a text line.
+            ldx #39
+            !addr .msg_offset_addr = *+1
+-           lda marquee,x
+            beq .end_of_msg
+    
+            ; Update one character.
+            ; Check for end of line.
+            sta SCROLL_SCR_MEM_START,x 
+            dex
+            bpl -
+
+            inc .msg_offset_addr        ; next msg is offset by 1 char
+
+.hard_scroll_done:
+            +set_border_color 0
+            +ack_short_kernal
+
+.end_of_msg:
+            ; End of message.
+            ; Reset msg offset and bail out.
+            lda #<marquee
+            sta .msg_offset_addr
+            jmp .hard_scroll_done
+
+
+; ---------------------------------------------------------------------------
+; DATA
+; ---------------------------------------------------------------------------
+
+; Charset for stripes: 3 pixels stripe followed by 3 blank pixels
+stripes_chars:
+stripe_1:   !byte 85,85,85,0,0,0,170,170
+stripe_2:   !byte 170,0,0,0,85,85,85,0
+stripe_3:   !byte 0,0,170,170,170,0,0,0
+stripe_4:   !byte 85,85,85,0,0,0,0,0
+            
+            NB_OF_CHARS = (* - stripes_chars) / 8
+
+stripe_colors:
+            !byte 2, 8
+            !byte 7, 5
+            !byte 14
+
+; Sprite "hello" moves horizontally according to a sine function.
+; We do not span the whole screen as it would require dealing with
+; bit #8 of the sprite X position. Instead, we shorten the path.
+;
+; x, 0, 255     0-255 interval - table is 256 bytes long
+; float(x)      Explicit float conversion
+; /255          Normalize to 0-1 interval
+; *2*PI         sine from 0 to 2*PI (values from -1 to 1)
+; /2            sine from 0 to PI (values from -0.5 to 0.5)
+; *120          Increase amplitude (values from -60 to 60)
+; +127+24       Shift to positive values (values from 91 to 211)
+sprite_hello_x_table:
+            !for x, 0, 255 {
+		      !byte sin(float(x)/255 * 2*PI) / 2 * 120 + 127 + 24
+	        }
+
+; Current X position in the table
+sprite_hello_x_idx:
+            !byte 0
+
+
+; ---------------------------------------------------------------------------
+; SUBROUTINES
+; ---------------------------------------------------------------------------
+
+            !src <mem/fill-pages.a>
+            !src <charset/reloc-charset.a>
+
+
+; ---------------------------------------------------------------------------
+; SPRITES
+; ---------------------------------------------------------------------------
+
+sprite_data:
+.sprite_c_with_lips:
+            !byte $03, $F8, $00
+            !byte $0F, $FE, $00
+            !byte $1F, $FF, $00
+            !byte $3E, $0F, $00
+            !byte $38, $07, $80
+            !byte $70, $03, $80
+            !byte $70, $00, $7F
+            !byte $E0, $00, $7E
+            !byte $E0, $00, $7C
+            !byte $E0, $00, $78
+            !byte $E0, $00, $00
+            !byte $E0, $00, $78
+            !byte $E0, $00, $7C
+            !byte $E0, $00, $7E
+            !byte $70, $00, $7F
+            !byte $70, $03, $80
+            !byte $38, $07, $80
+            !byte $3E, $0F, $00
+            !byte $1F, $FF, $00
+            !byte $0F, $FE, $00
+            !byte $03, $F8, $00
+            !byte 0 ; padding
+.sprite_hello_1:
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $C0, $00, $00
+	         !byte $FF, $C1, $FC
+	         !byte $FF, $E3, $FC
+	         !byte $C0, $E7, $00
+	         !byte $C0, $66, $00
+	         !byte $C0, $66, $00
+	         !byte $C0, $67, $FC
+	         !byte $C0, $67, $FC
+	         !byte $C0, $66, $00
+	         !byte $C0, $66, $00
+	         !byte $C0, $63, $00
+	         !byte $C0, $63, $FC
+	         !byte $C0, $61, $FC
+            !byte 0 ; padding
+.sprite_hello_2:
+	         !byte $F0, $F0, $00
+	         !byte $F0, $F0, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $00
+	         !byte $30, $30, $38
+	         !byte $30, $30, $7C
+	         !byte $30, $30, $C6
+	         !byte $30, $31, $83
+	         !byte $30, $31, $83
+	         !byte $30, $31, $83
+	         !byte $30, $31, $83
+	         !byte $30, $31, $83
+	         !byte $30, $31, $83
+	         !byte $30, $30, $C6
+	         !byte $FC, $FC, $7C
+	         !byte $FC, $FC, $38
+            !byte 0 ; padding
+
+
+; ---------------------------------------------------------------------------
+; CHARSET
+; ---------------------------------------------------------------------------
+
+; Custom character set
+;
+; Align to page for easy relocation.
+; .64c file starts with 00. Discard it.
+; Original file contains not so legit characters
+; (file corrupted?). They were fixed manually.  
+            !align $ff, 0, 0
+charset:    !bin "demo/demo_maker_a_fixed.64c", , 1
+
+
+
+        !align $ff, 0, 0
+marquee:
+        !fill 40, $20
+        !scr "this is a scrolling text - soft scroll - "
+        !scr "rtl (right-to-left) - "
+        !scr "using raster interrupt - "
+        !scr "one pixel at a time."
+        !byte 0

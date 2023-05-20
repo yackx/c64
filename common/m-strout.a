@@ -1,0 +1,10 @@
+                ;ACME 0.97
+                !cpu 6510
+
+!macro m_strout @msg_addr {
+                lda #<@msg_addr
+                sta R1
+                lda #>@msg_addr
+                sta R2
+                jsr strout
+}

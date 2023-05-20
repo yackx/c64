@@ -1,0 +1,519 @@
+; Boring Snake
+;
+; Good old snake game. Simple. Boring.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <common/upstart.a>
+            !src <common/pseudo-reg.a>
+            !src <common/registers.a>
+            !src <common/m-strout.a>
+
+            !addr SCREEN = $0400
+
+            DELAY = 15          ; 1/60th sec
+
+            ; Snake head or body part position
+            ; (Re-assign pseudo-registers)
+            POS_X       = R5
+            POS_Y       = R6
+
+            ; Screen characters
+            CHAR_HEAD   = 209
+            CHAR_BODY   = 81
+            CHAR_BLANK  = 32
+            CHAR_FOOD   = 83
+
+            ; Snake direction
+            LEFT        = %00000001
+            RIGHT       = %00000010
+            UP          = %00000100
+            DOWN        = %00001000
+
+            ; WASD
+            ;LEFT       = $57
+            ;UP         = $41
+            ;DOWN       = $53 
+            ;RIGHT      = $44
+
+            ; Keys
+            KEY_UP      = $91
+            KEY_DOWN    = $11
+            KEY_LEFT    = $9d
+            KEY_RIGHT   = $1d
+
+
+; ===========================================================================
+; SCREEN - INTRO
+; ===========================================================================
+
+; Print a line of text at a given cuursor position.
+; @struct:
+;   0: color
+;   1: x
+;   2: y
+;   3-: message
+;   end: 0
+!macro m_print_at_pos @struct {
+            lda @struct
+            sta $0286
+            clc
+            ldy @struct+1
+            ldx @struct+2
+            jsr $fff0                   ; set cursor position
+            +m_strout @struct+3
+}
+
+; Intro screen.
+;
+; Wait for space to start.
+; This allows to introduce a variable delay used
+; to seed the random number generator.
+intro_scr:
+            ; Clear screen
+            jsr $ff81
+            ; Lowercase
+            lda #$0f
+            sta $d01
+            ; Messages
+            +m_print_at_pos s_title
+            +m_print_at_pos s_info1
+            +m_print_at_pos s_info2
+            +m_print_at_pos s_start
+-
+            ; KERNAL SCANKEY & GETIN
+            jsr $ff9f
+            jsr $ffe4
+            cmp #$20
+            bne -                       ; wait for space
+
+            ; Seed random number generator
+            jsr init_rnd_sid
+
+            ; Back to uppercase
+            lda #142
+            jsr $ffd2
+
+            jmp main_scr
+
+
+s_title:    !byte 1, 8, 8
+            !byte 14  ; lower case
+            !pet "B o r i n g   S N A K E", 0
+s_info1:    !byte 14, 5, 17
+            !pet "ASM code available on GitHub", 0
+s_info2:    !byte 14, 5, 18
+            !pet "https://github.com/yackx/c64", 0
+s_start:    !byte 13, 9, 22
+            !pet "Press space to start", 0
+
+            !src <common/strout.a>
+
+
+; ===========================================================================
+; SCREEN - MAIN
+; ===========================================================================
+
+main_scr:
+            jsr $ff81                   ; clear screen
+            jsr init_game
+            jsr gen_food
+            jsr init_kb
+            jsr set_timer
+            jmp *
+
+            !src <rand/rnd-sid.a>
+
+
+; ---------------------------------------------------------------------------
+; INIT ROUTINES
+; ---------------------------------------------------------------------------
+
+; Initialize game state
+init_game:
+            lda #12
+            sta head_x
+            lda #5
+            sta head_y
+            lda #LEFT
+            sta direction
+            lda #4
+            sta max_idx
+            lda #12
+            sta snake_x
+            lda #13
+            sta snake_x+1
+            lda #14
+            sta snake_x+2
+            lda #15
+            sta snake_x+3
+            lda #16
+            sta snake_x+4
+            lda #5
+            sta snake_y
+            sta snake_y+1
+            sta snake_y+2
+            sta snake_y+3
+            sta snake_y+4
+
+            rts
+
+
+; Set timer vector
+set_timer:
+            sei
+            lda #<timer_handler
+            sta $314
+            lda #>timer_handler
+            sta $315
+            cli
+            rts
+
+
+; Initialize keyboard
+init_kb:
+            ; keyboard buffer size
+            lda #1
+            sta $0289
+
+            ; No key repeat
+            lda #$40
+            sta $028a
+
+            rts
+
+
+; ---------------------------------------------------------------------------
+; IRQ HANDLER
+; ---------------------------------------------------------------------------
+
+; CIA Timer A interrupt handler
+;
+; Acts as the main game loop.
+timer_handler:
+            ; Handler cursor on every irq for smooth movement
+            jsr handle_cursor
+
+            ; Perform game logic every n interrupts
+            dec delay
+            bne +                       ; skip frame
+
+            ; Actual game frame - reset delay
+            lda #DELAY
+            sta delay
+
+            ; Game logic
+            jsr move_head
+            jsr erase_tail
+            jsr update_head
++
+            jmp $ea31                   ; KERNAL std routine
+
+
+; ---------------------------------------------------------------------------
+; GAME ROUTINES
+; ---------------------------------------------------------------------------
+
+; Handle keyboard input to change snake direction
+handle_cursor:
+            ; KERNAL SCANKEY & GETIN
+            jsr $ff9f
+            jsr $ffe4
+            beq +                       ; no key pressed
+
+            ldx #0
+.find_key:  cmp key_idx,x               ; find cursor key in table
+            beq .key_found
+            inx
+            cpx #4
+            beq handle_cursor           ; not a cursor key
+            bne .find_key               ; try next cursor key
+.key_found:
+            lda dir_idx,x               ; find corresponding direction
+            sta direction               ; store it
++            
+            rts
+
+
+; Game over - screen border goes red
+game_over:
+            ; Reset CIA timer A
+            sei
+            lda #$31
+            sta $314
+            lda #$ea
+            sta $315
+            cli
+
+            ; Set screen border to red
+            lda #2
+            sta $d020
+
+            ; Wait for key
+-           jsr $ff9f                   ; SCANKEY
+            jsr $ffe4                   ; GETIN
+            beq -                       ; wait for key
+
+            ; Reset screen border to light blue
+            lda #14
+            sta $d020
+
+            jmp main_scr
+
+
+; Move and display the head
+;
+; Collision detection with border and self takes place here.
+move_head:
+            lda direction
+
+            ; Successive right shifts on direction
+            ; will eventually set the carry flag
+            ; as it contains exactly one bit set to 1.
+            ; Adjust head position accordingly.
+.move_l     lsr
+            bcc .move_r
+            dec head_x
+            bmi game_over
+            jmp +
+
+.move_r     lsr
+            bcc .move_u
+            inc head_x
+            ldx head_x
+            cpx #40
+            beq game_over
+            jmp +
+
+.move_u     lsr
+            bcc .move_d
+            dec head_y
+            bmi game_over
+            jmp +
+
+.move_d     inc head_y
+            ldx head_y
+            cpx #25
+            beq game_over
++
+            lda head_x
+            sta POS_X
+            lda head_y
+            sta POS_Y
+
+.check_food_collision:
+            jsr char_at                 ; A = char at (POS_X, POS_Y)
+            cmp #CHAR_FOOD
+            bne .check_body_collision
+            ; Food eaten
+            lda #CHAR_BLANK
+            sta char
+            jsr display_char
+            ; Let the snake grow
+            lda #4
+            sta skip_tail
+            ; Generate new food
+            jsr gen_food
+            jmp .display_head
+
+.check_body_collision:
+            cmp #CHAR_BLANK
+            bne game_over
+
+.display_head:
+            lda #CHAR_HEAD
+            sta char
+            jsr display_char
+
+            rts
+
+
+; Erase the tail
+erase_tail:
+            ldx max_idx             ; Last index of snake
+
+            ; Skip erase tail when growing
+            lda skip_tail
+            beq .erase
+            dec skip_tail
+            inc max_idx
+            inx                     ; X = max_idx
+            jmp .draw
+.erase:            
+            lda snake_x,x
+            sta POS_X
+            lda snake_y,x
+            sta POS_Y
+            lda #CHAR_BLANK
+            sta char
+            jsr display_char
+.draw
+            ; We will shift each xy of the snake one position
+            ; to the right -> loop max_idx-1 times
+            dex
+
+            lda #CHAR_BODY
+            sta char
+-
+            lda snake_x,x
+            sta snake_x+1,x         ; snake_x+1 = snake_x
+            sta POS_X
+            lda snake_y,x
+            sta snake_y+1,x         ; snake_y+1 = snake_y
+            sta POS_Y
+            jsr display_char
+            dex
+            bpl -
+
+            rts
+
+
+; Update the snake head (first element of the snake body)
+update_head:
+            lda head_x
+            sta snake_x
+            lda head_y
+            sta snake_y
+
+            rts
+
+
+; Display the char in A at (POS_X, POS_Y)
+;
+; IN:       A = char
+;           POS_X = x position
+;           POS_Y = y position
+; USES:     R1, R2, Y
+display_char:
+            ; Select and store start of screen row in R1+R2
+            ldy POS_Y
+            lda row_lsb,y
+            sta R1
+            lda row_msb,y
+            sta R2
+
+            ; Display character in screen RAM
+            lda char
+            ldy POS_X
+            sta (R1),y
+
+            rts
+
+
+; Get the char at (POS_X, POS_Y)
+;
+; IN:       POS_X = x position
+;           POS_Y = y position
+; OUT:      A = char
+; USES:     R1, R2, A, Y
+char_at:
+            ; Select and store start of screen row in R1+R2
+            ldy POS_Y
+            lda row_lsb,y
+            sta R1
+            lda row_msb,y
+            sta R2
+
+            ; Load character from screen RAM
+            ldy POS_X
+            lda (R1),y
+
+            rts
+
+
+; Generate food at a random position
+;
+; USES:     R1, R2, A, Y
+gen_food:
+            +push_ay
+-
+            lda $d41b                   ; random number
+            and #%00001111              ; 32 possible addresses
+            asl                         ; *2 for 2 bytes per address
+            tay
+            
+            ; Load random screen address
+            lda random_food_addr,y
+            sta R1
+            lda random_food_addr+1,y
+            sta R2
+
+            ; Check if food is already there
+            lda (R1),y
+            cmp #CHAR_BLANK
+            bne-
+            
+            ; Display food
+            lda #CHAR_FOOD
+            ldy #0
+            sta (R1),y                  ; add food to screen
+
+            +pull_ay
+            rts
+
+
+; ---------------------------------------------------------------------------
+; DATA
+; ---------------------------------------------------------------------------
+
+; Delay between 2 game frames
+delay       !byte 1
+
+; To compute the x,y position of the head,
+; and to avoid slow arithmetics, we declare 2 index tables
+; representing the first col of each row on the screen:
+; SCREEN, SCREEN+40, SCREEN+80, etc.
+;
+; We split LSB and MSB to use ZP index.
+; $0400, $0428, $0450 become:
+; row_lsb = 00 28 50 ... 18 ...
+; row_msb = 04 04 04 ... 05 ...
+row_lsb:    !for .i, 0, 24 {
+                !byte <(SCREEN + .i*40)
+            }
+
+row_msb:    !for .i, 0, 24 {
+                !byte >(SCREEN + .i*40)
+            }
+
+; Keyboard / direction mapping
+key_idx:    !byte KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
+dir_idx:    !byte UP, DOWN, LEFT, RIGHT
+
+; Character to print
+char:       !byte CHAR_HEAD
+
+; Head is temporarily stored.
+; It will be copied to the first byte of the snake body (x and y)
+head_x:     !fill 1
+head_y:     !fill 1
+
+; Snake direction
+direction:  !fill 1
+
+; Skip tail when growing
+skip_tail:  !byte 0
+
+; Maximum index of the snake body
+max_idx:    !fill 1
+
+; Screen addresses where food can be generated.
+; Avoid the screen borders.
+; Generated with a Python script.
+random_food_addr:
+            !byte $2f, $05, $d6, $05, $19, $06, $8e, $07
+            !byte $d7, $05, $ae, $06, $5f, $07, $bb, $04
+            !byte $b7, $04, $da, $04, $c9, $06, $fa, $06
+            !byte $1f, $06, $9e, $07, $2d, $05, $8e, $06
+            !byte $bf, $06, $50, $07, $15, $07, $9b, $06
+            !byte $53, $04, $34, $07, $d0, $04, $7d, $06
+            !byte $9e, $04, $5d, $06, $06, $07, $72, $06
+            !byte $a4, $04, $02, $05, $f2, $06, $9d, $06
+
+
+; Snake body
+            !align $ff, 0, 0
+snake_x:
+            * = snake_x + 256
+snake_y:

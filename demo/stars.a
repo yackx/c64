@@ -1,0 +1,84 @@
+; @TODO Broken
+
+                !cpu 6510
+                * = $c000
+
+main:
+                jsr clear_screen
+                jsr color_screen
+                jsr set_hires
+                jsr init_rnd
+-               jsr fill_random
+                jmp -
+
+
+clear_screen:
+                lda #%00010000          ; white pixels on black background
+                ldx #0
+-               sta $0400,x
+                sta $0500,x
+                sta $0600,x
+                sta $0700,x
+                inx
+                bne -
+                rts
+
+
+color_screen:
+                lda #0
+                sta $d020               ; border
+                sta $d021               ; background
+                rts
+
+
+set_hires:
+                lda #$3b
+                sta $d011
+                lda #$08
+                sta $d016
+                lda #$18
+                sta $d018
+                rts
+
+
+; https://www.atarimagazines.com/compute/issue72/random_numbers.php
+init_rnd:
+                lda $ffd2               ; maximum frequency value
+                sta $d40e               ; voice 3 frequency low byte
+                sta $d40f               ; voice 3 frequency high byte
+                lda #$80                ; noise waveform, gate bit off
+                sta $d412               ; voice 3 control register
+                rts
+
+
+fill_random:
+                ;lda #0
+                ;sta fill_random.label-1
+                ;lda #$20
+                ;sta fill_random.label
+                
+                ldx #0
+.loop:  
+                lda $d41b               ; obtain RND from SID
+                cmp #8
+                bcs .no_star
+.star:
+                tay        
+                lda #%00000001
+.shift:         rol
+                dey
+                bne .shift
+                jmp .light
+.no_star:
+                lda #0
+.light:
+                .page = * +2
+                sta $2000,x
+                inx
+                bne .loop
+                inc .page
+                lda .page
+                cmp #$40
+                beq .done
+                jmp .loop
+.done:          rts

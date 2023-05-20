@@ -1,0 +1,19 @@
+; BASIC upstart
+;
+; Emit the folllowing BASIC program:
+; 2012 SYS2061
+; to execute your asm code right after.
+;
+; When invoking `make`, add the following parameters so that
+; dcc6502 can start at the right place:
+;
+; `START_PC=0x080d D_SKIP_BYTES=14`
+; to skip 14 bytes (12 bytes BASIC + 2 bytes load address in the file).
+
+        ;ACME 0.97
+
+        !cpu 6510
+	* = $0801
+        ; 2012 SYS2061
+        !byte $0b, $08, $dc, $07, $9e, $32, $30, $36
+        !byte $31, 00, 00, 00

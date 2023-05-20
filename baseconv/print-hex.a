@@ -1,0 +1,32 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+; Print the value in A in hexadecimal.
+;
+; IN:       A = value to print
+; USES:     A X
+print_hex:
+            pha
+
+            ; HI nibble           
+            and #%11110000
+            lsr
+            lsr
+            lsr
+            lsr
+            tax
+            lda .hex,x
+            jsr $ffd2
+            
+            ; LO nibble
+            pla
+            and #%00001111
+            tax
+            lda .hex,x
+            jsr $ffd2
+
+            rts
+
+
+.hex:       !pet "0123456789abcdef"

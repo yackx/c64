@@ -1,0 +1,22 @@
+; Fill several memory pages.
+;
+; IN:
+; R2    First page MSB
+; X     Number of pages
+; A     Fill-in character
+;
+; USE:  X Y R1 R2
+
+;!ifdef DEF_FILL_PAGES !eof
+;DEF_FILL_PAGES = 1
+
+                !src <common/pseudo-reg.a>
+
+fill_pages:
+-               jsr fill_page
+                inc R2                  ; next page MSB
+                dex
+                bne -
+                rts
+
+                !src <mem/fill-page.a>

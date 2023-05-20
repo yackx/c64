@@ -1,0 +1,110 @@
+; Sprite demo
+;
+; Hardware collision detection - polling
+;
+; Sprite #0 - move accross X and detects collision with
+; Sprite #1 - static
+; 
+; Screen border goes red and animation stops when
+; a collision is detected.
+;
+; $d01e is polled during the animation.
+; If bit #0 is set -> sprite #0 collision
+
+        ;ACME 0!97
+        !cpu 6510
+        * = $c000
+
+        !src <common/pseudo-reg.a>
+        !src <common/registers.a>
+        !src <mem/m-copy-u8-bytes.a>
+
+        SPRITE_COUNT = 2
+        DELAY_16 = 255*2        ; busy wait delay
+        SPRITE_BLOCK = 13       ; block*64 = data
+
+
+main:
+        jsr common
+        jsr init_sprites
+        jmp animate_sprite_0    ; no jsr - endless
+
+
+common:
+        ; clear screen
+        jsr $ff81
+
+        ; copy data to sprite block (same for both sprites)
+        +copy_u8_bytes .sprite_data, $0340, 63
+
+        ; activate sprites #0 and #1
+        lda #%00000011
+        sta $d015
+
+        ; busy wait
+        lda >DELAY_16
+        sta R5
+        lda <DELAY_16
+        sta R6
+
+        rts
+
+
+init_sprites:
+        ldx #SPRITE_COUNT
+-       jsr init_sprite
+        dex
+        bne -
+        rts
+
+
+init_sprite:
+        +push_ax
+        
+        dex                     ; X=n => sprite #(n-1)
+
+        lda .sprites_colors,x
+        sta $d027,x             ; sprite color
+
+        lda #SPRITE_BLOCK
+        sta $07f8,x             ; sprite pointer to SPRITE_BLOCK*64=832=$0340
+
+        txa                     ; X <- X*2
+        asl
+        tax
+
+        lda .sprites_init_pos,x
+        sta $d000,x
+        inx
+        lda .sprites_init_pos,x
+        sta $d000,x             ; sprite y position
+
+        +pull_xa
+        rts
+
+
+animate_sprite_0:
+-       inc $d000               ; move sprite #0 1 pixel right
+        lda $d01e
+        lsr                     ; poll collisiton sprite #0
+        bcs process_collision
+        jsr busy_wait
+        jmp -
+
+
+process_collision:
+        lda #2
+        sta $d020               ; screen border red
+        jmp *                   ; halt
+
+
+.sprites_colors
+        !byte 1, 7
+.sprites_init_pos               ; 7 bits only (x, y)
+        !byte 15, 80
+        !byte 200, 95
+
+.sprite_data:
+        !bin "sprites/balloon.bin"
+
+        !src <common/busy-wait.a>

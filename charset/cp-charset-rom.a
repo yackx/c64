@@ -1,0 +1,57 @@
+; Copy the character set from ROM to RAM.
+;
+; Character set at $d000 will be copied to the destination
+; specified in ZP.
+;
+; IN    R3 Destination LSB
+;       R4 Destination MSB
+; USE   A X Y R1 R2
+
+        ;ACME 0.97
+        !cpu 6510
+
+        !src <common/pseudo-reg.a>
+
+        !addr SRC = $d000
+
+
+!zone cp_charset_to_ram
+cp_charset_to_ram:
+        sei
+        
+        ldx #$08        ; we loop 8 times (8x255 = 2Kb)
+        
+        ; Make the CPU see the character ROM
+        lda $01
+        and #%11111011
+        sta $01
+
+        ; Char ROM zp vector
+        lda #<SRC
+        sta R1
+        lda #>SRC
+        sta R2
+
+        ldy #0          ; page index
+
+        ; Copy ROM to RAM
+.loop:  lda (R1),y
+        sta (R3),y
+
+        iny             ; copy 255 bytes
+        bne .loop
+
+        ; Next 256 bytes
+        inc R2
+        inc R4
+        dex             ; 8 pages reached?
+        bne .loop
+        
+        ; Switch back to I/O mapped registers again
+        lda $01
+        ora #%00000100
+        sta $01
+
+        cli
+
+        rts

@@ -1,0 +1,249 @@
++------------------------------------------------------------------------+
++                      MOS 6510 ADDRESSING MODES                         +
++------------------------------------------------------------------------+
+
+
+EA  = Effective Address                     NC = No Carry
+LSB = Least Significant Byte (bits 0-7)     C  = Carry
+MSB = Most Significant Byte (bits 8-15)     ZP = Zero Page
+PC  = Program Counter
+
+
+*** Implied (Implicit) ***
+
+The address or register it refers to is implied by the opcode itself.
+
+        BRK   NOP   ASL   ROL   ...
+
+
+*** Immediate ***                                                   #$nn
+
+Specify a value directly in the instruction.
+The operand is contained in the second byte of the instruction,
+with no further memory addressing required.
+
+when:
+        LDA #$05
+then:
+        A = $05
+
+
+*** Absolute ***                                                   $nnnn
+
+EA = $nnnn
+
+Specify a memory address directly in the instruction.
+The operand $nnnn is the 2 byte EA.
+1st byte of the operand = LSB (bits 0-7) of the EA.
+2nd byte of the operand = MSB (bits 8-15) of the EA.
+
+given:
+        mem $1234 = $05
+when:    
+        LDA $1234
+then:
+        A = $05
+
+
+*** X-Indexed Absolute ***                                       $nnnn,X
+
+EA = $nnnn + X
+
+given:
+        X = 3
+        mem $1237 = $05
+when:
+        LDA $1234,X
+then:
+        A = $05
+
+! MOS 6502 !
+The value at the specified address, ignoring the addressing mode's
+X offset, is read and discarded before the final address is read.
+This may cause side effects in I/O registers.
+
+
+*** Y-Indexed Absolute ***                                       $nnnn,Y
+
+EA = $nnnn + Y
+
+Same as X-indexed absolute but with Y.
+
+
+*** Zero-page ***                                                    $nn
+
+EA = $00nn
+
+The instruction refers to a memory location in the first 256 bytes of memory
+(zero page). Allows for shorter code and execution times by only fetching
+the 2nd byte of the instruction and assuming a zero high address byte.
+
+given:
+        mem $0056 = $1D
+when:
+        LDA $56
+then:
+        A = $1D
+
+
+*** X-Indexed Zero Page ***                                        $nn,X
+
+EA = $00nn + X
+
+Allows to add an offset to a zero-page address.
+
+given:
+        mem $0012 = $BB
+        X = 2
+when:
+        LDA $10,X
+then:
+        A = $BB
+
+
+*** Y-Indexed Zero Page ***                                        $nn,y
+
+Same as X-indexed ZP but with Y.
+(Not for LDA)
+
+given:
+        mem $0012 = $BB
+        Y = 2
+when:
+        LDX $10,Y
+then:
+        X = $BB
+
+
+*** Indexed Indirect ***                                         ($nn,X)
+
+aka X-Indexed Zero Page Indirect
+
+* At a glance *
+
+        LDX #$04
+        LDA ($02,X)
+
+Results in a vector ($06). If ZP $06 contains 00 80, EA is $8000. 
+
+* More details *
+
+The 2nd byte of the instruction is added to the contents of X,
+discarding the carry. The result points to a memory location on ZP whose
+contents is the EA LSB. The next memory location in ZP contains the EA MSB.
+Both memory locations specifying the LSB and MSB of the EA must be in ZP.
+
+given:
+        X = $E9
+when:
+        LDA ($51,X)
+
+results in:
+
+        $nn + X (NC)    => ($51 + $E9) (NC)
+                        =  $13A (NC)
+                        =  $ 3A
+
+if:
+        mem $003A = $04 ; EA LSB
+        mem $003B = $31 ; EA MSB
+and:
+        mem $3104 = $81 ; EA
+then:
+        A = $81         ; content at $3104
+
+
+*** Indirect Indexed ***                                         ($nn),Y
+
+aka Zero Page Indirect Y-Indexed
+
+* At a glance *
+
+        LDY #$04
+        LDA ($02),Y
+
+If ZP $02 and $03 contain 00 80, EA is $8004.
+
+* More details *
+
+The 2nd byte of the instruction points to a memory location in ZP.
+The contents of this memory location is added to the contents of Y,
+the result being the EA LSB. The carry from this addition is added to the
+contents of the next ZP memory location, the result being the EA MSB.
+
+given:
+        Y = $E9
+        mem $00A4 = $51
+        mem $00A5 = $3F
+when:
+        LDA ($A4),Y
+
+results in:
+
+        ($nn) + Y (C)   => ($51 + $E9) (C)
+                        =  $13A (C)
+                        =  $3A
+                        => EA LSB
+    
+        ($nn) + 1 + C   => ($3F + C) 
+                        =  $3F + $01
+                        =  $40 
+                        => EA MSB
+
+                        => EA $403A
+if:
+        $4003 = $BB
+then:
+        A = $BB
+
+Usage: array indexing (frequent).
+
+
+*** Absolute Indirect ***                                        ($nnnn)
+
+EA = address at ($nnnn)
+
+        mem $2037 = $31 ; EA LSB
+        mem $2038 = $88 ; EA MSB
+    
+        JMP ($2037)     ; EA $8831
+
+        PC = $8831
+
+Program will jump to EA = $8831
+
+! MOS 6502 !
+
+The indirect jump instruction does not increment the page address when
+the indirect pointer crosses a page boundary. JMP ($xxFF) will fetch
+the address from $xxFF and $xx00 (not $xx+1-$00).
+
+
+*** Relative ***
+
+LSB PC + $nn = offset [$-80 to $+7F]
+
+Absolute addresses are converted to relative addresses by the assembler.
+Branch instructions are the only instructions to use this addressing mode.
+Offset is -128 to +127 bytes.
+
+
+======
+Cycles
+======
+
+Example with LDA
+
+----------------------------------------------------------
+Addressing Mode         Assembly        Opcode Operands #
+----------------------------------------------------------
+Immediate               LDA #$nn        $A9    2        2
+Absolute                LDA $nnnn       $AD    3        4
+X-Indexed Absolute      LDA $nnnn,X     $BD    3        4+
+Y-Indexed Absolute      LDA $nnnn,Y     $B9    3        4+
+Zero Page               LDA $nn         $A5    2        3
+X-Indexed ZP            LDA $nn,X       $B5    2        4
+ZP Indirect Y-Indexed   LDA ($nn),Y     $B1    2        5+
+----------------------------------------------------------
+
++1 if page boundary crossed
