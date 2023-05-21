@@ -45,8 +45,8 @@
             !src <common/upstart.a>
             !src <common/pseudo-reg.a>
             !src <common/math.a>
+            !src <common/m-raster.a>
             !src <mem/m-copy-u8-bytes.a>
-            !src <mem/m-raster.a>
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
@@ -81,6 +81,7 @@ main:
             jsr init_scroll
             jsr init_sprites
             jsr init_charset
+            jsr init_irq
             jsr init_text
 
             jmp *
@@ -145,17 +146,6 @@ init_charset:
             lda #$7e
             jsr print_line
 
-            ; Enable 1st raster IRQ
-            sei
-            lda #%01111111
-            sta $dc0d
-            and $d011
-            sta $d011
-            +set_raster_irq RASTER_BADGE_1, irq_badge_1
-            lda #%00000001
-            sta $d01a
-            cli
-
             rts
 
             !src <mem/copy-pages.a>
@@ -184,6 +174,21 @@ print_line:
             ldx #18
             +print_fragment
 
+            rts
+
+
+; Enable 1st raster IRQ
+init_irq:
+            sei
+            lda #%01111111
+            sta $dc0d
+            and $d011
+            sta $d011
+            +set_raster_irq RASTER_BADGE_1, irq_badge_1
+            lda #%00000001
+            sta $d01a
+            cli
+            
             rts
 
 
