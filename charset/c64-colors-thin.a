@@ -25,6 +25,7 @@
         
                 !src <common/pseudo-reg.a>
                 !src <mem/m-copy-u8-bytes.a>
+                !src <common/m-raster.a>
 
                 ; Charset location
                 !addr CHAR_SET_LOC = $3800
@@ -36,27 +37,6 @@
                 RASTER_LINE_3 = 50 + 8*2
 
                 BG_COLOR = 0                
-
-
-!macro set_raster_irq @line, @vector {
-                lda #@line
-                sta $d012
-        
-                lda #<@vector
-                sta $0314
-                lda #>@vector
-                sta $0315
-}
-
-!macro ack_short_kernal {
-                asl $d019
-                jmp $ea71
-}
-
-!macro ack_full_kernal {
-                asl $d019
-                jmp $ea31
-}
 
 
 main:

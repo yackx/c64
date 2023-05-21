@@ -2,6 +2,7 @@
 
         ;ACME 0.97
         !cpu 6510
+        !src <common/m-raster.a>
         * = $c000
 
         !addr SCREEN = $0400
@@ -16,29 +17,9 @@
         NB_OF_CHARS = 3
 
 
-!macro set_raster_irq @line, @vector {
-        lda #@line
-        sta $d012
-
-        lda #<@vector
-        sta $0314
-        lda #>@vector
-        sta $0315
-}
-
 !macro set_border_color @color {
         lda #@color
         sta $d020
-}
-
-!macro ack_short_kernal {
-        asl $d019
-        jmp $ea71
-}
-
-!macro ack_full_kernal {
-        asl $d019
-        jmp $ea31
 }
 
 

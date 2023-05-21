@@ -24,3 +24,15 @@
             sta $d01a
             cli
 }
+
+
+!macro ack_short_kernal {
+            asl $d019
+            jmp $ea71
+}
+
+
+!macro ack_full_kernal {
+            asl $d019
+            jmp $ea31
+}

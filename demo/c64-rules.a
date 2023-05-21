@@ -58,16 +58,6 @@
             RASTER_HARD_SCROLL = 245
 
 
-!macro ack_short_kernal {
-            asl $d019
-            jmp $ea71
-}
-
-!macro ack_full_kernal {
-            asl $d019
-            jmp $ea31
-}
-
 ; For debugging purposes.
 ; CAUTION - These instructions add cycles to the IRQ handler.
 !macro set_border_color @color {
