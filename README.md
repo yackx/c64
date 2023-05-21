@@ -8,9 +8,9 @@ In this repository:
 
 - Reusable routines and macros written in ACME cross-assembler
 - Sample code (routines in action)
-- Boring Snake, a basic game in text mode
-- Mini demos
-- Awesome references
+- [Boring Snake](/snake), a basic game in text mode
+- [Mini demos](/demo)
+- [Awesome references](/doc/references.md)
 
 Assume **PAL** for all VIC-II routines. Feel free to roam around the repository but **read this page first**.
 
@@ -112,20 +112,3 @@ make TARGET=charset/custom-font START_PC=0x1000 run
 ```
 
 Demos may contain "BASIC upstart", e.g. they start with BASIC code containing a `SYS` call to execute the asm program. In that case, set `START_PC=0x080d D_SKIP_BYTES=14` to skip 14 bytes (12 bytes BASIC + the usual 2 bytes load address).
-
-## Explore 👀
-
-Then explore in no particular order:
-
-- [Hello world](hello/README.md) (screen RAM, CHROUT)
-- [Boring Snake](snake/README.md) (text mode)
-- [common] macros and routines used throughout the repository
-- [mem] routines
-- [sprites] (movable objects) and collisions
-- custom [charset]
-- [raster] interrupts
-- [timer-irq] interrupts
-- [hires] mode
-- [baseconv] decimal mode and conversions
-- [rand] routines
-- BASIC [upstart]
