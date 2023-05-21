@@ -46,6 +46,7 @@
             !src <common/pseudo-reg.a>
             !src <common/math.a>
             !src <mem/m-copy-u8-bytes.a>
+            !src <mem/m-raster.a>
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
@@ -56,16 +57,6 @@
             RASTER_SOFT_SCROLL = 202
             RASTER_HARD_SCROLL = 245
 
-
-!macro set_raster_irq @line, @vector {
-            lda #@line
-            sta $d012
-        
-            lda #<@vector
-            sta $0314
-            lda #>@vector
-            sta $0315
-}
 
 !macro ack_short_kernal {
             asl $d019
@@ -367,6 +358,7 @@ irq_hello:
 irq_soft_scroll:
             SCROLL_SKIP_FRAMES = 5
             SCROLL_SCR_MEM_START = $0400 + 24*40
+            
             +set_border_color 1
             +set_raster_irq RASTER_HARD_SCROLL, irq_hard_scroll
 
@@ -504,7 +496,7 @@ sprite_data:
             !byte $1F, $FF, $00
             !byte $0F, $FE, $00
             !byte $03, $F8, $00
-            !byte 0 ; padding
+            !fill 1, 0 ; padding
 .sprite_hello_1:
 	         !byte $C0, $00, $00
 	         !byte $C0, $00, $00
@@ -527,7 +519,7 @@ sprite_data:
 	         !byte $C0, $63, $00
 	         !byte $C0, $63, $FC
 	         !byte $C0, $61, $FC
-            !byte 0 ; padding
+            !fill 1, 0 ; padding
 .sprite_hello_2:
 	         !byte $F0, $F0, $00
 	         !byte $F0, $F0, $00
@@ -550,7 +542,7 @@ sprite_data:
 	         !byte $30, $30, $C6
 	         !byte $FC, $FC, $7C
 	         !byte $FC, $FC, $38
-            !byte 0 ; padding
+            !fill 1, 0 ; padding
 
 
 ; ---------------------------------------------------------------------------

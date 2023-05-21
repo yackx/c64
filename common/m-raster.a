@@ -1,0 +1,13 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+!macro set_raster_irq @line, @vector {
+            lda #@line
+            sta $d012
+        
+            lda #<@vector
+            sta $0314
+            lda #>@vector
+            sta $0315
+}
