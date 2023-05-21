@@ -1,0 +1,35 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <common/upstart.a>
+            !src <common/m-raster.a>
+
+
+main:
+            ; disable interrupts
+            sei
+            ; switch off interrupt signals from CIA-1
+            lda #%01111111
+            sta $dc0d
+            ; scanline hi bit
+            and $d011
+            sta $d011
+            ; set raster interrupt line and vector
+            +set_raster_irq 0, irq_handler
+            ; enable raster interrupts
+            lda #%00000001          
+            sta $d01a
+            ; enable interrupts
+            cli
+            jmp *
+
+
+irq_handler:
+             lda #$01
+             sta $d019                  ; ACK any raster IRQs
+             jsr $1003                  ; Play the music
+             jmp $ea31
+
+        
+            * = $1000
+            !bin "sid/Wasted_All_These_Years.dat", , 2
