@@ -81,8 +81,10 @@ main:
             jsr init_scroll
             jsr init_sprites
             jsr init_charset
-            jsr init_irq
             jsr init_text
+            
+            ; Enable 1st raster IRQ
+            +init_raster_irq RASTER_BADGE_1, irq_badge_1            
 
             jmp *
 
@@ -174,21 +176,6 @@ print_line:
             ldx #18
             +print_fragment
 
-            rts
-
-
-; Enable 1st raster IRQ
-init_irq:
-            sei
-            lda #%01111111
-            sta $dc0d
-            and $d011
-            sta $d011
-            +set_raster_irq RASTER_BADGE_1, irq_badge_1
-            lda #%00000001
-            sta $d01a
-            cli
-            
             rts
 
 

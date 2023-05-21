@@ -11,3 +11,16 @@
             lda #>@vector
             sta $0315
 }
+
+
+!macro init_raster_irq @line, @vector {
+            sei
+            lda #%01111111
+            sta $dc0d
+            and $d011
+            sta $d011
+            +set_raster_irq @line, @vector
+            lda #%00000001
+            sta $d01a
+            cli
+}
