@@ -1,6 +1,8 @@
 ; ===========================================================================
-; Lame demo screen
+; LAME DEMO SCREEN
 ; ===========================================================================
+;
+; From top to bottom:
 ;
 ; 1. Commodore badge lines (5 colors)
 ;
@@ -10,18 +12,16 @@
 ; $d023 - shared color #2
 ; unused - character own color in Color RAM
 ;
-; Custom character set of 2 chars:
-; @ - double stripe (3 pixels stripe / 3 pixels blank / 2 pixels stripe)
-; A - single stripe (1 stripe / 3 blank / 3 stripe / 1 blank)
-; B - single stripe (2 blank / 3 stripe)
+; We hijack 3 unused characters from the custom charset used
+; for the rest of the demo, and replace them with our definition
+; to display stripes
 ;
-; Layout:
-; line 1 - @
-; line 2 - A
-; line 3 - B
+; a) double stripe (3 pixels stripe / 3 pixels blank / 2 pixels stripe)
+; b) single stripe (1 stripe / 3 blank / 3 stripe / 1 blank)
+; c) single stripe (2 blank / 3 stripe)
 ;
 ; For a total of 5 stripes taken from the C64 badge.
-; We use 3 raster IRQs to change the shared colors.
+; We use 3 raster IRQs to work around the 2 shared colors limitation.
 ;
 ; 2. Sprites
 ; 
