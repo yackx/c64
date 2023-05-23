@@ -1,0 +1,23 @@
+.sprite_c_with_lips:
+            !byte $03, $F8, $00
+            !byte $0F, $FE, $00
+            !byte $1F, $FF, $00
+            !byte $3E, $0F, $00
+            !byte $38, $07, $80
+            !byte $70, $03, $80
+            !byte $70, $00, $7F
+            !byte $E0, $00, $7E
+            !byte $E0, $00, $7C
+            !byte $E0, $00, $78
+            !byte $E0, $00, $00
+            !byte $E0, $00, $78
+            !byte $E0, $00, $7C
+            !byte $E0, $00, $7E
+            !byte $70, $00, $7F
+            !byte $70, $03, $80
+            !byte $38, $07, $80
+            !byte $3E, $0F, $00
+            !byte $1F, $FF, $00
+            !byte $0F, $FE, $00
+            !byte $03, $F8, $00
+            !fill 1, 0 ; padding

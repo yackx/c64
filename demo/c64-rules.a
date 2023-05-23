@@ -1,5 +1,5 @@
 ; ===========================================================================
-; LAME DEMO SCREEN
+; LAME INTRO SCREEN
 ; ===========================================================================
 ;
 ; From top to bottom:
@@ -38,6 +38,17 @@
 ;
 ; Text scrolling horizontally.
 ; 2 IRQ to avoid raster overrun: soft scroll and hard scroll.
+;
+; ---------------------------------------------------------------------------
+; MEMORY MAP
+; ---------------------------------------------------------------------------
+;
+; 0400-07e7: screen memory
+; 0801-0fff: program and data (not relocated)
+; 1000-2dff: SID data (not relocated)
+; 2e00-35ff: charset (relocated)
+; 3800-3fff: custom charset
+
 
             ;ACME 0.97
             !cpu 6510
@@ -81,9 +92,9 @@ main:
             jmp *
 
 
-; ---------------------------------------------------------------------------
+; ===========================================================================
 ; INITIALIZATION
-; ---------------------------------------------------------------------------
+; ===========================================================================
 
 init_scr:
             ; Clear screen
@@ -250,16 +261,16 @@ text:
 
 
 init_scroll:
-        lda $d016                       ; screen control register
-        and #%11110111                  ; screen 38 cols
-        sta $d016
+            lda $d016                       ; screen control register
+            and #%11110111                  ; screen 38 cols
+            sta $d016
+    
+            rts
 
-        rts
-
-scroll_count:                           ; will trigger hard scroll
-        !byte 1                         ; on 1st IRQ    
-scroll_frame_skip:                      ; do not skip 1st frame
-        !byte 1
+scroll_count:                               ; will trigger hard scroll
+            !byte 1                         ; on 1st IRQ    
+scroll_frame_skip:                          ; do not skip 1st frame
+            !byte 1
 
 
 ; ---------------------------------------------------------------------------
@@ -432,15 +443,6 @@ stripe_colors:
 
 
 ; ---------------------------------------------------------------------------
-; SID
-; ---------------------------------------------------------------------------
-
-sid_data:
-            !bin "sid/Wasted_All_These_Years.dat", , 2
-            SID_LEN = * - sid_data
-
-
-; ---------------------------------------------------------------------------
 ; SPRITES
 ; ---------------------------------------------------------------------------
 
@@ -465,75 +467,33 @@ sprite_hello_x_idx:
             !byte 0
 
 sprite_data:
-.sprite_c_with_lips:
-            !byte $03, $F8, $00
-            !byte $0F, $FE, $00
-            !byte $1F, $FF, $00
-            !byte $3E, $0F, $00
-            !byte $38, $07, $80
-            !byte $70, $03, $80
-            !byte $70, $00, $7F
-            !byte $E0, $00, $7E
-            !byte $E0, $00, $7C
-            !byte $E0, $00, $78
-            !byte $E0, $00, $00
-            !byte $E0, $00, $78
-            !byte $E0, $00, $7C
-            !byte $E0, $00, $7E
-            !byte $70, $00, $7F
-            !byte $70, $03, $80
-            !byte $38, $07, $80
-            !byte $3E, $0F, $00
-            !byte $1F, $FF, $00
-            !byte $0F, $FE, $00
-            !byte $03, $F8, $00
-            !fill 1, 0 ; padding
-.sprite_hello_1:
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $FF, $C1, $FC
-	         !byte $FF, $E3, $FC
-	         !byte $C0, $E7, $00
-	         !byte $C0, $66, $00
-	         !byte $C0, $66, $00
-	         !byte $C0, $67, $FC
-	         !byte $C0, $67, $FC
-	         !byte $C0, $66, $00
-	         !byte $C0, $66, $00
-	         !byte $C0, $63, $00
-	         !byte $C0, $63, $FC
-	         !byte $C0, $61, $FC
-            !fill 1, 0 ; padding
-.sprite_hello_2:
-	         !byte $F0, $F0, $00
-	         !byte $F0, $F0, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $38
-	         !byte $30, $30, $7C
-	         !byte $30, $30, $C6
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $30, $C6
-	         !byte $FC, $FC, $7C
-	         !byte $FC, $FC, $38
-            !fill 1, 0 ; padding
+            !src "demo/sprite_chicken_lips.a"
+            !src "demo/sprites_hello.a"
+
+
+; ---------------------------------------------------------------------------
+; MARQUEE
+; ---------------------------------------------------------------------------
+
+            !align $ff, 0, 0
+marquee:
+            !fill 40, $20
+            !scr "this is a scrolling text - soft scroll - "
+            !scr "rtl (right-to-left) - "
+            !scr "using raster interrupt - "
+            !scr "one pixel at a time."
+            !byte 0
+
+
+; ---------------------------------------------------------------------------
+; SID
+; ---------------------------------------------------------------------------
+
+; Cannot be relocated - must be at $1000
+            !align $ffff, $1000, $0
+sid_data:
+            !bin "sid/Wasted_All_These_Years.dat", , 2
+            SID_LEN = * - sid_data
 
 
 ; ---------------------------------------------------------------------------
@@ -544,18 +504,7 @@ sprite_data:
 ;
 ; Align to page for easy relocation.
 ; .64c file starts with 00. Discard it.
-; Original file contains not so legit characters
-; (file corrupted?). They were fixed manually.  
+; Original file contains not so legit characters (file corrupted?).
+; They were fixed manually.  
             !align $ff, 0, 0
 charset:    !bin "demo/demo_maker_a_fixed.64c", , 1
-
-
-
-        !align $ff, 0, 0
-marquee:
-        !fill 40, $20
-        !scr "this is a scrolling text - soft scroll - "
-        !scr "rtl (right-to-left) - "
-        !scr "using raster interrupt - "
-        !scr "one pixel at a time."
-        !byte 0
