@@ -62,11 +62,11 @@
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
-            RASTER_BADGE_1 = 50 - 2  ; early
+            RASTER_BADGE_1 = 48  ; early
             RASTER_BADGE_2 = RASTER_BADGE_1 + 2 + RASTER_BADGE_OFFSET
             RASTER_BADGE_3 = RASTER_BADGE_1 + RASTER_BADGE_OFFSET*2
             RASTER_HELLO = SPRITE_HELLO_Y - 2
-            RASTER_PLAY = RASTER_HELLO + 15
+            RASTER_SID = RASTER_HELLO + 20
             RASTER_SOFT_SCROLL = 202
             RASTER_HARD_SCROLL = 245
 
@@ -314,7 +314,7 @@ irq_badge_3:
 
 irq_hello:
             +set_border_color 1
-            +set_raster_irq RASTER_PLAY, irq_sid
+            +set_raster_irq RASTER_SID, irq_sid
 
             ldx sprite_hello_x_idx
             lda sprite_hello_x_table, x
