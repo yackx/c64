@@ -54,6 +54,7 @@
             RASTER_BADGE_2 = RASTER_BADGE_1 + 2 + RASTER_BADGE_OFFSET
             RASTER_BADGE_3 = RASTER_BADGE_1 + RASTER_BADGE_OFFSET*2
             RASTER_HELLO = SPRITE_HELLO_Y - 2
+            RASTER_PLAY = RASTER_HELLO + 10
             RASTER_SOFT_SCROLL = 202
             RASTER_HARD_SCROLL = 245
 
@@ -68,6 +69,7 @@
 
 main:
             jsr init_scr
+            jsr init_sid
             jsr init_scroll
             jsr init_sprites
             jsr init_charset
@@ -93,6 +95,10 @@ init_scr:
             sta $d021
 
             rts
+
+
+init_sid:
+            +copy_bytes_16 sid_data, $1000, SID_LEN
 
 
 init_charset:
@@ -131,6 +137,7 @@ init_charset:
 
             rts
 
+            !src <charset/reloc-charset.a>
 
 !macro print_fragment {
 -           jsr $ffd2
@@ -308,7 +315,7 @@ irq_badge_3:
 
 irq_hello:
             +set_border_color 1
-            +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
+            +set_raster_irq RASTER_PLAY, irq_sid
 
             ldx sprite_hello_x_idx
             lda sprite_hello_x_table, x
@@ -327,6 +334,12 @@ irq_hello:
             +ack_short_kernal
 
 
+irq_sid:
+            +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
+            jsr $1003                   ; Play the music
+            +ack_short_kernal
+
+
 irq_soft_scroll:
             SCROLL_SKIP_FRAMES = 5
             SCROLL_SCR_MEM_START = $0400 + 24*40
@@ -336,8 +349,8 @@ irq_soft_scroll:
 
             ; Set horizontal scroll (bits #2-#0)
             lda $d016
-            and #%11111000              ; masks for scr ctrl reg
-            ora scroll_count            ; set how many scroll pixels
+            and #%11111000               ; masks for scr ctrl reg
+            ora scroll_count             ; set how many scroll pixels
             sta $d016
 
             ; One less pixel on the scroll.
@@ -394,8 +407,13 @@ irq_hard_scroll:
             jmp .hard_scroll_done
 
 
-; ---------------------------------------------------------------------------
+; ===========================================================================
 ; DATA
+; ===========================================================================
+
+
+; ---------------------------------------------------------------------------
+; STRIPES
 ; ---------------------------------------------------------------------------
 
 ; Charset for stripes: 3 pixels stripe followed by 3 blank pixels
@@ -411,6 +429,20 @@ stripe_colors:
             !byte 2, 8
             !byte 7, 5
             !byte 14
+
+
+; ---------------------------------------------------------------------------
+; SID
+; ---------------------------------------------------------------------------
+
+sid_data:
+            !bin "sid/Wasted_All_These_Years.dat", , 2
+            SID_LEN = * - sid_data
+
+
+; ---------------------------------------------------------------------------
+; SPRITES
+; ---------------------------------------------------------------------------
 
 ; Sprite "hello" moves horizontally according to a sine function.
 ; We do not span the whole screen as it would require dealing with
@@ -431,19 +463,6 @@ sprite_hello_x_table:
 ; Current X position in the table
 sprite_hello_x_idx:
             !byte 0
-
-
-; ---------------------------------------------------------------------------
-; SUBROUTINES
-; ---------------------------------------------------------------------------
-
-            !src <mem/m-mem.a>
-            !src <charset/reloc-charset.a>
-
-
-; ---------------------------------------------------------------------------
-; SPRITES
-; ---------------------------------------------------------------------------
 
 sprite_data:
 .sprite_c_with_lips:
