@@ -245,12 +245,12 @@ init_text:
             D_QUOTES = 34
 text:
 .text1      !byte 14, (44-.text2+.text1)/2, 14
-            !pet "GFX/ASM Youri Ackx, 2023", 0
+            !pet "GFX / ASM Youri Ackx 2023", 0
 .text2      !byte 15, (44-.text3+.text2)/2, 14
-            !pet "SFX", D_QUOTES, "Wasted All These Years", D_QUOTES, ", "
-            !pet "by Dane", 0
+            !pet "SFX ", D_QUOTES, "Wasted All These Years", D_QUOTES
+            !pet " 'Dane'", 0
 .text3      !byte 16, (44-.text4+.text3)/2, 14
-            !pet "Stellan Andersson, 2020 Booze Design", 0
+            !pet "Stellan Andersson 2020 Booze Design", 0
 .text4      !byte 18, (44-.textx+.text4)/2, 14
             !pet "https://github.com/yackx/c64", 0
 .textx
