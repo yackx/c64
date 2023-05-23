@@ -73,8 +73,8 @@
 ; For debugging purposes.
 ; CAUTION - These instructions add cycles to the IRQ handler.
 !macro set_border_color @color {
-            lda #@color
-            sta $d020
+            ;lda #@color
+            ;sta $d020
 }
 
 
@@ -109,7 +109,8 @@ init_scr:
 
 
 init_sid:
-            ;+copy_bytes_16 sid_data, $1000, SID_LEN
+            +copy_bytes_16 sid_data, $1000, SID_LEN
+            rts
 
 
 init_charset:
@@ -326,8 +327,8 @@ irq_badge_3:
 
 irq_hello:
             +set_border_color 1
-            ;+set_raster_irq RASTER_PLAY, irq_sid
-            +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
+            +set_raster_irq RASTER_PLAY, irq_sid
+            ;+set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
 
             ldx sprite_hello_x_idx
             lda sprite_hello_x_table, x
@@ -349,7 +350,7 @@ irq_hello:
 irq_sid:
             +set_border_color 1
             +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
-            ;jsr $1003                   ; Play the music
+            jsr $1003                   ; Play the music
             +set_border_color 0
             +ack_short_kernal
 
