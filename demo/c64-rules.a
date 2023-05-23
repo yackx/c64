@@ -44,6 +44,7 @@
         
             !src <common/upstart.a>
             !src <common/pseudo-reg.a>
+            !src <common/m-print-clr-msg-at.a>
             !src <common/math.a>
             !src <common/m-raster.a>
             !src <mem/m-mem.a>
@@ -206,38 +207,24 @@ init_sprites:
             rts
 
 
-            !src <common/m-strout.a>
-
-!macro print_txt @struct {
-            lda @struct
-            sta $0286
-            clc
-            ldy @struct+1
-            ldx @struct+2
-            jsr $fff0                   ; set cursor position
-            +m_strout @struct+3
-}
-
 init_text:
             ;lda #$0e                   ; Lower case font
             ;jsr $ffd2
             lda #$08                    ; Font case toggle disabled
             jsr $ffd2
 
-            +print_txt .text1
-            +print_txt .text2
+            +m_print_color_msg_struct_at .text1
+            +m_print_color_msg_struct_at .text2
+
             rts
 
+            !src <common/print-clr-msg-at.a>
             !src <common/strout.a>
 
 text:
-.text1      !byte 14
-            !byte (44-.text2+.text1)/2
-            !byte 14
+.text1      !byte 14, (44-.text2+.text1)/2, 14
             !pet "https://github.com/yackx/c64", 0
-.text2      !byte 14
-            !byte (44-.textx+.text2)/2
-            !byte 16
+.text2      !byte 16, (44-.textx+.text2)/2, 14
             !pet "Youri Ackx - (C) 2023", 0
 .textx
 
