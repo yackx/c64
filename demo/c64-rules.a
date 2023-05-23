@@ -328,7 +328,6 @@ irq_badge_3:
 irq_hello:
             +set_border_color 1
             +set_raster_irq RASTER_PLAY, irq_sid
-            ;+set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
 
             ldx sprite_hello_x_idx
             lda sprite_hello_x_table, x
