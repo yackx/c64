@@ -6,3 +6,15 @@
             lda #13
             jsr $ffd2
 }
+
+
+!macro print_color_msg_at @msg_addr, @x, @y, @color {
+            lda @color
+            sta $0286
+
+            ldy @x
+            ldx @y
+            jsr $fff0
+            
+            +m_strout @msg_addr
+}
