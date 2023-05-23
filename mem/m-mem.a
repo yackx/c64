@@ -1,0 +1,164 @@
+!ifdef DEF_m_men !eof
+DEF_m_men = 1
+
+
+; Fill u8 bytes in memory.
+;
+; USE:  A X
+!macro fill_bytes_8 @dest_addr, @count, @value {
+        ldx #@count
+        lda #@value
+-
+        sta @dest_addr-1,x
+        dex
+        bne -
+}
+
+
+; Fill u16 bytes in memory.
+;
+; USE:  A X Y
+!macro fill_bytes_16 @dest_addr, @count, @value {
+        !set @target = @dest_addr + 256 * >@count
+        ldy #1 + >@count
+        ldx #(<@count) - 1
+        lda #>@value
+        sta @target
+-
+        .target = *+1
+        sta @target,x
+        dex
+        cpx #$ff
+        bne -
+        dec .target+1
+        dey
+        bne -
+}
+
+
+
+; Fill a memory page.
+;
+; USES:     A, Y
+!macro fill_page @page, @char {
+            ldy #0
+            lda #@char
+-
+            !byte $99                   ; STA Y-indirect indexed absolute
+            !byte 0                     ; page LSB
+            !byte @page                 ; page MSB
+
+            iny
+            bne -
+}
+
+
+; Fill a memory page.
+;
+; USES:     A, Xm Y
+!macro fill_pages @start_page, @count, @char {
+            ldy #0
+            ldx #@count
+            lda #@char
+-
+            .page = *+2
+            !byte $99                   ; STA Y-indirect indexed absolute
+            !byte 0                     ; page LSB
+            !byte @start_page           ; page MSB
+
+            iny
+            bne -
+
+            dex
+            beq +
+            inc .page
+            jmp -
++
+}
+
+
+; Copy u8 bytes in memory.
+;
+; USE: A X
+!macro copy_bytes_8 @src_addr, @dest_addr, @count {
+        ldx #@count
+-
+        lda @src_addr-1,x
+        sta @dest_addr-1,x
+        dex
+        bne -
+}
+
+
+; Copy u16 bytes in memory.
+;
+; USE: A X Y
+!macro copy_bytes_16 @src_addr, @dest_addr, @count {
+        !set @src = @src_addr + 256 * >@count
+        !set @dest = @dest_addr + 256 * >@count
+        ldy #1 + >@count
+        ldx #(<@count) - 1
+        lda @src
+        sta @dest
+-
+        .src = *+1
+        lda @src,x
+        .dest = *+1
+        sta @dest,x
+
+        dex
+        cpx #$ff
+        bne -
+
+        dec .src+1
+        dec .dest+1
+        dey
+        bne -
+}
+
+
+; Copy a memory page.
+;
+; USES:     A, Y
+!macro copy_page @src_page_msb, @dest_page_msb {
+            ldy #0
+-
+            !byte $b9                   ; LDA Y-indirect indexed absolute
+            !byte 0                     ; page LSB
+            !byte @src_page_msb         ; page MSB
+
+            !byte $99                   ; STA Y-indirect indexed absolute
+            !byte 0                     ; page LSB
+            !byte @dest_page_msb        ; page MSB
+
+            iny
+            bne -
+}
+
+
+; Copy memory pages.
+;
+; USES:     A, X, Y
+!macro copy_pages @src_page_msb, @dest_page_msb, @count {
+            ldy #0
+            ldx #@count
+-
+            .src = *+2
+            !byte $b9                   ; LDA Y-indirect indexed absolute
+            !byte 0                     ; page LSB
+            !byte @src_page_msb         ; page MSB
+
+            .dest = *+2
+            !byte $99                   ; STA Y-indirect indexed absolute
+            !byte 0                     ; page LSB
+            !byte @dest_page_msb        ; page MSB
+
+            iny
+            bne -
+            dex
+            beq +
+            inc .src
+            inc .dest
+            jmp -
++
+}

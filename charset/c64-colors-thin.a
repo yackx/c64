@@ -21,10 +21,11 @@
 
                 ;ACME 0.97
                 !cpu 6510
-                * = $c000
-        
+
+                !src <common/upstart.a>
                 !src <common/pseudo-reg.a>
-                !src <mem/m-copy-u8-bytes.a>
+                !src <mem/m-mem.a>
+                !src <mem/m-mem.a>
                 !src <common/m-raster.a>
 
                 ; Charset location
@@ -45,11 +46,7 @@ main:
 
                 ; Blank charset memory
                 ; Most characters are blank
-                ldx #8
-                lda #>CHAR_SET_LOC
-                sta R2
-                lda #0
-                jsr fill_pages
+                +fill_pages >CHAR_SET_LOC, 8, 0
 
                 ; Point to custom charset
                 lda #CHAR_PTR_BITMASK
@@ -61,7 +58,7 @@ main:
                 sta $d016
 
                 ; Copy custom characters
-                +copy_u8_bytes double_stripe, CHAR_SET_LOC, 8*2
+                +copy_bytes_8 double_stripe, CHAR_SET_LOC, 8*2
 
                 ; Background color
                 lda #BG_COLOR
@@ -145,5 +142,5 @@ stripe_colors:  !byte 2, 8
                 !byte 7, 5
                 !byte 14
 
-                !src <mem/fill-pages.a>
+                !src <mem/m-mem.a>
                 !src <charset/reloc-charset.a>

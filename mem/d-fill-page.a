@@ -1,12 +1,7 @@
-; Demo copy page
-;
-; Copy 1st page of text screen on the 3rd page
-
         !cpu 6510
         !src <common/upstart.a>
         !src <mem/m-mem.a>
 
 main:
         +fill_page $04, 0
-        +copy_page $04, $06
         rts

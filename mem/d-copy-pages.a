@@ -4,16 +4,8 @@
 
         !cpu 6510
         !src <common/upstart.a>
-        !src <common/pseudo-reg.a>
+        !src <mem/m-mem.a>
 
 main:
-        lda #$04
-        sta R2                  ; TEXT screen
-        lda #$06
-        sta R4                  ; below on the text screen
-        ldx #2                  ; 2 pages
-        jsr copy_pages
-
+        +copy_pages $04, $06, 2
         rts
-
-        !src <mem/copy-pages.a>

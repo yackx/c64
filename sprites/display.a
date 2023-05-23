@@ -6,7 +6,7 @@
         !cpu 6510
         * = $c000
         
-        !src <mem/m-copy-u8-bytes.a>
+        !src <mem/m-mem.a>
 
 ; sprite pointers (8 bytes)
 ; = start of text screen RAM + 1016
@@ -25,7 +25,7 @@
 main:
         jsr $ff81               ; clear screen
 
-        +copy_u8_bytes .sprite_data, $0340, 63
+        +copy_bytes_8 .sprite_data, $0340, 63
 
         lda #%00000001
         sta $d015               ; activate sprite #0

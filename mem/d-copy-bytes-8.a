@@ -1,0 +1,10 @@
+        !cpu 6510
+        !src <common/upstart.a>
+        !src <mem/m-mem.a>
+
+
+main:
+        jsr $ff81
+        +fill_bytes_8 $0400+40*4, 40, 0
+        +copy_bytes_8 $0400+40*4, $0400+40*6, 40
+        rts

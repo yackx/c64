@@ -19,7 +19,7 @@
     
             !src <common/upstart.a>
             !src <common/pseudo-reg.a>
-            !src <mem/m-copy-u8-bytes.a>
+            !src <mem/m-mem.a>
     
             ; Current scroll register mask (bits #2 to #0)
             !addr ZP_SCROLL_COUNT = $2a
@@ -53,7 +53,7 @@ init:
       
             jsr $ff81                   ; clear screen
     
-            +copy_u8_bytes txt_fixed, START_OF_FIX_LINE, FIX_TXT_LENGTH
+            +copy_bytes_8 txt_fixed, START_OF_FIX_LINE, FIX_TXT_LENGTH
     
             ; Set screen to 38 columns mode
             lda $d016

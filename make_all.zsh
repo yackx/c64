@@ -2,7 +2,7 @@
 
 set -e
 for f in **/*.a; do
-    if ! grep -q "* = " $f; then
+    if ! grep -q -E "upstart\.a|\* =" $f; then
         echo "Skipping $f"
         continue
     fi

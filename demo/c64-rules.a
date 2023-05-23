@@ -46,7 +46,7 @@
             !src <common/pseudo-reg.a>
             !src <common/math.a>
             !src <common/m-raster.a>
-            !src <mem/m-copy-u8-bytes.a>
+            !src <mem/m-mem.a>
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
@@ -103,25 +103,16 @@ init_charset:
 
             ; Blank charset memory
             ; (most characters are blank for the badge)
-            ldx #8
-            lda #>CHAR_SET_LOC
-            sta R2
-            lda #0
-            jsr fill_pages
+            +fill_pages >CHAR_SET_LOC, 8, 0
 
             ; Copy custom character set
             ; (the one for the message)
-            lda #>charset
-            sta R2                      ; source       
-            lda #>CHAR_SET_LOC
-            sta R4                      ; destination
             // @TODO Copy exactly 91*8 = 728 bytes
-            ldx #3                      ; 2 mem pages
-            jsr copy_pages
+            +copy_pages >charset, >CHAR_SET_LOC, 3
 
             ; Copy custom characters for the stripes
             ; starting at index 91 (=after 'Z' in lowercase charset)
-            +copy_u8_bytes stripes_chars, CHAR_SET_LOC + 91*8, 8*NB_OF_CHARS
+            +copy_bytes_8 stripes_chars, CHAR_SET_LOC + 91*8, 8*NB_OF_CHARS
 
             ; Point to custom charset
             lda #CHAR_PTR_BITMASK
@@ -140,7 +131,6 @@ init_charset:
 
             rts
 
-            !src <mem/copy-pages.a>
 
 !macro print_fragment {
 -           jsr $ffd2
@@ -175,7 +165,7 @@ init_sprites:
             SPRITE_HELLO_Y = 90
 
             ; copy data to sprite block
-            +copy_u8_bytes sprite_data, SPRITE_BLOCK*64, 64*3
+            +copy_bytes_8 sprite_data, SPRITE_BLOCK*64, 64*3
 
             ; sprite colors
             lda #1
@@ -447,7 +437,7 @@ sprite_hello_x_idx:
 ; SUBROUTINES
 ; ---------------------------------------------------------------------------
 
-            !src <mem/fill-pages.a>
+            !src <mem/m-mem.a>
             !src <charset/reloc-charset.a>
 
 

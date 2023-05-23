@@ -17,7 +17,7 @@
 
         !src <common/pseudo-reg.a>
         !src <common/registers.a>
-        !src <mem/m-copy-u8-bytes.a>
+        !src <mem/m-mem.a>
 
         SPRITE_COUNT = 2
         DELAY_16 = 255*2        ; busy wait delay
@@ -35,7 +35,7 @@ common:
         jsr $ff81
 
         ; copy data to sprite block (same for both sprites)
-        +copy_u8_bytes .sprite_data, $0340, 63
+        +copy_bytes_8 .sprite_data, $0340, 63
 
         ; activate sprites #0 and #1
         lda #%00000011

@@ -1,0 +1,16 @@
+        !cpu 6510
+        !src <common/upstart.a>
+        !src <mem/m-mem.a>
+
+        SCREEN = $0400
+
+main:
+        jsr $ff81
+
+        +fill_bytes_16 SCREEN+40*1, 40*7, 0
+        +copy_bytes_16 SCREEN+40*1, SCREEN+40*10, 40*7
+
+        +fill_bytes_16 SCREEN+40*20, 40, 0
+        +copy_bytes_16 SCREEN+40*20, SCREEN+40*22, 40
+
+        rts

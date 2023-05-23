@@ -5,6 +5,7 @@
         * = $1000
     
         !src <common/pseudo-reg.a>
+        !src <mem/m-mem.a>
 
         !addr DEST = $3800
         CHAR_PTR_BITMASK = $0e
@@ -12,12 +13,7 @@
 
 main:
         ; Copy custom font
-        lda #>font
-        sta R2
-        lda #>DEST
-        sta R4
-        ldx #8
-        jsr copy_pages
+        +copy_pages >font, >DEST, 8
 
         ; Point to charset
         lda #CHAR_PTR_BITMASK
@@ -30,6 +26,4 @@ main:
 font:
         !bin <charset/patrickmollohan/zx_spectrum.bin>
 
-
-        !src <mem/copy-pages.a>
         !src <charset/reloc-charset.a>

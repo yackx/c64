@@ -15,14 +15,14 @@
 
         !src <common/pseudo-reg.a>
         !src <common/registers.a>
-        !src <mem/m-copy-u8-bytes.a>
+        !src <mem/m-mem.a>
 
         DELAY = 255*40
 
 main:
         jsr $ff81               ; clear screen
 
-        +copy_u8_bytes .sprite_data, $0340, 63
+        +copy_bytes_8 .sprite_data, $0340, 63
 
         lda #255
         sta $d015               ; activate sprite #0

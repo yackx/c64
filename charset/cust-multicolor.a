@@ -5,10 +5,11 @@
 
                 ;ACME 0.97
                 !cpu 6510
-                * = $c000
         
+                !src <common/upstart.a>
                 !src <common/pseudo-reg.a>
-                !src <mem/m-copy-u8-bytes.a>
+                !src <mem/m-mem.a>
+                !src <mem/m-mem.a>
 
                 ; Charset location
                 !addr CHAR_SET_LOC = $3800
@@ -19,6 +20,11 @@
                 ; Mask for setting charset (depends on CHAR_SET_LOC)
                 CHAR_PTR_BITMASK = $0e
 
+                BG_COLOR = 0
+                CHAR_COLOR = 2
+                MULTI_COLOR_1 =  12
+                MULTI_COLOR_2 = 15
+
 
 main:
                 ; Clear screen
@@ -26,11 +32,7 @@ main:
 
                 ; Blank charset memory
                 ; Most characters are blank
-                ldx #8
-                lda #>CHAR_SET_LOC
-                sta R2
-                lda #0
-                jsr fill_pages
+                +fill_pages >CHAR_SET_LOC, 8, 0
 
                 ; Point to custom charset
                 lda #CHAR_PTR_BITMASK
@@ -51,14 +53,10 @@ main:
                 sta $d023
 
                 ; Fill color RAM
-                lda #$d8
-                sta R2
-                ldx #4
-                lda #CHAR_COLOR
-                jsr fill_pages
+                +fill_pages $d8, 4, CHAR_COLOR
 
                 ; Copy custom characters
-                +copy_u8_bytes characters, CUST_CHARS, NB_OF_CHARS*8
+                +copy_bytes_8 characters, CUST_CHARS, NB_OF_CHARS*8
 
                 ; Fill screen with patterns
                 ldy #0                  ; char
@@ -84,18 +82,7 @@ main:
                 rts
 
 
-.includes:
-                !src <mem/fill-pages.a>
-                !src <charset/reloc-charset.a>
-
-
-                BG_COLOR = 0
-                CHAR_COLOR = 2
-                MULTI_COLOR_1 =  12
-                MULTI_COLOR_2 = 15
-
                 NB_OF_CHARS = 8
-
 characters:
 .wall_1:        !byte 127,127,85,247,247,85,127,127
 .wall_2:        !byte 85,127,127,85,247,247,85,127
@@ -105,3 +92,5 @@ characters:
 .wall_b:        !byte 238,170,187,170,238,170,187,170
 .weird:         !byte 170,130,85,125,125,85,130,170
 .diag:          !byte 108,27,198,177,108,27,198,177
+
+                !src <charset/reloc-charset.a>
