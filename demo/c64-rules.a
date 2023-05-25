@@ -493,9 +493,9 @@ sprite_data:
 text:
 .text1a     !scr "     GFX & ASM by Youri Ackx - 2023     "
 .text1b     !scr "      https://github.com/yackx/c64      "
-.text2a     !scr "     SFX ", D_QUOTES
-            !scr "Wasted All These Years", D_QUOTES, "       "
-.text2b     !scr "  Dane Andersson - 2020 Booze Design    "
+.text2a     !scr "      SFX ", D_QUOTES
+            !scr "Wasted All These Years", D_QUOTES, "      "
+.text2b     !scr "   Dane Andersson - 2020 Booze Design   "
 .textx
 
             +check_len_40 .text1a, .text1b, "text1a"
