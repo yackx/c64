@@ -43,6 +43,7 @@
 ; MEMORY MAP
 ; ---------------------------------------------------------------------------
 ;
+; 0340-03ff: top 3 sprites
 ; 0400-07e7: screen memory
 ; 0801-0fff: program and data (not relocated)
 ; 1000-2dff: SID data (not relocated)
@@ -66,7 +67,8 @@
             RASTER_BADGE_2 = RASTER_BADGE_1 + 2 + RASTER_BADGE_OFFSET
             RASTER_BADGE_3 = RASTER_BADGE_1 + RASTER_BADGE_OFFSET*2
             RASTER_HELLO = SPRITE_HELLO_Y - 2
-            RASTER_SID = RASTER_HELLO + 20
+            RASTER_TEXT = RASTER_HELLO + 10
+            RASTER_SID = RASTER_TEXT + 25
             RASTER_SOFT_SCROLL = 202
             RASTER_HARD_SCROLL = 245
 
@@ -85,7 +87,6 @@ main:
             jsr init_scroll
             jsr init_sprites
             jsr init_charset
-            jsr init_text
             
             ; Enable 1st raster IRQ
             +init_raster_irq RASTER_BADGE_1, irq_badge_1            
@@ -226,36 +227,6 @@ init_sprites:
             rts
 
 
-init_text:
-            ;lda #$0e                   ; Lower case font
-            ;jsr $ffd2
-            lda #$08                    ; Font case toggle disabled
-            jsr $ffd2
-
-            +m_print_color_msg_struct_at .text1
-            +m_print_color_msg_struct_at .text2
-            +m_print_color_msg_struct_at .text3
-            +m_print_color_msg_struct_at .text4
-
-            rts
-
-            !src <common/print-clr-msg-at.a>
-            !src <common/strout.a>
-
-            D_QUOTES = 34
-text:
-.text1      !byte 14, (44-.text2+.text1)/2, 14
-            !pet "GFX / ASM Youri Ackx 2023", 0
-.text2      !byte 15, (44-.text3+.text2)/2, 14
-            !pet "SFX ", D_QUOTES, "Wasted All These Years", D_QUOTES
-            !pet " 'Dane'", 0
-.text3      !byte 16, (44-.text4+.text3)/2, 14
-            !pet "Stellan Andersson 2020 Booze Design", 0
-.text4      !byte 18, (44-.textx+.text4)/2, 14
-            !pet "https://github.com/yackx/c64", 0
-.textx
-
-
 init_scroll:
             lda $d016                       ; screen control register
             and #%11110111                  ; screen 38 cols
@@ -322,7 +293,7 @@ irq_badge_3:
 
 irq_hello:
             +set_border_color 1
-            +set_raster_irq RASTER_SID, irq_sid
+            +set_raster_irq RASTER_TEXT, irq_text
 
             ldx sprite_hello_x_idx
             lda sprite_hello_x_table, x
@@ -339,6 +310,39 @@ irq_hello:
 
             +set_border_color 0
             +ack_short_kernal
+
+
+irq_text:
+            SCREEN = $0400
+            D_QUOTES = 34
+
+            +set_border_color 1
+            +set_raster_irq RASTER_SID, irq_sid
+
+            dec .skip_fr
+            bne ++
+            
+            lda #TEXT_SKIP_FRAMES
+            sta .skip_fr
+
+            lda .curr_txt
+            beq +
+
+            dec .curr_txt
+            +copy_bytes_8 .text2a, SCREEN+14*40, 40
+            +copy_bytes_8 .text2b, SCREEN+16*40, 40
+            jmp ++
++
+            inc .curr_txt
+            +copy_bytes_8 .text1a, SCREEN+14*40, 40
+            +copy_bytes_8 .text1b, SCREEN+16*40, 40
+++
+            +set_border_color 0
+            +ack_short_kernal
+
+            TEXT_SKIP_FRAMES = 255
+.skip_fr    !byte 1
+.curr_txt   !byte 0
 
 
 irq_sid:
@@ -470,6 +474,32 @@ sprite_data:
 
 
 ; ---------------------------------------------------------------------------
+; TEXT
+; ---------------------------------------------------------------------------
+
+!macro check_len_40 @from, @to, @msg {
+    !set @length = (@to - @from)
+    !if @length != 40 {
+        !warn "Text line length is not 40 chars: " +  @msg
+        !error @length
+    }
+}
+
+text:
+.text1a     !scr "     GFX & ASM by Youri Ackx - 2023     "
+.text1b     !scr "      https://github.com/yackx/c64      "
+.text2a     !scr "     SFX ", D_QUOTES
+            !scr "Wasted All These Years", D_QUOTES, "       "
+.text2b     !scr "  Dane Andersson - 2020 Booze Design    "
+.textx
+
+            +check_len_40 .text1a, .text1b, "text1a"
+            +check_len_40 .text1b, .text2a, "text1b"
+            +check_len_40 .text2a, .text2b, "text2a"
+            +check_len_40 .text2b, .textx,  "text2b"
+
+
+; ---------------------------------------------------------------------------
 ; MARQUEE
 ; ---------------------------------------------------------------------------
 
@@ -477,7 +507,6 @@ sprite_data:
 marquee:
             !fill 40, $20
             !scr "C64 rules. This is my lame intro screen. "
-            ;!scr "but hey i did it myself. "
             !scr "Hello to sudokrew.io - "
             !scr "We could have killed on the demo scene in the 1980's..."
             !fill 255 - * + marquee, $20
