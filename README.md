@@ -105,6 +105,7 @@ make TARGET=sprites/many
 make TARGET=sprites/many run
 ```
 
+
 Programs in this repository are located at `$c000` preferably. This is the default address for the Makefile. Sometimes, a program is too large and needs to be relocated. In that case, add a `START_PC` parameter to match the program's `*=` directive:
 
 ```bash
@@ -112,3 +113,5 @@ make TARGET=charset/custom-font START_PC=0x1000 run
 ```
 
 Demos may contain "BASIC upstart", e.g. they start with BASIC code containing a `SYS` call to execute the asm program. In that case, set `START_PC=0x080d D_SKIP_BYTES=14` to skip 14 bytes (12 bytes BASIC + the usual 2 bytes load address).
+
+![C64 rules intro screen](/demo/c64-rules.gif)
