@@ -1,5 +1,5 @@
 ; ===========================================================================
-; LAME DEMO SCREEN
+; LAME INTRO SCREEN
 ; ===========================================================================
 ;
 ; From top to bottom:
@@ -38,6 +38,18 @@
 ;
 ; Text scrolling horizontally.
 ; 2 IRQ to avoid raster overrun: soft scroll and hard scroll.
+;
+; ---------------------------------------------------------------------------
+; MEMORY MAP
+; ---------------------------------------------------------------------------
+;
+; 0340-03ff: top 3 sprites
+; 0400-07e7: screen memory
+; 0801-0fff: program and data (not relocated)
+; 1000-2dff: SID data (not relocated)
+; 2e00-35ff: charset (relocated)
+; 3800-3fff: custom charset
+
 
             ;ACME 0.97
             !cpu 6510
@@ -51,10 +63,12 @@
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
-            RASTER_BADGE_1 = 50 - 2  ; early
+            RASTER_BADGE_1 = 48  ; early
             RASTER_BADGE_2 = RASTER_BADGE_1 + 2 + RASTER_BADGE_OFFSET
             RASTER_BADGE_3 = RASTER_BADGE_1 + RASTER_BADGE_OFFSET*2
             RASTER_HELLO = SPRITE_HELLO_Y - 2
+            RASTER_TEXT = RASTER_HELLO + 10
+            RASTER_SID = RASTER_TEXT + 25
             RASTER_SOFT_SCROLL = 202
             RASTER_HARD_SCROLL = 245
 
@@ -69,10 +83,10 @@
 
 main:
             jsr init_scr
+            jsr init_sid
             jsr init_scroll
             jsr init_sprites
             jsr init_charset
-            jsr init_text
             
             ; Enable 1st raster IRQ
             +init_raster_irq RASTER_BADGE_1, irq_badge_1            
@@ -80,9 +94,9 @@ main:
             jmp *
 
 
-; ---------------------------------------------------------------------------
+; ===========================================================================
 ; INITIALIZATION
-; ---------------------------------------------------------------------------
+; ===========================================================================
 
 init_scr:
             ; Clear screen
@@ -93,6 +107,11 @@ init_scr:
             sta $d020
             sta $d021
 
+            rts
+
+
+init_sid:
+            +copy_bytes_16 sid_data, $1000, SID_LEN
             rts
 
 
@@ -132,6 +151,7 @@ init_charset:
 
             rts
 
+            !src <charset/reloc-charset.a>
 
 !macro print_fragment {
 -           jsr $ffd2
@@ -207,39 +227,22 @@ init_sprites:
             rts
 
 
-init_text:
-            ;lda #$0e                   ; Lower case font
-            ;jsr $ffd2
-            lda #$08                    ; Font case toggle disabled
-            jsr $ffd2
+init_scroll:
+            ; 38 columns
+            lda $d016                       ; screen control register
+            and #%11110111                  ; screen 38 cols
+            sta $d016
 
-            +m_print_color_msg_struct_at .text1
-            +m_print_color_msg_struct_at .text2
-
+            ; Text color
+            SCROLL_SCR_CLR_START = $d800 + 24*40
+            +fill_bytes_8 SCROLL_SCR_CLR_START, 40, 13
+    
             rts
 
-            !src <common/print-clr-msg-at.a>
-            !src <common/strout.a>
-
-text:
-.text1      !byte 14, (44-.text2+.text1)/2, 14
-            !pet "https://github.com/yackx/c64", 0
-.text2      !byte 16, (44-.textx+.text2)/2, 14
-            !pet "Youri Ackx - (C) 2023", 0
-.textx
-
-
-init_scroll:
-        lda $d016                       ; screen control register
-        and #%11110111                  ; screen 38 cols
-        sta $d016
-
-        rts
-
-scroll_count:                           ; will trigger hard scroll
-        !byte 1                         ; on 1st IRQ    
-scroll_frame_skip:                      ; do not skip 1st frame
-        !byte 1
+scroll_count:                               ; will trigger hard scroll
+            !byte 1                         ; on 1st IRQ    
+scroll_frame_skip:                          ; do not skip 1st frame
+            !byte 1
 
 
 ; ---------------------------------------------------------------------------
@@ -295,7 +298,7 @@ irq_badge_3:
 
 irq_hello:
             +set_border_color 1
-            +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
+            +set_raster_irq RASTER_TEXT, irq_text
 
             ldx sprite_hello_x_idx
             lda sprite_hello_x_table, x
@@ -314,6 +317,47 @@ irq_hello:
             +ack_short_kernal
 
 
+irq_text:
+            SCREEN = $0400
+            D_QUOTES = 34
+
+            +set_border_color 1
+            +set_raster_irq RASTER_SID, irq_sid
+
+            dec .skip_fr
+            bne ++
+            
+            lda #TEXT_SKIP_FRAMES
+            sta .skip_fr
+
+            lda .curr_txt
+            beq +
+
+            dec .curr_txt
+            +copy_bytes_8 .text2a, SCREEN+14*40, 40
+            +copy_bytes_8 .text2b, SCREEN+16*40, 40
+            jmp ++
++
+            inc .curr_txt
+            +copy_bytes_8 .text1a, SCREEN+14*40, 40
+            +copy_bytes_8 .text1b, SCREEN+16*40, 40
+++
+            +set_border_color 0
+            +ack_short_kernal
+
+            TEXT_SKIP_FRAMES = 255
+.skip_fr    !byte 1
+.curr_txt   !byte 0
+
+
+irq_sid:
+            +set_border_color 1
+            +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
+            jsr $1003                   ; Play the music
+            +set_border_color 0
+            +ack_short_kernal
+
+
 irq_soft_scroll:
             SCROLL_SKIP_FRAMES = 5
             SCROLL_SCR_MEM_START = $0400 + 24*40
@@ -323,8 +367,8 @@ irq_soft_scroll:
 
             ; Set horizontal scroll (bits #2-#0)
             lda $d016
-            and #%11111000              ; masks for scr ctrl reg
-            ora scroll_count            ; set how many scroll pixels
+            and #%11111000               ; masks for scr ctrl reg
+            ora scroll_count             ; set how many scroll pixels
             sta $d016
 
             ; One less pixel on the scroll.
@@ -381,8 +425,13 @@ irq_hard_scroll:
             jmp .hard_scroll_done
 
 
-; ---------------------------------------------------------------------------
+; ===========================================================================
 ; DATA
+; ===========================================================================
+
+
+; ---------------------------------------------------------------------------
+; STRIPES
 ; ---------------------------------------------------------------------------
 
 ; Charset for stripes: 3 pixels stripe followed by 3 blank pixels
@@ -398,6 +447,11 @@ stripe_colors:
             !byte 2, 8
             !byte 7, 5
             !byte 14
+
+
+; ---------------------------------------------------------------------------
+; SPRITES
+; ---------------------------------------------------------------------------
 
 ; Sprite "hello" moves horizontally according to a sine function.
 ; We do not span the whole screen as it would require dealing with
@@ -419,89 +473,60 @@ sprite_hello_x_table:
 sprite_hello_x_idx:
             !byte 0
 
-
-; ---------------------------------------------------------------------------
-; SUBROUTINES
-; ---------------------------------------------------------------------------
-
-            !src <mem/m-mem.a>
-            !src <charset/reloc-charset.a>
-
-
-; ---------------------------------------------------------------------------
-; SPRITES
-; ---------------------------------------------------------------------------
-
 sprite_data:
-.sprite_c_with_lips:
-            !byte $03, $F8, $00
-            !byte $0F, $FE, $00
-            !byte $1F, $FF, $00
-            !byte $3E, $0F, $00
-            !byte $38, $07, $80
-            !byte $70, $03, $80
-            !byte $70, $00, $7F
-            !byte $E0, $00, $7E
-            !byte $E0, $00, $7C
-            !byte $E0, $00, $78
-            !byte $E0, $00, $00
-            !byte $E0, $00, $78
-            !byte $E0, $00, $7C
-            !byte $E0, $00, $7E
-            !byte $70, $00, $7F
-            !byte $70, $03, $80
-            !byte $38, $07, $80
-            !byte $3E, $0F, $00
-            !byte $1F, $FF, $00
-            !byte $0F, $FE, $00
-            !byte $03, $F8, $00
-            !fill 1, 0 ; padding
-.sprite_hello_1:
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $C0, $00, $00
-	         !byte $FF, $C1, $FC
-	         !byte $FF, $E3, $FC
-	         !byte $C0, $E7, $00
-	         !byte $C0, $66, $00
-	         !byte $C0, $66, $00
-	         !byte $C0, $67, $FC
-	         !byte $C0, $67, $FC
-	         !byte $C0, $66, $00
-	         !byte $C0, $66, $00
-	         !byte $C0, $63, $00
-	         !byte $C0, $63, $FC
-	         !byte $C0, $61, $FC
-            !fill 1, 0 ; padding
-.sprite_hello_2:
-	         !byte $F0, $F0, $00
-	         !byte $F0, $F0, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $00
-	         !byte $30, $30, $38
-	         !byte $30, $30, $7C
-	         !byte $30, $30, $C6
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $31, $83
-	         !byte $30, $30, $C6
-	         !byte $FC, $FC, $7C
-	         !byte $FC, $FC, $38
-            !fill 1, 0 ; padding
+            !src "demo/sprite_chicken_lips.a"
+            !src "demo/sprites_hello.a"
+
+
+; ---------------------------------------------------------------------------
+; TEXT
+; ---------------------------------------------------------------------------
+
+!macro check_len_40 @from, @to, @msg {
+    !set @length = (@to - @from)
+    !if @length != 40 {
+        !warn "Text line length is not 40 chars: " +  @msg
+        !error @length
+    }
+}
+
+text:
+.text1a     !scr "     GFX & ASM by Youri Ackx - 2023     "
+.text1b     !scr "      https://github.com/yackx/c64      "
+.text2a     !scr "      SFX ", D_QUOTES
+            !scr "Wasted All These Years", D_QUOTES, "      "
+.text2b     !scr "   Dane Andersson - 2020 Booze Design   "
+.textx
+
+            +check_len_40 .text1a, .text1b, "text1a"
+            +check_len_40 .text1b, .text2a, "text1b"
+            +check_len_40 .text2a, .text2b, "text2a"
+            +check_len_40 .text2b, .textx,  "text2b"
+
+
+; ---------------------------------------------------------------------------
+; MARQUEE
+; ---------------------------------------------------------------------------
+
+            !align $ff, 0, 0
+marquee:
+            !fill 40, $20
+            !scr "C64 rules. This is my lame intro screen. "
+            !scr "Hello to sudokrew.io - "
+            !scr "We could have killed on the demo scene in the 1980's..."
+            !fill 255 - * + marquee, $20
+            !byte 0
+
+
+; ---------------------------------------------------------------------------
+; SID
+; ---------------------------------------------------------------------------
+
+; Cannot be relocated - must be at $1000
+            !align $ffff, $1000, $0
+sid_data:
+            !bin "sid/Wasted_All_These_Years.dat", , 2
+            SID_LEN = * - sid_data
 
 
 ; ---------------------------------------------------------------------------
@@ -512,18 +537,7 @@ sprite_data:
 ;
 ; Align to page for easy relocation.
 ; .64c file starts with 00. Discard it.
-; Original file contains not so legit characters
-; (file corrupted?). They were fixed manually.  
+; Original file contains not so legit characters (file corrupted?).
+; They were fixed manually.  
             !align $ff, 0, 0
 charset:    !bin "demo/demo_maker_a_fixed.64c", , 1
-
-
-
-        !align $ff, 0, 0
-marquee:
-        !fill 40, $20
-        !scr "this is a scrolling text - soft scroll - "
-        !scr "rtl (right-to-left) - "
-        !scr "using raster interrupt - "
-        !scr "one pixel at a time."
-        !byte 0
