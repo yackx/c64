@@ -16,7 +16,7 @@ all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 	$(ASM) -v1 -I `pwd` --color --strict-segments --cpu 6510 --format cbm --vicelabels $<.sym --outfile $@ $<
 
 %.d64: %.prg
-	$(C1541) -format "foobar,1" d64 `pwd`/$@ -write `pwd`/$< `pwd`/$*
+	$(C1541) -format "foobar,1" d64 `pwd`/$@ -write `pwd`/$< $(*F)
 
 %.d: %.prg
 	$(DCC6502) -c -d -s $(D_SKIP_BYTES) -o $(START_PC) $< > $@
