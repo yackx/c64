@@ -15,14 +15,14 @@ all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 %.prg: %.a
 	$(ASM) -v1 -I `pwd` --color --strict-segments --cpu 6510 --format cbm --vicelabels $<.sym --outfile $@ $<
 
-%.d64: %.a
-	$(C1541) -format foo,1 d64 `pwd`/$@ -write `pwd`/$<
+%.d64: %.prg
+	$(C1541) -format "foobar,1" d64 `pwd`/$@ -write `pwd`/$< `pwd`/$*
 
 %.d: %.prg
 	$(DCC6502) -c -d -s $(D_SKIP_BYTES) -o $(START_PC) $< > $@
 
 run: $(TARGET).prg
-	$(X64) --args -autostart `pwd`/$(TARGET).prg -moncommands `pwd`/$(TARGET).a.sym
+	$(X64) --args -autostart `pwd`/$(TARGET).d64 -moncommands `pwd`/$(TARGET).a.sym
 
 bas: $(TARGET).bas
 	$(PETCAT) -w2 -o `pwd`/$(TARGET).prg `pwd`/$(TARGET).bas
