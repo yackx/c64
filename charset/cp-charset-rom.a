@@ -1,3 +1,12 @@
+        ;ACME 0.97
+        !cpu 6510
+
+        !src <common/pseudo-reg.a>
+        !src <mem/m-mem.a>
+
+        !addr SRC = $d000
+
+
 ; Copy the character set from ROM to RAM.
 ;
 ; Character set at $d000 will be copied to the destination
@@ -6,16 +15,6 @@
 ; IN    R3 Destination LSB
 ;       R4 Destination MSB
 ; USE   A X Y R1 R2
-
-        ;ACME 0.97
-        !cpu 6510
-
-        !src <common/pseudo-reg.a>
-
-        !addr SRC = $d000
-
-
-!zone cp_charset_to_ram
 cp_charset_to_ram:
         sei
         
