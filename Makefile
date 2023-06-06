@@ -21,7 +21,7 @@ all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 %.d: %.prg
 	$(DCC6502) -c -d -s $(D_SKIP_BYTES) -o $(START_PC) $< > $@
 
-run: $(TARGET).prg
+run: $(TARGET).d64
 	$(X64) --args -autostart `pwd`/$(TARGET).d64 -moncommands `pwd`/$(TARGET).a.sym
 
 bas: $(TARGET).bas
