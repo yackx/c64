@@ -26,7 +26,7 @@
 - [MOS Microcomputers - Hardware manual](http://www.zimmers.net/anonftp/pub/cbm/manuals/mos/mcs6500_family_hardware_manual.pdf)
 - [Programmer's reference guide (recreated)](https://pickledlight.blogspot.com/p/commodore-64-guides.html)
 - [PETSCII and screen display code](https://www.aivosto.com/articles/petscii.pdf)
-
+- [64doc atarihq.com](http://www.atarihq.com/danb/files/64doc.txt)
 ## Tools
 
 - [PETSCII editor](https://petscii.krissz.hu/)
@@ -113,6 +113,13 @@
 - [Pokefinder](http://ftp.pokefinder.org/) - Search engine
 - [ktuukkan/c64-asm](https://github.com/ktuukkan/c64-asm) - Examples in ACME
 
+## Hardware
+
+- [Synertek - SY6500 8-bit microprocessor family](https://www.princeton.edu/~mae412/HANDOUTS/Datasheets/6502.pdf) - Technical specifications and datasheet. Fetch-execute cycle in appendix
+- [MOS - MCS6500 Microcomputer System Hardware Manual - Appendix A - Summary of single-cycle execution](https://xotmatrix.github.io/6502/6502-single-cycle-execution.html)
+- [cs.niu.edu - Fetch/Execute](https://faculty.cs.niu.edu/~berezin/463/notes/fetchex.html)
+- [27c3: Reverse Engineering the MOS 6502 CPU](https://www.youtube.com/watch?v=fWqBmmPQP40) (video)
+  
 ## Not evaluated
 
 - [HiRes plot sub-routine](https://github.com/spoitras/High-resolution-plot-sub-routine)
