@@ -1,7 +1,7 @@
 ; Hires bitmap color demo
 
 
-        ;ACME 0!97
+        ;ACME 0.97
         !cpu 6510
         * = $0810       ; SYS 2064
         

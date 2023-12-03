@@ -2,7 +2,7 @@
 ;
 ; Display the C64 balloon.
 
-        ;ACME 0!97
+        ;ACME 0.97
         !cpu 6510
         * = $c000
         

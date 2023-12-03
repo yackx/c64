@@ -4,7 +4,7 @@
 ;
 ; Caution - only 256 bytes of program before data!
 
-        ;ACME 0!97
+        ;ACME 0.97
         !cpu 6510
         * = $1f00       ; SYS 7936 
 
