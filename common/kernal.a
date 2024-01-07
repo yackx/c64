@@ -1,0 +1,13 @@
+; KERNAL subroutine addresses.
+;
+; See also:
+; https://c64os.com/post/c64kernalrom
+; https://www.c64-wiki.com/wiki/KERNAL
+
+!ifdef DEF_KERNAL_ROUTINES !eof
+DEF_KERNAL_ROUTINES = 1
+
+!addr {
+    SCNKEY = $ff9f
+    GETIN = $ffe4
+}
