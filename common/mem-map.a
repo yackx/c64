@@ -1,0 +1,13 @@
+; Memory mapping aliases.
+;
+; See:
+; https://www.pagetable.com/c64ref/c64mem
+
+!ifdef DEF_MEMORY_MAP !eof
+DEF_MEMORY_MAP = 1
+
+!addr {
+    XMAX = $0289                                ; Maximum Keyboard Buffer Size
+    RPTFLA = $028a                              ; Keyboard Repeat Flag
+    RPTFLG = RPTFLA
+}
