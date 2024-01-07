@@ -105,8 +105,7 @@ make TARGET=sprites/many
 make TARGET=sprites/many run
 ```
 
-
-Programs in this repository are located at `$c000` preferably. This is the default address for the Makefile. Sometimes, a program is too large and needs to be relocated. In that case, add a `START_PC` parameter to match the program's `*=` directive:
+Programs in this repository are located at `$c000` by convention. Type `SYS 49152` to run them from BASIC. This is the default address for the `Makefile`. In several instances, depending on its layour, a program may be located at a different address. In that case, add a `START_PC` parameter to match the program's `*=` directive. For instance, if `*=$1000`:
 
 ```bash
 make TARGET=charset/custom-font START_PC=0x1000 run
