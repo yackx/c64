@@ -2,8 +2,8 @@
 
             ;ACME 0.97
             !cpu 6510
-            * = $c000
 
+            !src <common/upstart.a>
             !src <common/m-print.a>
             !src <common/kernal.a>
             !src <common/mem-map.a>
