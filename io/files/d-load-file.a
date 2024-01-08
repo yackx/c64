@@ -1,0 +1,51 @@
+; Demo - Load a file and display its contents on the screen.
+;
+; File format:
+; - The file must be in Screen code format to be displayed correctly
+;   (not PETSCII nor ASCII);
+; - The 2 first bytes of the file are the load address of the file
+;   (ignored here but used by the subroutine nonetheless).
+;
+; A utility Python program is provided to perform the conversion.
+;
+;     $ cat lorem.txt | python petscii_to_screen.py > lorem.scr.bin
+;     $ make
+;
+; The file will be loaded as if the following BASIC command was typed:
+;
+;     LOAD "LOREM,U",8,1
+
+            ;ACME 0.97
+            !cpu 6510
+
+            SCREEN = $0400
+            FILE_HANDLER = 2
+            DEVICE = 8
+            SECONDARY = 2
+
+            !src <common/upstart.a>
+            !src <common/pseudo-reg.a>
+
+main:
+            lda #<SCREEN
+            sta R1
+            lda #>SCREEN
+            sta R2
+            lda #FILE_HANDLER
+            sta R3
+            lda #DEVICE
+            sta R4
+            lda #SECONDARY
+            sta R5
+            ldx #<filename
+            ldy #>filename
+            lda #filename_end-filename
+            jsr load_file_to_address
+
+            rts
+
+
+filename:   !pet "lorem,u"                  ; LOREM.USR on disk
+filename_end:
+
+            !src <io/files/load-file.a>

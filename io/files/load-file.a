@@ -1,0 +1,60 @@
+; Load a file into memory at a specified address
+;
+; See:
+; https://www.c64-wiki.com/wiki/OPEN
+;
+; The validity of the parameters is not checked.
+;
+; Example:
+;           SCREEN = $0400
+;           lda #<SCREEN
+;           sta R1
+;           lda #>SCREEN
+;           sta R2
+;           lda #FILE_HANDLER
+;           sta R3
+;           lda #DEVICE
+;           sta R4
+;           lda #SECONDARY
+;           sta R5
+;           ldx #<filename
+;           ldy #>filename
+;           lda #filename_end-filename
+;           jsr load_file_to_address
+;  
+;  
+; IN:       X = filename addr LSB
+;           Y = filename addr MSB
+;           A = filename length
+;           R1 = load address LSB
+;           R2 = load address MSB
+;           R3 = logical file handler # (1-255)
+;           R4 = device # (1-2 or 8-15)
+;           R5 = secondary number (2-14)
+;
+; OUT:      C = error flag
+;           A = error code
+;
+; USES:     A X Y R3 R4
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <common/kernal.a>
+            !src <common/mem-map.a>
+
+
+load_file_to_address:
+            jsr SETNAM
+
+            lda R3
+            ldx R4
+            ldy #$00                        ; Load to new address
+            jsr SETLFS
+
+            ldx R1
+            ldy R2
+            lda #$00                        ; Load
+            jsr LOAD
+
+            rts

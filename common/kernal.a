@@ -8,6 +8,12 @@
 DEF_KERNAL_ROUTINES = 1
 
 !addr {
-    SCNKEY = $ff9f
-    GETIN = $ffe4
+    SCNKEY = $ff9f                          ; Scan the keyboard
+    GETIN = $ffe4                           ; Get a character from the keyboard
+    CHROUT = $ffd2                          ; Output a character to the screen
+    SETLFS = $ffba                          ; Set logical file number
+    SETNAM = $ffbd                          ; Set filename for LOAD/SAVE
+    OPEN = $ffc0                            ; Open a file
+    CHKIN = $ffc6                           ; Open a channel for input
+    LOAD = $ffd5                            ; Load or verify a file
 }
