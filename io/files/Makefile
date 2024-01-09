@@ -8,8 +8,6 @@ PETCAT ?= petcat
 START_PC ?= 0xc000
 D_SKIP_BYTES ?= 2
 
-TARGET = d-load-file
-
 .PRECIOUS: %
 
 all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
@@ -19,7 +17,8 @@ all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 
 %.d64: %.prg
 	$(C1541) -format "foobar,1" d64 `pwd`/$@ -write `pwd`/$< $(*F)
-	$(C1541) `pwd`/$@ -write `pwd`/lorem.scr.bin "lorem,u"
+	$(C1541) `pwd`/$@ -write `pwd`/lorem_la.scr.bin "lorem la,u"
+	$(C1541) `pwd`/$@ -write `pwd`/lorem_no_la.scr.bin "lorem no la,u"
 
 %.d: %.prg
 	$(DCC6502) -c -d -s $(D_SKIP_BYTES) -o $(START_PC) $< > $@

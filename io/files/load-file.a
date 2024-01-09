@@ -1,13 +1,19 @@
 ; Load a file into memory at a specified address
 ;
+; The 2 first bytes of the file are the load address of the file
+; (ignored here but used by the subroutine nonetheless).
+;
+; The validity of the parameters is not checked.
+;
 ; See:
 ; https://www.c64-wiki.com/wiki/OPEN
 ; https://codebase64.org/doku.php?id=base:loading_a_file
 ;
-; The validity of the parameters is not checked.
 ;
 ; Example:
 ;           SCREEN = $0400
+;           FILE_HANDLER = 2
+;           DEVICE = 8
 ;           lda #<SCREEN
 ;           sta R1
 ;           lda #>SCREEN
@@ -16,13 +22,15 @@
 ;           sta R3
 ;           lda #DEVICE
 ;           sta R4
-;           lda #SECONDARY
-;           sta R5
 ;           ldx #<filename
 ;           ldy #>filename
 ;           lda #filename_end-filename
 ;           jsr load_file_to_address
-;  
+;
+; The file will be loaded as if the following BASIC command was issued:
+;
+;     LOAD "LOREM,U",8,1
+;
 ;  
 ; IN:       X = filename addr LSB
 ;           Y = filename addr MSB
@@ -31,12 +39,11 @@
 ;           R2 = load address MSB
 ;           R3 = logical file handler # (1-255)
 ;           R4 = device # (1-2 or 8-15)
-;           R5 = secondary number (2-14)
 ;
 ; OUT:      C = error flag
 ;           A = error code
 ;
-; USES:     A X Y R3 R4
+; USES:     A X Y
 
             ;ACME 0.97
             !cpu 6510
