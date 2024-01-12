@@ -51,7 +51,7 @@
 ;               $01: Maximum number of files already open exceeded (OPEN).
 ;               $02: File handler in use (OPEN).
 ;               $05: Device did not respond / device not present (OPEN).
-;               $04: Short block (TAPE) (CHKIN). @TODO File not found?
+;               $04: File not found / Short block (TAPE) (CHKIN).
 ;               $08: Long block (TAPE) (CHKIN).
 ;               $10: Unrecoverable read error (CHKIN).
 ;               CHKIN error: for further information,

@@ -1,4 +1,4 @@
-; Load a file into memory at a specified address
+; Load a file into memory at a specified address.
 ;
 ; The 2 first bytes of the file are the load address of the file
 ; (ignored here but used by the subroutine nonetheless).
