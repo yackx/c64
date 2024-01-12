@@ -47,15 +47,7 @@
 ;           R5 = secondary address (0-31)
 ;
 ; OUT:      C = error flag
-;           A = error code (OPEN or CHKIN aka read error)
-;               $01: Maximum number of files already open exceeded (OPEN).
-;               $02: File handler in use (OPEN).
-;               $05: Device did not respond / device not present (OPEN).
-;               $04: File not found / Short block (TAPE) (CHKIN).
-;               $08: Long block (TAPE) (CHKIN).
-;               $10: Unrecoverable read error (CHKIN).
-;               CHKIN error: for further information,
-;                            the drive error channel has to be read.
+;           A = error code
 ;
 ; USES:     A X Y R1 R2
 
