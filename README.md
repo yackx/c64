@@ -16,9 +16,9 @@ Assume **PAL** for all VIC-II routines. Feel free to roam around the repository 
 
 ## Prerequisites 💪
 
-It is assumed that you are comfortable with the following topics:
+You sdhould be comfortable with the following topics:
 
--**Programming** and basic algorithms, in any language, preferably in the imperative category (C, Java, but also Python, JavaScript, etc).
+- **Programming** and basic algorithms, in any language, preferably in the imperative category (C, Java, but also Python, JavaScript, etc).
 - **Base conversion** -- decimal, binary, hexadecimal. This is the bread and butter of assembly programming.
 - **Command line** -- Understanding of `export`, `source`, `PATH` and `make` is required.
 
