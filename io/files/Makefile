@@ -6,7 +6,7 @@ ASM ?= acme
 DCC6502 ?= dcc6502
 PETCAT ?= petcat
 
-START_PC = 0x0801
+START_PC ?= 0x0801
 D_SKIP_BYTES = 2
 
 .PRECIOUS: %

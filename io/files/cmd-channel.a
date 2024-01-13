@@ -1,0 +1,88 @@
+;  Operations linked to the disk command channel.
+;
+; See also:
+; https://retrocomputing.stackexchange.com/questions/27826/sending-dos-commands-in-assembly-on-my-c64
+;
+; @TODO Clear error message buffer before starting
+; @TODO Make drive number a parameter
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <common/registers.a>
+            !src <common/kernal.a>
+            !src <common/mem-map.a>
+
+
+; Read and store the status message from the disk drive.
+;
+; IN:       X = drive number
+; USES:     A, X, Y
+read_disk_status_msg:
+            jsr open_15_d_15
+            jsr read_store_status
+            jsr close_15
+            rts
+
+
+; Send the init command to the disk drive.
+;
+; IN:       X = drive number
+; USES:     A, X, Y
+init_disk:
+            jsr open_15_d_15
+            jsr send_init_cmd
+            jsr close_15
+            rts
+
+
+open_15_d_15:
+            +push_x                         ; Save drive number
+
+            lda #0
+            tax
+            tay
+            jsr SETNAM
+
+            +pull_x
+            lda #15
+            tay
+            jsr SETLFS
+            
+            jsr OPEN
+            
+            rts
+
+
+send_init_cmd:
+            ldx #15
+            jsr CHKOUT
+            lda #'I'
+            jsr CHROUT
+            lda #$0d
+            jsr CHROUT
+            rts
+
+
+read_store_status:
+            ldx #15
+            jsr CHKIN
+            ldx #0
+-           jsr READST
+            bne +
+            jsr CHRIN
+            sta error_msg,x
+            inx
+            bne -
++           rts
+
+
+close_15:
+            jsr CLRCHN
+            lda #15
+            jsr CLOSE
+            rts
+
+
+error_msg:
+            !fill 255, 0
