@@ -14,5 +14,6 @@ DEF_MEMORY_MAP = 1
     RPTFLG = RPTFLA
 
     ; VIC-II
+    VIC2INTR = $d019                            ; Interrupt register
     VIC2BORDER = $d020                          ; Border color
 }
