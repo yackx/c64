@@ -2,6 +2,7 @@
 
 - [Hello World](hello) - `CHROUT` and direct screen memory access.
 - [Border flickering](border-flicker) - Classic border flickering effect.
+- [Sprites](sprites) - Sprite display and movement.
 - [Mutliple centered messages](screen-messages) - Print multiple messages directly to screen memory.
 - [Scroll](scroll) - Scroll text horizontally.
 - [SID](sid) - Play a SID music file.
