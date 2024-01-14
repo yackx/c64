@@ -1,4 +1,4 @@
-; @TODO Broken
+; A stars animation.
 
                 !cpu 6510
                 * = $c000
@@ -58,6 +58,8 @@ fill_random:
                 ;sta fill_random.label
                 
                 ldx #0
+                lda #$20
+                sta .page
 .loop:  
                 lda $d41b               ; obtain RND from SID
                 cmp #8
