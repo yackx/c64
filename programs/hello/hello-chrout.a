@@ -1,0 +1,17 @@
+; Print "hello 64" to the screen using the KERNAL routine at $ffd2
+            ; AC
+            !cpu 6510
+            * = $c000
+
+            !src <common/kernal.a>
+
+main:
+            ldx #0
+            beq +
+-           jsr CHROUT
+            inx
++           lda hello, x
+            bne -                
+            rts
+
+hello:      !pet "hello 64", 13, 0

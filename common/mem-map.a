@@ -2,6 +2,7 @@
 ;
 ; See:
 ; https://www.pagetable.com/c64ref/c64mem
+; https://area51.dev/c64/kernal/memorymap/
 
 !ifdef DEF_MEMORY_MAP !eof
 DEF_MEMORY_MAP = 1
@@ -11,4 +12,7 @@ DEF_MEMORY_MAP = 1
     XMAX = $0289                                ; Maximum Keyboard Buffer Size
     RPTFLA = $028a                              ; Keyboard Repeat Flag
     RPTFLG = RPTFLA
+
+    ; VIC-II
+    VIC2BORDER = $d020                          ; Border color
 }

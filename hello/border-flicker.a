@@ -1,9 +1,0 @@
-; Make a classic border effect
-
-            !cpu 6510
-            * = $c000           ; SYS49152
-
-main:
-            inc $d020           ; next border color
-            nop                 ; slow down
-            jmp main            ; endless loop

@@ -1,8 +1,12 @@
 ; Print a string using the strout routine.
 
+        ;ACME 0.97
         !cpu 6510
+
         !src <common/pseudo-reg.a>
+        
         * = $c000
+
 
 main:
         lda #<.hello

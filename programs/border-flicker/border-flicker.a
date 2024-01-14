@@ -1,0 +1,12 @@
+; Make a classic border flickering effect
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <common/mem-map.a>
+            !src <common/upstart.a>
+
+main:
+            inc VIC2BORDER                  ; Next border color
+            nop                             ; Slow down
+            jmp main                        ; Endless loop
