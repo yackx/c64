@@ -16,7 +16,9 @@
 
 ; Read and store the status message from the disk drive.
 ;
-; IN:       X = drive number
+; IN:       R1, R2 = address of buffer to store the message
+;           X = drive number
+;
 ; USES:     A, X, Y
 read_disk_status_msg:
             jsr open_15_d_15
@@ -82,15 +84,24 @@ send_init_cmd:
 ;
 ; File handler 15 must be opened and closed by the caller.
 ;
+; IN:       R1, R2 = address of buffer to store the message
+;           X = drive number
+;
 ; USES:     A, X, Y
 read_store_status:
+            lda R1
+            sta .target
+            lda R2
+            sta .target+1
+
             ldx #15
             jsr CHKIN
             ldx #0
 -           jsr READST
             bne +
             jsr CHRIN
-            sta error_msg,x
+            .target = * + 1   
+            sta $ffff,x
             inx
             bne -
 +           rts
@@ -106,7 +117,3 @@ close_15:
             lda #15
             jsr CLOSE
             rts
-
-
-error_msg:
-            !fill 255, 0

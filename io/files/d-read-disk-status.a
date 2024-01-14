@@ -14,11 +14,16 @@
             * = $c000
 
 main:
+            lda #<status_msg
+            sta R1
+            lda #>status_msg
+            sta R2
             ldx #8
             jsr read_disk_status_msg
-            +m_strout error_msg
+            +m_strout status_msg
             rts
 
+status_msg: !fill 64, 0
 
             !src <io/files/cmd-channel.a>
             !src <common/strout.a>
