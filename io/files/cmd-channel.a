@@ -36,6 +36,12 @@ init_disk:
             rts
 
 
+; Open the disk command channel.
+;
+; OPEN 15,8,15
+;
+; IN:       X = drive number
+; USES:     A, X, Y
 open_15_d_15:
             +push_x                         ; Save drive number
 
@@ -54,6 +60,14 @@ open_15_d_15:
             rts
 
 
+; Send the init command to the disk drive.
+;
+; File handler 15 must be opened and closed by the caller.
+;
+; This function does the functional equivalent of:
+; PRINT#15,"I"
+;
+; USES:     A, X, Y
 send_init_cmd:
             ldx #15
             jsr CHKOUT
@@ -64,6 +78,11 @@ send_init_cmd:
             rts
 
 
+; Read and store the status message from the disk drive.
+;
+; File handler 15 must be opened and closed by the caller.
+;
+; USES:     A, X, Y
 read_store_status:
             ldx #15
             jsr CHKIN
@@ -77,6 +96,11 @@ read_store_status:
 +           rts
 
 
+; Close the disk command channel.
+;
+; CLOSE 15
+;
+; USES:     A, X, Y
 close_15:
             jsr CLRCHN
             lda #15
