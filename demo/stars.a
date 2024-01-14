@@ -1,27 +1,19 @@
 ; A stars animation.
 
+                ;ACME 0.97
                 !cpu 6510
+
                 * = $c000
 
+
 main:
+                lda #%00010000          ; white pixels on black background
                 jsr clear_screen
                 jsr color_screen
                 jsr set_hires
                 jsr init_rnd
 -               jsr fill_random
                 jmp -
-
-
-clear_screen:
-                lda #%00010000          ; white pixels on black background
-                ldx #0
--               sta $0400,x
-                sta $0500,x
-                sta $0600,x
-                sta $0700,x
-                inx
-                bne -
-                rts
 
 
 color_screen:
@@ -84,3 +76,6 @@ fill_random:
                 bne .loop
 
                 rts
+
+
+                !src <mem/clear-scr.a>

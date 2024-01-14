@@ -1,0 +1,23 @@
+; Clear screen.
+;
+; This routine efficiently perform a single one-page loop.
+;
+; IN:       A = color
+;               for example #%00010000 = white pixels on black background
+;
+; USES:     A, X
+
+            ; ACME 0.97
+            !cpu 6510
+
+
+clear_screen:
+            ldx #0
+-           sta $0400,x
+            sta $0500,x
+            sta $0600,x
+            sta $0700,x
+            inx
+            bne -
+            
+            rts
