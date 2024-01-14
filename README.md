@@ -8,15 +8,14 @@ In this repository:
 
 - Reusable routines and macros written in ACME cross-assembler
 - Sample code (routines in action)
-- [Boring Snake](/snake), a basic game in text mode
-- [Mini demos](/demo)
-- [Awesome references](/doc/references.md)
+- [Programs](/programs) - Illustrations of basic techniques, [Boring Snake](/snake), [mini demo](/demo)
+- [Documentation](/doc/) - Assemblers, editor code completion, IDE and [Awesome references](/doc/references.md).
 
 Assume **PAL** for all VIC-II routines. Feel free to roam around the repository but **read this page first**.
 
 ## Prerequisites 💪
 
-You sdhould be comfortable with the following topics:
+You should be comfortable with the following topics:
 
 - **Programming** and basic algorithms, in any language, preferably in the imperative category (C, Java, but also Python, JavaScript, etc).
 - **Base conversion** -- decimal, binary, hexadecimal. This is the bread and butter of assembly programming.
