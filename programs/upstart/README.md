@@ -27,6 +27,3 @@ LIST
 ```
 
 That is what a **BASIC upstart** is for. Depending on the assembler, you have to provide the necessary routine (dasm) or use a built-in directive (KickAssembler).
-
-- [dasm](upstart-dasm)
-- [kick](upstart-kick)
