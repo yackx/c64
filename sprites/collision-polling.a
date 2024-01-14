@@ -65,25 +65,25 @@ init_sprite:
         
         dex                     ; X=n => sprite #(n-1)
 
+        ; Sprite color
         lda .sprites_colors,x
-        sta VIC2SPCOL0,x        ; sprite color
+        sta VIC2SPCOL0,x
 
         ; sprite pointer to SPRITE_BLOCK*64=832=$0340
         lda #SPRITE_BLOCK
         sta DEFAULT_SPRITE_PTR_AREA,x
 
-        txa                     ; X <- X*2
+        ; X <- X*2
+        txa
         asl
         tax
 
+        ; Sprite position
         lda .sprites_init_pos,x
         sta VIC2M0X,x
+        lda .sprites_init_pos+1,x
+        sta VIC2M0Y,x
         inx
-        lda .sprites_init_pos,x
-        sta VIC2M0X,x           ; actually sprite *Y() position
-        ; @TODO Improve the logic
-        ; Avoid INX and DEX
-        ; Use VIC2M0Y i.o. VIC2M0X
 
         +pull_xa
         rts
