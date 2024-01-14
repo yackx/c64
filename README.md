@@ -8,7 +8,7 @@ In this repository:
 
 - Reusable routines and macros written in ACME cross-assembler
 - Sample code (routines in action)
-- [Programs](/programs) - Illustrations of basic techniques, [Boring Snake](/snake), [mini demo](/demo)
+- [Programs](/programs) - Illustrations of basic techniques, [Boring Snake](/programs/snake), [mini demo](/demo)
 - [Documentation](/doc/) - Assemblers, editor code completion, IDE and [Awesome references](/doc/references.md).
 
 Assume **PAL** for all VIC-II routines. Feel free to roam around the repository but **read this page first**.
