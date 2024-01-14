@@ -1,4 +1,4 @@
-; Print multiple messages directly to screen memory.
+; Print multiple centered messages directly to screen memory.
 ;
 ; This is faster than using the KERNAL routine CHROUT,
 ; and is not necessarily more cumbersome as we avoid
