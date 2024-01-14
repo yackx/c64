@@ -8,7 +8,7 @@
 ; Screen border goes red and animation stops when
 ; a collision is detected.
 ;
-; $d01e is polled during the animation.
+; VIC2SPSPCOL $d01e is polled during the animation.
 ; If bit #0 is set -> sprite #0 collision
 
         ;ACME 0!97
@@ -17,6 +17,8 @@
 
         !src <common/pseudo-reg.a>
         !src <common/registers.a>
+        !src <common/mem-map.a>
+        !src <common/kernal.a>
         !src <mem/m-mem.a>
 
         SPRITE_COUNT = 2
@@ -32,14 +34,14 @@ main:
 
 common:
         ; clear screen
-        jsr $ff81
+        jsr CINT
 
         ; copy data to sprite block (same for both sprites)
         +copy_bytes_8 .sprite_data, $0340, 63
 
         ; activate sprites #0 and #1
         lda #%00000011
-        sta $d015
+        sta VIC2SPE
 
         ; busy wait
         lda >DELAY_16
@@ -64,28 +66,32 @@ init_sprite:
         dex                     ; X=n => sprite #(n-1)
 
         lda .sprites_colors,x
-        sta $d027,x             ; sprite color
+        sta VIC2SPCOL0,x        ; sprite color
 
+        ; sprite pointer to SPRITE_BLOCK*64=832=$0340
         lda #SPRITE_BLOCK
-        sta $07f8,x             ; sprite pointer to SPRITE_BLOCK*64=832=$0340
+        sta DEFAULT_SPRITE_PTR_AREA,x
 
         txa                     ; X <- X*2
         asl
         tax
 
         lda .sprites_init_pos,x
-        sta $d000,x
+        sta VIC2M0X,x
         inx
         lda .sprites_init_pos,x
-        sta $d000,x             ; sprite y position
+        sta VIC2M0X,x           ; actually sprite *Y() position
+        ; @TODO Improve the logic
+        ; Avoid INX and DEX
+        ; Use VIC2M0Y i.o. VIC2M0X
 
         +pull_xa
         rts
 
 
 animate_sprite_0:
--       inc $d000               ; move sprite #0 1 pixel right
-        lda $d01e
+-       inc VIC2M0X             ; move sprite #0 1 pixel right
+        lda VIC2SPSPCOL
         lsr                     ; poll collisiton sprite #0
         bcs process_collision
         jsr busy_wait
@@ -94,8 +100,8 @@ animate_sprite_0:
 
 process_collision:
         lda #2
-        sta $d020               ; screen border red
-        jmp *                   ; halt
+        sta VIC2BORDER          ; screen border red
+        jmp *
 
 
 .sprites_colors
@@ -106,5 +112,6 @@ process_collision:
 
 .sprite_data:
         !bin "sprites/balloon.bin"
+
 
         !src <common/busy-wait.a>

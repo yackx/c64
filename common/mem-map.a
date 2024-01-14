@@ -8,12 +8,22 @@
 DEF_MEMORY_MAP = 1
 
 !addr {
-    FA = $ba                                    ; Current device number
-    XMAX = $0289                                ; Maximum Keyboard Buffer Size
-    RPTFLA = $028a                              ; Keyboard Repeat Flag
+    FA = $ba                                ; Current device number
+    XMAX = $0289                            ; Maximum Keyboard Buffer Size
+    RPTFLA = $028a                          ; Keyboard Repeat Flag
     RPTFLG = RPTFLA
 
-    ; VIC-II
-    VIC2INTR = $d019                            ; Interrupt register
-    VIC2BORDER = $d020                          ; Border color
+    ; $0400-$07FF, 1024-2047
+    ; Default screen memory
+    DEFAULT_SPRITE_PTR_AREA = $07f8         ; Default area for sprite pointers (8 bytes).
+
+    ; $D000-$D3FF, 53248-54271
+    ; VIC-II video display
+    VIC2M0X = $d000                         ; Sprite 0 X coordinate
+    VIC2M0Y = $d001                         ; Sprite 0 Y coordinate
+    VIC2SPE = $d015                         ; Sprite enabled
+    VIC2INTR = $d019                        ; Interrupt register
+    VIC2SPSPCOL = $d01e                     ; Sprite-sprite collision
+    VIC2BORDER = $d020                      ; Border color
+    VIC2SPCOL0 = $d027                      ; Sprite 0 color
 }
