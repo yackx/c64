@@ -81,6 +81,6 @@ fill_random:
                 inc .page
                 lda .page
                 cmp #$40
-                beq .done
-                jmp .loop
-.done:          rts
+                bne .loop
+
+                rts
