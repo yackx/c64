@@ -11,7 +11,7 @@ In this repository:
 - [Programs](/programs) - Illustrations of basic techniques, [Boring Snake](/programs/snake), [mini demo](/demo)
 - [Documentation](/doc/) - Assemblers, editor code completion, IDE and [Awesome references](/doc/references.md).
 
-Assume **PAL** for all VIC-II routines. Feel free to roam around the repository but **read this page first**.
+Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
 
 ## Prerequisites 💪
 
@@ -34,6 +34,7 @@ At a minimum, keep the following reference handy:
 
 - Memory map
 - Instruction set
+- Kernel tables
 
 See also:
 
