@@ -136,7 +136,7 @@ inc_current:
 
 
 ; Exit the program by returning to the KERNAL.
-done:       rts                         ; to KERNAL 
+done:       rts 
 
 
 first:      !byte 0
@@ -146,7 +146,7 @@ total:      !word 0
 
             ; Align to page boundary for convenience.
             !align $ff, 0, 0
-input:      !bin <aoc/2023/day01/part1/sample.txt>
+input:      !bin <programs/aoc/2023/day01/part1/sample.txt>
             ; Make sure there is on EOL at the end.
             !byte EOL
             ; Add EOF to let the program complete.
