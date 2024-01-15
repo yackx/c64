@@ -24,6 +24,6 @@ main:
 
         !align $ff, 0, 0
 font:
-        !bin <charset/patrickmollohan/zx_spectrum.bin>
+        !bin <programs/charset/patrickmollohan/zx_spectrum.bin>
 
         !src <charset/reloc-charset.a>

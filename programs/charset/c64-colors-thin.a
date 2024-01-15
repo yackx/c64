@@ -25,7 +25,6 @@
                 !src <common/upstart.a>
                 !src <common/pseudo-reg.a>
                 !src <mem/m-mem.a>
-                !src <mem/m-mem.a>
                 !src <common/m-raster.a>
 
                 ; Charset location
