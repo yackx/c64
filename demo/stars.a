@@ -8,6 +8,9 @@
                 !src <common/mem-map.a>
                 !src <common/kernal.a>
 
+                HIRES = $2000
+                HIRES_END = $4000
+
 
 main:
                 lda #%00010000                  ; white pixels on black background
@@ -52,8 +55,8 @@ fill_random:
                 ;lda #$20
                 ;sta fill_random.label
                 
-                ldx #0
-                lda #$20
+                ldx #<HIRES
+                lda #>HIRES
                 sta .page
 .loop:  
                 lda SID3WFOUT               ; obtain RND from SID
@@ -70,12 +73,12 @@ fill_random:
                 lda #0
 .light:
                 .page = * +2
-                sta $2000,x
+                sta HIRES,x                 ; Self-mod
                 inx
                 bne .loop
                 inc .page
                 lda .page
-                cmp #$40
+                cmp #>HIRES_END
                 bne .loop
 
                 rts
