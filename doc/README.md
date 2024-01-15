@@ -5,3 +5,4 @@
 - [Editor code completion](completion.md) - VSCode, vim.
 - [IDE](ide.md)
 - [Awesome references](references.md). ✨
+- [Record an animated GIF from VICE](record.md)
