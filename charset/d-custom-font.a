@@ -1,4 +1,4 @@
-; Demo - Italic character set
+; Demo - Use a custom charset
 
         ;ACME 0.97
         !cpu 6510
