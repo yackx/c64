@@ -7,6 +7,7 @@
 - [Mutliple centered messages](screen-messages) - Print multiple messages directly to screen memory.
 - [Scroll](scroll) - Scroll text horizontally.
 - [SID](sid) - Play a SID music file.
+- [CIA timer](timer-irq) - Change a character on the screen every second.
 - [Raster](raster) - Basic raster interrupt techniques illustrated.
 - [Snake](snake) - Snake game.
 - [HiRes bitmap](hires) - Display a HiRes bitmap including Koala format.
