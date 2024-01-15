@@ -9,5 +9,3 @@
 - [SID](sid) - Play a SID music file.
 - [Raster](raster) - Basic raster interrupt techniques illustrated.
 - [Snake](snake) - Snake game.
-
-![Night sky](stars/stars.png)

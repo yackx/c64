@@ -1,3 +1,3 @@
 # Stars
 
-![Night sky](stars.png)
+![Night sky](stars.gif)
