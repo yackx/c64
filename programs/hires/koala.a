@@ -86,4 +86,4 @@ main:
 ; Drop the 2 first bytes (memory load address)
         * = $2000 - 2
 data:
-        !bin <hires/mountain.kla>
+        !bin <programs/hires/mountain.kla>

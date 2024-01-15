@@ -50,4 +50,4 @@ main:
 
 picture:
         ; Underscore postfix to protect from .gitignore
-        !bin "hires/mountain.prg_"
+        !bin <programs/hires/mountain.prg_>

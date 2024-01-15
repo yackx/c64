@@ -9,3 +9,5 @@
 - [SID](sid) - Play a SID music file.
 - [Raster](raster) - Basic raster interrupt techniques illustrated.
 - [Snake](snake) - Snake game.
+- [HiRes bitmap](hires) - Display a HiRes bitmap including Koala format.
+- 
