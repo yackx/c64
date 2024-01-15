@@ -474,8 +474,8 @@ sprite_hello_x_idx:
             !byte 0
 
 sprite_data:
-            !src "demo/sprite_chicken_lips.a"
-            !src "demo/sprites_hello.a"
+            !src <programs/c64-rules/sprite_chicken_lips.a>
+            !src <programs/c64-rules/sprites_hello.a>
 
 
 ; ---------------------------------------------------------------------------
@@ -525,7 +525,7 @@ marquee:
 ; Cannot be relocated - must be at $1000
             !align $ffff, $1000, $0
 sid_data:
-            !bin "sid/Wasted_All_These_Years.dat", , 2
+            !bin <programs/sid/Wasted_All_These_Years.dat>, , 2
             SID_LEN = * - sid_data
 
 
@@ -540,4 +540,4 @@ sid_data:
 ; Original file contains not so legit characters (file corrupted?).
 ; They were fixed manually.  
             !align $ff, 0, 0
-charset:    !bin "demo/demo_maker_a_fixed.64c", , 1
+charset:    !bin <programs/c64-rules/demo_maker_a_fixed.64c>, , 1
