@@ -5,9 +5,12 @@
 
                 * = $c000
 
+                !src <common/mem-map.a>
+                !src <common/kernal.a>
+
 
 main:
-                lda #%00010000          ; white pixels on black background
+                lda #%00010000                  ; white pixels on black background
                 jsr clear_screen
                 jsr color_screen
                 jsr set_hires
@@ -18,28 +21,28 @@ main:
 
 color_screen:
                 lda #0
-                sta $d020               ; border
-                sta $d021               ; background
+                sta VIC2BORDER
+                sta VIC2B0C                 ; background
                 rts
 
 
 set_hires:
                 lda #$3b
-                sta $d011
+                sta VIC2CR1
                 lda #$08
-                sta $d016
+                sta VIC2CR2
                 lda #$18
-                sta $d018
+                sta VIC2MPTR
                 rts
 
 
 ; https://www.atarimagazines.com/compute/issue72/random_numbers.php
 init_rnd:
-                lda $ffd2               ; maximum frequency value
-                sta $d40e               ; voice 3 frequency low byte
-                sta $d40f               ; voice 3 frequency high byte
-                lda #$80                ; noise waveform, gate bit off
-                sta $d412               ; voice 3 control register
+                lda CHROUT                  ; maximum frequency value
+                sta SID3FR                  ; voice 3 frequency low byte
+                sta SID3FR+1                ; voice 3 frequency high byte
+                lda #$80                    ; noise waveform, gate bit off
+                sta SID3CR                  ; voice 3 control register
                 rts
 
 
@@ -53,7 +56,7 @@ fill_random:
                 lda #$20
                 sta .page
 .loop:  
-                lda $d41b               ; obtain RND from SID
+                lda SID3WFOUT               ; obtain RND from SID
                 cmp #8
                 bcs .no_star
 .star:
