@@ -8,6 +8,7 @@
 DEF_MEMORY_MAP = 1
 
 !addr {
+    R6510 = $01                             ; 6510 On-Chip I/O Port
     FA = $ba                                ; Current device number
     XMAX = $0289                            ; Maximum Keyboard Buffer Size
     RPTFLA = $028a                          ; Keyboard Repeat Flag
@@ -17,6 +18,11 @@ DEF_MEMORY_MAP = 1
     ; $0400-$07FF, 1024-2047
     ; Default screen memory
     DEFAULT_SPRITE_PTR_AREA = $07f8         ; Default area sprite pointers
+
+    ; $D000-$DFFF, 53248-57343
+    ; I/O Area or Character ROM
+    ; depends on the value of bits #0-#2 of the processor port at $0001.
+    CHARROM = $d000                         ; Character ROM
 
     ; $D000-$D3FF, 53248-54271
     ; VIC-II video display

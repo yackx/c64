@@ -3,8 +3,7 @@
 
         !src <common/pseudo-reg.a>
         !src <mem/m-mem.a>
-
-        !addr SRC = $d000
+        !src <common/mem-map.a>
 
 
 ; Copy the character set from ROM to RAM.
@@ -21,14 +20,14 @@ cp_charset_to_ram:
         ldx #$08        ; we loop 8 times (8x255 = 2Kb)
         
         ; Make the CPU see the character ROM
-        lda $01
+        lda R6510
         and #%11111011
-        sta $01
+        sta R6510
 
         ; Char ROM zp vector
-        lda #<SRC
+        lda #<CHARROM
         sta R1
-        lda #>SRC
+        lda #>CHARROM
         sta R2
 
         ldy #0          ; page index
@@ -47,9 +46,9 @@ cp_charset_to_ram:
         bne .loop
         
         ; Switch back to I/O mapped registers again
-        lda $01
+        lda R6510
         ora #%00000100
-        sta $01
+        sta R6510
 
         cli
 
