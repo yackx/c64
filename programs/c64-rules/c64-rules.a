@@ -537,7 +537,8 @@ sid_data:
 ;
 ; Align to page for easy relocation.
 ; .64c file starts with 00. Discard it.
-; Original file contains not so legit characters (file corrupted?).
-; They were fixed manually.  
+;
+; Original file contained not so legit characters (file corrupted?).
+; They were fixed manually.
             !align $ff, 0, 0
 charset:    !bin <programs/c64-rules/demo_maker_a_fixed.64c>, , 1
