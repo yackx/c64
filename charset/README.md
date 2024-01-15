@@ -7,12 +7,13 @@
 
 ## Colors
 
-- [Color table - c64-wiki](https://www.c64-wiki.com/wiki/Color
-)
+- [Color table - c64-wiki](https://www.c64-wiki.com/wiki/Color)
+
 ## PETSCII editors
 
-- [petmate](https://nurpax.github.io/petmate/) (python, opens source)
-- [petscii krissz.hu](http://petscii.krissz.hu/) (online editor)
+- [petmate - nurpax](https://nurpax.github.io/petmate/) (python, open source)
+- [PETSCII editor - krissz.hu](http://petscii.krissz.hu/) (online editor)
+
 ## Charset collections
 
 [patrickmollohan/c64-fonts](https://github.com/patrickmollohan/c64-fonts)

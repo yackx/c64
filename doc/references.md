@@ -31,7 +31,8 @@
 
 ## Tools
 
-- [PETSCII editor](https://petscii.krissz.hu/)
+- [petmate - nurpax](https://nurpax.github.io/petmate/) (python, open source)
+- [PETSCII editor - krissz.hu](http://petscii.krissz.hu/) (online editor)
 - [GoDot](https://codeberg.org/jan0sch/GoDot) - Image processing
 - [ditheridoo](https://github.com/fieserWolF/ditheridoo) - Image editor (JS - React - Electron)
 - [macdraw](https://mcdraw.xyz/) - Image editor
