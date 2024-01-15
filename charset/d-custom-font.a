@@ -2,8 +2,8 @@
 
         ;ACME 0.97
         !cpu 6510
-        * = $1000
     
+        !src <common/upstart.a>
         !src <common/pseudo-reg.a>
         !src <mem/m-mem.a>
 
