@@ -9,7 +9,7 @@
                 !src <common/upstart.a>
                 !src <common/pseudo-reg.a>
                 !src <mem/m-mem.a>
-                !src <mem/m-mem.a>
+                !src <common/kernal.a>
 
                 ; Charset location
                 !addr CHAR_SET_LOC = $3800
@@ -28,10 +28,10 @@
 
 main:
                 ; Clear screen
-                jsr $ff81
+                jsr CINT
 
-                ; Blank charset memory
-                ; Most characters are blank
+                ; Blank charset memory.
+                ; Most characters in the set are blank
                 +fill_pages >CHAR_SET_LOC, 8, 0
 
                 ; Point to custom charset
@@ -39,18 +39,18 @@ main:
                 jsr set_charset_loc
 
                 ; Multicolor mode
-                lda $d016
+                lda VIC2CR2
                 ora #%00010000
-                sta $d016
+                sta VIC2CR2
 
                 ; Multicolor characters
                 lda #BG_COLOR
-                sta $d020
-                sta $d021
+                sta VIC2BORDER
+                sta VIC2B0C
                 lda #MULTI_COLOR_1
-                sta $d022
+                sta VIC2B1C
                 lda #MULTI_COLOR_2
-                sta $d023
+                sta VIC2B2C
 
                 ; Fill color RAM
                 +fill_pages $d8, 4, CHAR_COLOR
@@ -66,14 +66,13 @@ main:
                 clc
                 adc #$30                ; char to PETSCII
 -
-                jsr $ffd2
-
+                jsr CHROUT
                 inx
                 cpx #40 * 2             ; pattern: 2 lines / char
                 bne -
 
                 lda #$0d
-                jsr $ffd2               ; newline
+                jsr CHROUT              ; newline
         
                 iny
                 cpy #NB_OF_CHARS
