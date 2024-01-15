@@ -5,8 +5,11 @@
 
         ;ACME 0.97
         !cpu 6510
+        
         !src <common/pseudo-reg.a>
+        
         * = $c000
+
 
 init:
         sei                     ; turn off interrupts -
