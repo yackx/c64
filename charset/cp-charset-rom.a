@@ -21,6 +21,7 @@ cp_charset_to_ram:
         
         ; Make the CPU see the character ROM
         lda R6510
+        pha
         and #%11111011
         sta R6510
 
@@ -45,9 +46,8 @@ cp_charset_to_ram:
         dex             ; 8 pages reached?
         bne .loop
         
-        ; Switch back to I/O mapped registers again
-        lda R6510
-        ora #%00000100
+        ; Restore original I/O register value
+        pla
         sta R6510
 
         cli
