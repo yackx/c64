@@ -1,11 +1,15 @@
+; @FIXME Not working + purpose unclear
+;
 ; Hires bitmap color demo
 
 
         ;ACME 0.97
         !cpu 6510
+
         * = $0810       ; SYS 2064
         
         PRG_BITMAP = $2002
+
 
 main:
         ; Copy picture to $2000
@@ -51,3 +55,4 @@ main:
 picture:
         ; Underscore postfix to protect from .gitignore
         !bin <programs/hires/mountain.prg_>
+picture_end:
