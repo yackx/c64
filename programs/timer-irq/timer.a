@@ -1,4 +1,4 @@
-; Timer interrupt
+; CIA Timer interrupt
 ;
 ; Change the top-left character on the screen periodically.
 ;
@@ -7,17 +7,23 @@
 
         ;ACME 0.97
         !cpu 6510
+        
         * = $c000
 
-        !addr SCREEN = $0400
+        !src <common/mem-map.a>
+        !src <common/rom.a>
+
+        !addr SCR = $0400
         DELAY = 60
 
+
+; Set CIA #1 Timer B vector
 main:
         sei
         lda #<timer_irq
-        sta $314
+        sta CINV
         lda #>timer_irq
-        sta $315
+        sta CINV+1
         cli
 
         rts
@@ -28,8 +34,8 @@ timer_irq:
         bne +
         lda #DELAY
         sta delay
-        inc SCREEN              ; top-left screen RAM
-+       jmp $ea31               ; KERNAL std int routine
+        inc SCR                             ; top-left char
++       jmp ROM_IRQ_HANDLER                 ; KERNAL std int routine
 
 
 delay:  !byte 60

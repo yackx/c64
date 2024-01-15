@@ -19,4 +19,5 @@ DEF_ROM = 1
     ; CINV_ACTUAL $ea31       = IRQ Interrupt Routine proper
 
     CINV_ACTUAL = $ea31                         ; IRQ Interrupt Routine
+    ROM_IRQ_HANDLER = CINV_ACTUAL
 }

@@ -12,6 +12,7 @@ DEF_MEMORY_MAP = 1
     XMAX = $0289                            ; Maximum Keyboard Buffer Size
     RPTFLA = $028a                          ; Keyboard Repeat Flag
     RPTFLG = RPTFLA
+    CINV = $0314                            ; IRQ interrupt routine vector
 
     ; $0400-$07FF, 1024-2047
     ; Default screen memory
