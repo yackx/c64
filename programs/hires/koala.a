@@ -6,23 +6,11 @@
 
         ;ACME 0.97
         !cpu 6510
+
         * = $1f00       ; SYS 7936 
 
+        !src <mem/m-mem.a>
 
-!macro copy_1000_bytes @src, @dest {
-        ldx #250
--
-        lda @src,x
-        sta @dest,x
-        lda @src+250,x
-        sta @dest+250,x
-        lda @src+500,x
-        sta @dest+500,x
-        lda @src+750,x
-        sta @dest+750,x
-        dex
-        bne -        
-}
 
 main:
         ; Picture alreay located at $2000

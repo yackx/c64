@@ -162,3 +162,24 @@ DEF_m_men = 1
             jmp -
 +
 }
+
+
+; Copy 1000 bytes efficiently.
+;
+; For screen memory, this is faster than copy_bytes_16.
+;
+; USES:     A, X
+!macro copy_1000_bytes @src, @dest {
+            ldx #250
+-
+            lda @src,x
+            sta @dest,x
+            lda @src+250,x
+            sta @dest+250,x
+            lda @src+500,x
+            sta @dest+500,x
+            lda @src+750,x
+            sta @dest+750,x
+            dex
+            bne -        
+}
