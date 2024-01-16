@@ -1,0 +1,35 @@
+; Copy memory pages.
+;
+; IN:       X = source page MSB
+;           Y = destination page MSB
+;           A = number of pages to copy
+; USES:     A, X, Y
+
+; !ifdef DEF_COPY_MEM_PAGES !eof
+; DEF_COPY_MEM_PAGES = 1
+
+            ;ACME 0.97
+            !cpu 6510
+
+
+copy_mem_pages:
+            stx .src
+            sty .dest
+            ldy #0                          ; Index inside page
+            tax                             ; Number of pages to copy
+-
+            .src = *+2                      ; Self modifying
+            lda $0000,y
+
+            .dest = *+2                     ; Self modifying
+            sta $0000,y
+
+            iny
+            bne -
+            dex
+            beq +
+            inc .src
+            inc .dest
+            jmp -
+
++           rts
