@@ -99,18 +99,17 @@ You must set `ACME` env var to the root of the project to allow lib includes lik
 ## Run 🏃‍♀️
 
 ```bash
-# Assemble and package from `many.a` in directory `sprites`
-make TARGET=sprites/many
+# Assemble and package `many.a`
+make TARGET=programs/sprites/many
 # Launch emulator and auto-load
-make TARGET=sprites/many run
+make TARGET=programs/sprites/many run
 ```
 
-Programs in this repository are located at `$c000` by convention. Type `SYS 49152` to run them from BASIC. This is the default address for the `Makefile`. In several instances, depending on its layour, a program may be located at a different address. In that case, add a `START_PC` parameter to match the program's `*=` directive. For instance, if `*=$1000`:
+Programs in this repository are located at `$c000` by convention or benefit from BASIC upstart.
 
-```bash
-make TARGET=charset/custom-font START_PC=0x1000 run
-```
+- If the program contains a Program Counter (PC) directive, for instance `*=$c000`, type `SYS 49152` to run it from BASIC.
+- If the program includes `common/upstart.a`, a [neat trick](common/upstart.a) will cause the asm program to run with `RUN`. Thanks to Vice `-autostart` option, the emulator will automatically load and run the program.
 
-Demos may contain "BASIC upstart", e.g. they start with BASIC code containing a `SYS` call to execute the asm program. In that case, set `START_PC=0x080d D_SKIP_BYTES=14` to skip 14 bytes (12 bytes BASIC + the usual 2 bytes load address).
+Note: the `Makefile` will automatically detect the PC directive and adjust the disassembler command accordingly.
 
 ![C64 rules intro screen](/demo/c64-rules.gif)

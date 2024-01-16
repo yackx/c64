@@ -1,14 +1,23 @@
 ; BASIC upstart
 ;
-; Emit the folllowing BASIC program:
-; 2012 SYS2061
-; to execute your asm code right after.
+; This routine emits the folllowing BASIC program:
 ;
-; When invoking `make`, add the following parameters so that
-; dcc6502 can start at the right place:
+;   2012 SYS2061
 ;
-; `START_PC=0x080d D_SKIP_BYTES=14`
-; to skip 14 bytes (12 bytes BASIC + 2 bytes load address in the file).
+; that will execute the asm code right after this source inclusion.
+;
+; Example:
+;
+;      !src <common/basic-upstart.a>
+;      main:
+;      lda #0
+;      sta $d020
+;      rts
+;
+; To run the program, simply issue the `RUN` command from BASIC.
+; The Makefile configures the emulator to autoload the program at startup,
+; so it will be executed right after `make TARGET=foo/bar run` without
+; further action.
 
         ;ACME 0.97
 
