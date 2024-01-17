@@ -59,6 +59,6 @@ main:
 
 
 .sprite_data:
-        !bin "sprites/balloon.bin"
+        !bin <programs/sprites/balloon.bin>
 
         !src <common/busy-wait.a>

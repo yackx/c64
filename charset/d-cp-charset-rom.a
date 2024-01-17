@@ -12,4 +12,4 @@ main:
             jsr copy_charset_to_ram
             rts
 
-            !src <charset/cp-charset-rom.a>
+            !src <charset/copy-charset-rom.a>

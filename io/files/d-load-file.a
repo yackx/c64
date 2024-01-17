@@ -20,7 +20,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            SCREEN = $0400
+            !addr SCREEN_MEM = $0400
             FILE_HANDLER = 2
             DEVICE = 8
 
@@ -30,9 +30,9 @@
 
 main:       
             ; Load the file to the screen memory
-            lda #<SCREEN
+            lda #<SCREEN_MEM
             sta R1
-            lda #>SCREEN
+            lda #>SCREEN_MEM
             sta R2
             lda #FILE_HANDLER
             sta R3

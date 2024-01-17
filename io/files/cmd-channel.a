@@ -2,14 +2,12 @@
 ;
 ; See also:
 ; https://retrocomputing.stackexchange.com/questions/27826/sending-dos-commands-in-assembly-on-my-c64
-;
-; @TODO Clear error message buffer before starting
-; @TODO Make drive number a parameter
 
             ;ACME 0.97
             !cpu 6510
 
             !src <common/registers.a>
+            !src <common/pseudo-reg.a>
             !src <common/kernal.a>
             !src <common/mem-map.a>
 

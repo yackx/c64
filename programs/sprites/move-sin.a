@@ -64,7 +64,7 @@ move:
         !src <common/busy-wait.a>
 
 sprite_data:
-        !bin "sprites/balloon.bin"
+        !bin <programs/sprites/balloon.bin>
 
         !align $ff, 0, 0
 y_pos:

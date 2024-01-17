@@ -137,6 +137,6 @@ move_sprite_x:
         !byte 1, 2, 4, 8, 16, 32, 64, 128
 
 .sprite_data:
-        !bin "sprites/balloon.bin"
+        !bin <programs/sprites/balloon.bin>
 
         !src <common/busy-wait.a>

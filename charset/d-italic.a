@@ -20,7 +20,7 @@ main:
         ; Char ROM to RAM
         +push_r3
         +push_r4
-        jsr cp_charset_to_ram
+        jsr copy_charset_to_ram
 
         ; Point to charset
         lda #CHAR_PTR_BITMASK
@@ -33,6 +33,6 @@ main:
 
         rts
 
-        !src <charset/cp-charset-rom.a>
+        !src <charset/copy-charset-rom.a>
         !src <charset/reloc-charset.a>
         !src <charset/italic.a>
