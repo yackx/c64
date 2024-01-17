@@ -14,9 +14,9 @@
         !cpu 6510
         * = $c000
 
-        !src <common/math.a>
-        !src <common/pseudo-reg.a>
-        !src <mem/m-mem.a>
+        !src <lib/misc/math.a>
+        !src <lib/registers/pseudo-registers.a>
+        !src <lib/mem/m-mem.a>
 
         DELAY = 128*4
 
@@ -61,7 +61,7 @@ move:
         jmp -
 
 
-        !src <common/busy-wait.a>
+        !src <lib/misc/busy-wait.a>
 
 sprite_data:
         !bin <programs/sprites/balloon.bin>

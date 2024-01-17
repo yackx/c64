@@ -5,10 +5,10 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <common/upstart.a>
-            !src <common/pseudo-reg.a>
-            !src <common/registers.a>
-            !src <common/m-strout.a>
+            !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/registers/m-registers.a>
+            !src <lib/strings/m-strout.a>
 
             !addr SCREEN = $0400
 
@@ -108,7 +108,7 @@ s_info2:    !byte 14, 5, 18
 s_start:    !byte 13, 9, 22
             !pet "Press space to start", 0
 
-            !src <common/strout.a>
+            !src <lib/strings/strout.a>
 
 
 ; ===========================================================================
@@ -123,7 +123,7 @@ main_scr:
             jsr set_timer
             jmp *
 
-            !src <rand/rnd-sid.a>
+            !src <lib/random/rnd-sid.a>
 
 
 ; ---------------------------------------------------------------------------

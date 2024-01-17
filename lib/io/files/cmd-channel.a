@@ -1,0 +1,117 @@
+;  Operations linked to the disk command channel.
+;
+; See also:
+; https://retrocomputing.stackexchange.com/questions/27826/sending-dos-commands-in-assembly-on-my-c64
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/m-registers.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/layout/kernal.a>
+            !src <lib/layout/main.a>
+
+
+; Read and store the status message from the disk drive.
+;
+; IN:       R1, R2 = address of buffer to store the message
+;           X = drive number
+;
+; USES:     A, X, Y
+read_disk_status_msg:
+            jsr open_15_d_15
+            jsr read_store_status
+            jsr close_15
+            rts
+
+
+; Send the init command to the disk drive.
+;
+; IN:       X = drive number
+; USES:     A, X, Y
+init_disk:
+            jsr open_15_d_15
+            jsr send_init_cmd
+            jsr close_15
+            rts
+
+
+; Open the disk command channel.
+;
+; OPEN 15,8,15
+;
+; IN:       X = drive number
+; USES:     A, X, Y
+open_15_d_15:
+            +push_x                         ; Save drive number
+
+            lda #0
+            tax
+            tay
+            jsr SETNAM
+
+            +pull_x
+            lda #15
+            tay
+            jsr SETLFS
+            
+            jsr OPEN
+            
+            rts
+
+
+; Send the init command to the disk drive.
+;
+; File handler 15 must be opened and closed by the caller.
+;
+; This function does the functional equivalent of:
+; PRINT#15,"I"
+;
+; USES:     A, X, Y
+send_init_cmd:
+            ldx #15
+            jsr CHKOUT
+            lda #'I'
+            jsr CHROUT
+            lda #$0d
+            jsr CHROUT
+            rts
+
+
+; Read and store the status message from the disk drive.
+;
+; File handler 15 must be opened and closed by the caller.
+;
+; IN:       R1, R2 = address of buffer to store the message
+;           X = drive number
+;
+; USES:     A, X, Y
+read_store_status:
+            lda R1
+            sta .target
+            lda R2
+            sta .target+1
+
+            ldx #15
+            jsr CHKIN
+            ldx #0
+-           jsr READST
+            bne +
+            jsr CHRIN
+            .target = * + 1   
+            sta $ffff,x
+            inx
+            bne -
++           rts
+
+
+; Close the disk command channel.
+;
+; CLOSE 15
+;
+; USES:     A, X, Y
+close_15:
+            jsr CLRCHN
+            lda #15
+            jsr CLOSE
+            rts

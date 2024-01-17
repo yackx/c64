@@ -1,0 +1,41 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/pseudo-registers.a>
+
+
+; Print a color message at a given position
+;
+; USES:     A, X, Y, R1, R2
+!macro m_print_color_msg_at @line, @col, @color, @msg_addr {
+            ldx @line
+            ldy @col
+            lda #<@msg_addr
+            sta R1
+            lda #>@msg_addr
+            sta R2
+            lda @color
+            jsr print_color_msg_at
+}
+
+
+; Print a color message at a given position
+;
+; IN:       @struct_addr
+;           index:
+;           0 = line
+;           1 = col
+;           2 = color
+;           3 = msg
+;
+; USES:     A, X, Y, R1, R2
+!macro m_print_color_msg_struct_at @struct_addr {
+            ldx @struct_addr
+            ldy @struct_addr+1
+            lda #<@struct_addr+3
+            sta R1
+            lda #>@struct_addr+3
+            sta R2
+            lda @struct_addr+2
+            jsr print_color_msg_at
+}

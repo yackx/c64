@@ -1,0 +1,30 @@
+; Demo - Read disk status message.
+;
+; You may first simulate an error by loading a non-existent file
+; or by accessing a non-existent drive.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/layout/kernal.a>
+            !src <lib/layout/main.a>
+            !src <lib/strings/m-strout.a>
+
+            * = $c000
+
+main:
+            lda #<status_msg
+            sta R1
+            lda #>status_msg
+            sta R2
+            ldx #8
+            jsr read_disk_status_msg
+            +m_strout status_msg
+            rts
+
+status_msg: !fill 64, 0
+
+            !src <lib/io/files/cmd-channel.a>
+            !src <lib/strings/strout.a>
+

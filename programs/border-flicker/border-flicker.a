@@ -3,8 +3,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <common/mem-map.a>
-            !src <common/upstart.a>
+            !src <lib/layout/main.a>
+            !src <lib/misc/upstart.a>
 
 main:
             inc VIC2BORDER                  ; Next border color

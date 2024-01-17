@@ -6,7 +6,7 @@
         !cpu 6510
         * = $c000
         
-        !src <mem/m-mem.a>
+        !src <lib/mem/m-mem.a>
 
 ; sprite pointers (8 bytes)
 ; = start of text screen RAM + 1016

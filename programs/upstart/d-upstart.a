@@ -4,8 +4,8 @@
 
         ;ACME 0.97
         !cpu 6510
-        !src <common/upstart.a>
-        !src <common/pseudo-reg.a>
+        !src <lib/misc/upstart.a>
+        !src <lib/registers/pseudo-registers.a>
 
 main:
         lda #<.hello
@@ -17,4 +17,4 @@ main:
 
 .hello  !pet "hello basic upstart", 13, 0
 
-        !src <common/strout.a>
+        !src <lib/strings/strout.a>

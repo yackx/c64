@@ -14,7 +14,7 @@
         !cpu 6510
         * = $0810
 
-        !src <common/pseudo-reg.a>
+        !src <lib/registers/pseudo-registers.a>
 
         ; current scroll register mask (bits #2 to #0)
         !addr ZP_SCROLL_COUNT = $2a

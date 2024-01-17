@@ -54,12 +54,12 @@
             ;ACME 0.97
             !cpu 6510
         
-            !src <common/upstart.a>
-            !src <common/pseudo-reg.a>
-            !src <common/m-print-clr-msg-at.a>
-            !src <common/math.a>
-            !src <common/m-raster.a>
-            !src <mem/m-mem.a>
+            !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/strings/m-print-color-msg-xy.a>
+            !src <lib/misc/math.a>
+            !src <lib/raster/m-raster.a>
+            !src <lib/mem/m-mem.a>
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
@@ -151,7 +151,7 @@ init_charset:
 
             rts
 
-            !src <charset/reloc-charset.a>
+            !src <lib/charset/reloc-charset.a>
 
 !macro print_fragment {
 -           jsr $ffd2

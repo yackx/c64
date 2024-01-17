@@ -10,7 +10,7 @@ from typing import IO, Optional
 The directeive is either:
 - * = $xxxx
 - *=$xxxx
-- Inclusion of common/upstart.a
+- Inclusion of upstart.a
 
 The PC will be returned as a string with 0x prefix, e.g. 0xc000.
 
@@ -21,7 +21,7 @@ def detect_start_pc_directive(f: IO) -> Optional[str]:
     content = f.read()
 
     # Look for upstart.a in the file content
-    if 'common/upstart.a' in content:
+    if 'lib/misc/upstart.a' in content:
         return '0x080d'
 
     # Find a line containing * = xxxx

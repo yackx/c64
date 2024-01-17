@@ -4,7 +4,7 @@
 
         ;ACME 0.97
         !cpu 6510
-        !src <common/m-raster.a>
+        !src <lib/raster/m-raster.a>
         * = $c000
 
         !addr SCREEN = $0400

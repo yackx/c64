@@ -23,11 +23,11 @@
                 ;ACME 0.97
                 !cpu 6510
 
-                !src <common/upstart.a>
-                !src <common/pseudo-reg.a>
-                !src <mem/m-mem.a>
-                !src <mem/m-mem.a>
-                !src <common/m-raster.a>
+                !src <lib/misc/upstart.a>
+                !src <lib/registers/pseudo-registers.a>
+                !src <lib/mem/m-mem.a>
+                !src <lib/mem/m-mem.a>
+                !src <lib/raster/m-raster.a>
 
                 ; Charset location
                 !addr CHAR_SET_LOC = $3800
@@ -163,4 +163,4 @@ stripe_colors:  !byte 2, 8
                 !byte 7, 5
                 !byte 14
 
-                !src <charset/reloc-charset.a>
+                !src <lib/charset/reloc-charset.a>

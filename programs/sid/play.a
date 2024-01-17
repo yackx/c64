@@ -6,10 +6,10 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <common/upstart.a>
-            !src <common/m-raster.a>
-            !src <common/mem-map.a>
-            !src <common/rom.a>
+            !src <lib/misc/upstart.a>
+            !src <lib/raster/m-raster.a>
+            !src <lib/layout/main.a>
+            !src <lib/layout/rom.a>
 
 
 main:

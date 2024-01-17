@@ -6,10 +6,10 @@
 
 In this repository:
 
-- Reusable routines and macros written in ACME cross-assembler
-- Sample code (routines in action)
-- [Programs](/programs) - Illustrations of basic techniques, [Boring Snake](/programs/snake), [mini demo](/demo)
-- [Documentation](/doc/) - Assemblers, editor code completion, IDE and [Awesome references](/doc/references.md).
+- [lib](/lib/) - Reusable routines and macros written for ACME cross-assembler.
+- [lib-demo](/lib-demo/) - Sample code (routines in action)
+- [programs](/programs) - Illustrations of basic techniques, [Boring Snake](/programs/snake), [c64 rules](/programs/c64-rules/), one part in one day of [Advent of Code](/programs/aoc/) and minor experiments.
+- [doc](/doc/) - [Addressing modes](/doc/addressing_modes.txt) summary, assemblers, editor code completion, IDE and [Awesome references](/doc/references.md).
 
 Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
 
@@ -43,7 +43,7 @@ See also:
 
 ## Toolchain ⛓️
 
-You need to install the following tools:
+To use this repository, install the following tools:
 
 - [ACME](https://github.com/meonwax/acme) - Cross-platform assembler.
 - [VICE](https://vice-emu.sourceforge.io/) - Multi-platform emulator for C64 and other Commodore products.
@@ -58,14 +58,14 @@ You can use any editor of your liking. `vim` and Visual Studio Code have plugins
 VICE ships with utilities that can be launched from the command line:
 
 - `c1541` disk drive utility
-- `petcat` ASCII/PETSCII converter
+- `petcat` ASCII/PETSCII converter (depending on the version)
 - `x64sc` to launch the emulator itself
 
 ## (No) hardware ⌨️
 
 Nothing beats the feel of real hardware, but emulators are certainly convenient.
 
-Deploying programs to an actual C64 (or anything close like a FPGA) is an option, but for the sake of our mental sanity, we will target and work with an emulator, a macro assembler from this era and a modern editor.
+Deploying programs to an actual C64 (or anything close like a FPGA) is an option, but convenience, we will target and work with an emulator, a macro assembler from this era and a modern editor.
 
 ## Setup 🛠️
 
@@ -86,7 +86,7 @@ export DCC6502=dcc6502
 export PATH=`pwd`:$PATH
 ```
 
-You must set `ACME` env var to the root of the project to allow lib includes like `<common/addr.a>`.
+You must set `ACME` environment variable to the root of this project to allow lib include directive to work.
 
 > **NOTE**
 > If you store `export` statements in a file, remember to `source` it, not to run it.

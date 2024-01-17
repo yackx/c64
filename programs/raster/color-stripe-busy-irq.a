@@ -4,7 +4,7 @@
 
         ;ACME 0.97
         !cpu 6510
-        !src <common/registers.a>
+        !src <lib/registers/m-registers.a>
         * = $c000
 
         !addr .LINE = 98        ; interrupt shall occur at that line

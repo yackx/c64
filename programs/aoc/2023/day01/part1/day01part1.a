@@ -8,8 +8,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <common/upstart.a>
-            !src <common/pseudo-reg.a>
+            !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
 
             !addr CURRENT_VECT = R1
             !addr ONE_BEFORE_INPUT = input-1

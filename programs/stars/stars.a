@@ -5,8 +5,8 @@
 
                 * = $c000
 
-                !src <common/mem-map.a>
-                !src <common/kernal.a>
+                !src <lib/layout/main.a>
+                !src <lib/layout/kernal.a>
 
                 HIRES = $2000
                 HIRES_END = $4000
@@ -84,4 +84,4 @@ fill_random:
                 rts
 
 
-                !src <mem/clear-scr.a>
+                !src <lib/screen/clear-screen.a>

@@ -1,0 +1,50 @@
+; SID random number generator seed demo
+;
+; Poor distribution but fast
+
+
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/strings/m-strout.a>
+            !src <lib/strings/m-print.a>
+
+
+main:
+            jsr $ff81                   ; clrscr
+
+            ; Press key to start.
+            ; This introduces entropy for RNPG.
+            +m_strout .msg_start
+-           jsr $ff9f                   ; SCANKEY
+            jsr $ffe4                   ; GETIN
+            beq -                       ; wait for key
+
+            ; Init SID random number generator
+            jsr init_rnd_sid
+
+            ; Print several SID voice #3 wave form values
+            +m_strout .msg_d41b
+            ldy #$ff
+-
+            lda $d41b                   ; Get random number
+            jsr print_hex
+            lda #' '
+            jsr $ffd2                   ; CHROUT
+            
+            dey
+            bne -
+            
+            rts
+
+
+            !src <lib/baseconv/print-hex.a>
+            !src <lib/strings/strout.a>
+            !src <lib/random/rnd-sid.a>
+
+
+.msg_start  !pet "press any key to start", 13, 0
+.msg_d41b   !pet "$d41b:", 13, 0

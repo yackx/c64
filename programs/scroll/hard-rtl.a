@@ -4,7 +4,7 @@
         !cpu 6510
         * = $c000
 
-        !src <common/pseudo-reg.a>
+        !src <lib/registers/pseudo-registers.a>
 
         SCREEN = $0400
         LINE = 1
@@ -52,4 +52,4 @@ marquee:
         !fill 10, $20
         !byte 0
 
-        !src <common/busy-wait.a>
+        !src <lib/misc/busy-wait.a>

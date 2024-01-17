@@ -9,7 +9,7 @@
 
         * = $1f00       ; SYS 7936 
 
-        !src <mem/m-mem.a>
+        !src <lib/mem/m-mem.a>
 
 
 main:

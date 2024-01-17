@@ -8,10 +8,10 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <common/upstart.a>
-            !src <common/pseudo-reg.a>
-            !src <common/registers.a>
-            !src <common/kernal.a>
+            !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/registers/m-registers.a>
+            !src <lib/layout/kernal.a>
 
 
 main:   

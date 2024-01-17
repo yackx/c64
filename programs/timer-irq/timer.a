@@ -10,8 +10,8 @@
         
         * = $c000
 
-        !src <common/mem-map.a>
-        !src <common/rom.a>
+        !src <lib/layout/main.a>
+        !src <lib/layout/rom.a>
 
         !addr SCR = $0400
         DELAY = 60

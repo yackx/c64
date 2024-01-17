@@ -1,0 +1,27 @@
+            !cpu 6510
+            !src <lib/misc/upstart.a>
+            !src <lib/strings/m-print-color-msg-xy.a>
+
+
+main:
+            jsr $ff81
+
+            lda #0
+            sta $d020
+            sta $d021
+
+            +m_print_color_msg_at .text1, .text1+1, .text1+2, .text1+3
+            +m_print_color_msg_struct_at .text2
+            +m_print_color_msg_struct_at .text3
+
+            rts
+
+            !src <lib/strings/print-color-msg-xy.a>
+
+.text1:     !byte 2, 0, 1
+            !pet "message using explicit params macro", 0
+.text2:     !byte 4, 0, 7
+            !pet "message using struct macro", 0
+.text3:     !byte 8, (44-.textx+.text3)/2, 4
+            !pet "centered with acme arithmetic", 0
+.textx

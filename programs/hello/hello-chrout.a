@@ -3,7 +3,7 @@
             !cpu 6510
             * = $c000
 
-            !src <common/kernal.a>
+            !src <lib/layout/kernal.a>
 
 main:
             ldx #0

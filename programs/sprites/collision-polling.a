@@ -15,11 +15,11 @@
         !cpu 6510
         * = $c000
 
-        !src <common/pseudo-reg.a>
-        !src <common/registers.a>
-        !src <common/mem-map.a>
-        !src <common/kernal.a>
-        !src <mem/m-mem.a>
+        !src <lib/registers/pseudo-registers.a>
+        !src <lib/registers/m-registers.a>
+        !src <lib/layout/main.a>
+        !src <lib/layout/kernal.a>
+        !src <lib/mem/m-mem.a>
 
         SPRITE_COUNT = 2
         DELAY_16 = 255*2        ; busy wait delay
@@ -114,4 +114,4 @@ process_collision:
         !bin <programs/sprites/balloon.bin>
 
 
-        !src <common/busy-wait.a>
+        !src <lib/misc/busy-wait.a>
