@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 set -e
+make clean
 for f in **/*.(a|asm); do
     if ! grep -q -E "upstart\.a|\* =" $f; then
         # No PC directory or no BASIC upstart found.
