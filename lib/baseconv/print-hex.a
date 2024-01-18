@@ -1,6 +1,8 @@
             ;ACME 0.97
             !cpu 6510
 
+            !src <lib/layout/kernal.a>
+
 
 ; Print the value in A in hexadecimal.
 ;
@@ -10,21 +12,21 @@ print_hex:
             pha
 
             ; HI nibble
-            and #%11110000
+            and #$f0
             lsr
             lsr
             lsr
             lsr
             tax
             lda .hex,x
-            jsr $ffd2
+            jsr CHROUT
 
             ; LO nibble
             pla
-            and #%00001111
+            and #$0f
             tax
             lda .hex,x
-            jsr $ffd2
+            jsr CHROUT
 
             rts
 
