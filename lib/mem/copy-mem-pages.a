@@ -5,8 +5,6 @@
 ;           A = number of pages to copy
 ; USES:     A, X, Y
 
-; !ifdef DEF_COPY_MEM_PAGES !eof
-; DEF_COPY_MEM_PAGES = 1
 
             ;ACME 0.97
             !cpu 6510
