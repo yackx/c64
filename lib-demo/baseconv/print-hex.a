@@ -2,8 +2,8 @@
 
             ;ACME 0.97
             !cpu 6510
-            * = $c000
 
+            !src <lib/misc/upstart.a>
             !src <lib/strings/m-print.a>
 
 
