@@ -8,7 +8,7 @@ rnd_range_0_24:
 .gen        lda $d41b
             cmp #249
             bcs .gen
-            
+
             tax
             lda .values,x
 
@@ -16,7 +16,7 @@ rnd_range_0_24:
 
 
 .values     !for .x, 0, 10 {
-                !for .y, 0, 24 {
-                    !byte .y
-                }    
+            !for .y, 0, 24 {
+            !byte .y
+            }
             }

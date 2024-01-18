@@ -3,93 +3,93 @@
 ; Use a sample character set to create multicolor patterns
 ; (bricks, rings, etc.)
 
-                ;ACME 0.97
-                !cpu 6510
-        
-                !src <lib/misc/upstart.a>
-                !src <lib/registers/pseudo-registers.a>
-                !src <lib/mem/m-mem.a>
-                !src <lib/layout/kernal.a>
+                                            ;ACME 0.97
+            !cpu 6510
 
-                ; Charset location
-                !addr CHAR_SET_LOC = $3800
-                ; Charset offset '0'
-                IDX_OFFSET = $30 * 8
-                ; Custom charset start address
-                !addr CUST_CHARS = CHAR_SET_LOC + IDX_OFFSET
-                ; Mask for setting charset (depends on CHAR_SET_LOC)
-                CHAR_PTR_BITMASK = $0e
+            !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/mem/m-mem.a>
+            !src <lib/layout/kernal.a>
 
-                BG_COLOR = 0
-                CHAR_COLOR = 2
-                MULTI_COLOR_1 =  12
-                MULTI_COLOR_2 = 15
+                                            ; Charset location
+            !addr CHAR_SET_LOC = $3800
+                                            ; Charset offset '0'
+            IDX_OFFSET = $30 * 8
+                                            ; Custom charset start address
+            !addr CUST_CHARS = CHAR_SET_LOC + IDX_OFFSET
+                                            ; Mask for setting charset (depends on CHAR_SET_LOC)
+            CHAR_PTR_BITMASK = $0e
+
+            BG_COLOR = 0
+            CHAR_COLOR = 2
+            MULTI_COLOR_1 =  12
+            MULTI_COLOR_2 = 15
 
 
 main:
-                ; Clear screen
-                jsr CINT
+                                            ; Clear screen
+            jsr CINT
 
-                ; Blank charset memory.
-                ; Most characters in the set are blank
-                +fill_pages >CHAR_SET_LOC, 8, 0
+                                            ; Blank charset memory.
+                                            ; Most characters in the set are blank
+            +fill_pages >CHAR_SET_LOC, 8, 0
 
-                ; Point to custom charset
-                lda #CHAR_PTR_BITMASK
-                jsr set_charset_loc
+                                            ; Point to custom charset
+            lda #CHAR_PTR_BITMASK
+            jsr set_charset_loc
 
-                ; Multicolor mode
-                lda VIC2CR2
-                ora #%00010000
-                sta VIC2CR2
+                                            ; Multicolor mode
+            lda VIC2CR2
+            ora #%00010000
+            sta VIC2CR2
 
-                ; Multicolor characters
-                lda #BG_COLOR
-                sta VIC2BORDER
-                sta VIC2B0C
-                lda #MULTI_COLOR_1
-                sta VIC2B1C
-                lda #MULTI_COLOR_2
-                sta VIC2B2C
+                                            ; Multicolor characters
+            lda #BG_COLOR
+            sta VIC2BORDER
+            sta VIC2B0C
+            lda #MULTI_COLOR_1
+            sta VIC2B1C
+            lda #MULTI_COLOR_2
+            sta VIC2B2C
 
-                ; Fill color RAM
-                +fill_pages $d8, 4, CHAR_COLOR
+                                            ; Fill color RAM
+            +fill_pages $d8, 4, CHAR_COLOR
 
-                ; Copy custom characters
-                +copy_bytes_8 characters, CUST_CHARS, NB_OF_CHARS*8
+                                            ; Copy custom characters
+            +copy_bytes_8 characters, CUST_CHARS, NB_OF_CHARS*8
 
-                ; Fill screen with patterns
-                ldy #0                  ; char
+                                            ; Fill screen with patterns
+            ldy #0                          ; char
 --
-                ldx #0                  ; column
-                tya
-                clc
-                adc #$30                ; char to PETSCII
+            ldx #0                          ; column
+            tya
+            clc
+            adc #$30                        ; char to PETSCII
 -
-                jsr CHROUT
-                inx
-                cpx #40 * 2             ; pattern: 2 lines / char
-                bne -
+            jsr CHROUT
+            inx
+            cpx #40 * 2                     ; pattern: 2 lines / char
+            bne -
 
-                lda #$0d
-                jsr CHROUT              ; newline
-        
-                iny
-                cpy #NB_OF_CHARS
-                bne --
+            lda #$0d
+            jsr CHROUT                      ; newline
 
-                rts
+            iny
+            cpy #NB_OF_CHARS
+            bne --
+
+            rts
 
 
-                NB_OF_CHARS = 8
+            NB_OF_CHARS = 8
 characters:
-.wall_1:        !byte 127,127,85,247,247,85,127,127
-.wall_2:        !byte 85,127,127,85,247,247,85,127
-.wall_3:        !byte 127,85,247,247,85,127,127,85
-.ring:          !byte 20,130,65,65,65,65,130,20
-.wall_a:        !byte 238,170,187,170,238,170,187,170
-.wall_b:        !byte 238,170,187,170,238,170,187,170
-.weird:         !byte 170,130,85,125,125,85,130,170
-.diag:          !byte 108,27,198,177,108,27,198,177
+.wall_1:    !byte 127,127,85,247,247,85,127,127
+.wall_2:    !byte 85,127,127,85,247,247,85,127
+.wall_3:    !byte 127,85,247,247,85,127,127,85
+.ring:      !byte 20,130,65,65,65,65,130,20
+.wall_a:    !byte 238,170,187,170,238,170,187,170
+.wall_b:    !byte 238,170,187,170,238,170,187,170
+.weird:     !byte 170,130,85,125,125,85,130,170
+.diag:      !byte 108,27,198,177,108,27,198,177
 
-                !src <lib/charset/reloc-charset.a>
+            !src <lib/charset/reloc-charset.a>

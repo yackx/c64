@@ -28,7 +28,7 @@
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
 
-main:       
+main:
             ; Load the file to the screen memory
             lda #<SCREEN_MEM
             sta R1
@@ -46,8 +46,8 @@ main:
             bcs .error
             rts
 
-.error:     
-            ; Store error code (A will be used)  
+.error:
+            ; Store error code (A will be used)
             sta error_code
 
 .print_error_code:
@@ -82,21 +82,21 @@ main:
             lda msg_table+2,x
             sta R2
             jsr strout                      ; Print error message
-            
+
             rts
 
 
-filename:   !pet "lorem la,u"              ; "LOREM LA.USR" on disk
+filename:   !pet "lorem la,u"               ; "LOREM LA.USR" on disk
 filename_end:
 
 error_code: !byte 0
 error_msg:  !byte $0d
             !pet "error ", 0
 
-msg_table:  
+msg_table:
             ; Each entry is 3 bytes:
             ; 1st byte: error code
-            ; 2nd + 3rd bytes: pointer to error message        
+            ; 2nd + 3rd bytes: pointer to error message
             !byte 4
             !word msg_fnf
             !byte 5

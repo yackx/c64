@@ -23,7 +23,7 @@ byte_to_bcd:
             lda #0
             sta BCD+0
             sta BCD+1
-            ldx #8                  ; number of bits
+            ldx #8                          ; number of bits
 -           asl BINARY
             lda BCD+0
             adc BCD+0
@@ -44,23 +44,23 @@ byte_to_bcd:
 ;
 ; IN       BCD
 print_bcd:
-            lda BCD+1               ; $02 => "2" (no need for mask or shift)
+            lda BCD+1                       ; $02 => "2" (no need for mask or shift)
             clc
             adc #$30
             jsr $ffd2
 
-            lda BCD+0               ; $34 => "3"
-            and #%11110000          ; $34 = %00110100 => %00110000
-            ror                     ; shift right 4 bits
+            lda BCD+0                       ; $34 => "3"
+            and #%11110000                  ; $34 = %00110100 => %00110000
+            ror                             ; shift right 4 bits
             ror
             ror
             ror
             clc
             adc #$30
             jsr $ffd2
-            
-            lda BCD+0               ; $34 => "4"
-            and #%00001111          ; $34 = %00110100 => %00000100
+
+            lda BCD+0                       ; $34 => "4"
+            and #%00001111                  ; $34 = %00110100 => %00000100
             clc
             adc #$30
             jsr $ffd2
@@ -68,5 +68,5 @@ print_bcd:
             rts
 
 
-BINARY:     !byte 234           ; example value
-BCD:        !fill 0, 2          ; will be $34 $02 after conversion
+BINARY:     !byte 234                       ; example value
+BCD:        !fill 0, 2                      ; will be $34 $02 after conversion

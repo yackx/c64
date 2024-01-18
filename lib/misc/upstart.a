@@ -19,10 +19,10 @@
 ; so it will be executed right after `make TARGET=foo/bar run` without
 ; further action.
 
-        ;ACME 0.97
+            ;ACME 0.97
 
-        !cpu 6510
-	* = $0801
-        ; 2012 SYS2061
-        !byte $0b, $08, $dc, $07, $9e, $32, $30, $36
-        !byte $31, 00, 00, 00
+            !cpu 6510
+            * = $0801
+            ; 2012 SYS2061
+            !byte $0b, $08, $dc, $07, $9e, $32, $30, $36
+            !byte $31, 00, 00, 00

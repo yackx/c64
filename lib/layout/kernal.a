@@ -8,28 +8,28 @@
 DEF_MEM_ADDR_KERNAL = 1
 
 !addr {
-    ; Screen
-    CINT = $ff81                            ; Clear screen
-    PLOT = $fff0                            ; Read/set cursor position
-    SCREEN = $ffed                          ; Read the screen dimensions (columns, rows)
-    SETMSG = $ff90                          ; Configure output of KERNAL messages
+            ; Screen
+            CINT = $ff81                    ; Clear screen
+            PLOT = $fff0                    ; Read/set cursor position
+            SCREEN = $ffed                  ; Read the screen dimensions (columns, rows)
+            SETMSG = $ff90                  ; Configure output of KERNAL messages
 
-    ; Keyboard
-    SCNKEY = $ff9f                          ; Scan keyboard
-    GETIN = $ffe4                           ; Get a character from keyboard
-    
-    ; File
-    SETLFS = $ffba                          ; Set logical file number
-    SETNAM = $ffbd                          ; Set filename for LOAD/SAVE
-    OPEN = $ffc0                            ; Open a file
-    LOAD = $ffd5                            ; Load or verify a file
-    CLOSE = $ffc3                           ; Close a file
-    CLRCHN = $ffcc                          ; Clear I/O channels
+            ; Keyboard
+            SCNKEY = $ff9f                  ; Scan keyboard
+            GETIN = $ffe4                   ; Get a character from keyboard
 
-    ; I/O
-    CHKIN = $ffc6                           ; Open a channel for input
-    CHKOUT = $ffc9                          ; Open a channel for output
-    READST = $ffb7                          ; Read I/O status byte
-    CHRIN = $ffcf                           ; Read a byte from input channel
-    CHROUT = $ffd2                          ; Write a byte to output channel
+            ; File
+            SETLFS = $ffba                  ; Set logical file number
+            SETNAM = $ffbd                  ; Set filename for LOAD/SAVE
+            OPEN = $ffc0                    ; Open a file
+            LOAD = $ffd5                    ; Load or verify a file
+            CLOSE = $ffc3                   ; Close a file
+            CLRCHN = $ffcc                  ; Clear I/O channels
+
+            ; I/O
+            CHKIN = $ffc6                   ; Open a channel for input
+            CHKOUT = $ffc9                  ; Open a channel for output
+            READST = $ffb7                  ; Read I/O status byte
+            CHRIN = $ffcf                   ; Read a byte from input channel
+            CHROUT = $ffd2                  ; Write a byte to output channel
 }

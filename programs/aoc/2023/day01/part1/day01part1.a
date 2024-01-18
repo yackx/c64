@@ -51,7 +51,7 @@ find_first:
             bcs .found_f
             jmp find_first
 .found_f:   sta first
-            sta last                    ; In case there is only one digit.
+            sta last                        ; In case there is only one digit.
             jmp find_last
 
 
@@ -67,21 +67,21 @@ find_last:
             bcs .found_dig
             jmp find_last
 .found_dig: sta last
-            jmp find_last               ; Look for more.
+            jmp find_last                   ; Look for more.
 .eol:       bcs update_total
-            jmp find_first              ; Next line.
+            jmp find_first                  ; Next line.
 
 
 ; Update the total.
 ;
 ; total = total + first*10 + last
-; 
+;
 ; We multiply by 10 by shifting left 3 times (x8)
 ; and then adding the original value twice.
 ;
 ; At the end, we process the next line - back to find_first.
 update_total:
-            lda first                   ; "char to int"
+            lda first                       ; "char to int"
             sec
             sbc #'0'
             sta first
@@ -91,7 +91,7 @@ update_total:
             sbc #'0'
             sta last
 
-            lda first                   ; first = first * 10
+            lda first                       ; first = first * 10
             asl
             asl
             asl
@@ -125,7 +125,7 @@ is_digit:
             rts
 
 
-; Increment the current vector. 
+; Increment the current vector.
 inc_current:
             iny
             bne +
@@ -136,7 +136,7 @@ inc_current:
 
 
 ; Exit the program by returning to the KERNAL.
-done:       rts 
+done:       rts
 
 
 first:      !byte 0

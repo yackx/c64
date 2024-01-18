@@ -2,68 +2,68 @@
 ;
 ; We use KERNAL CHROUT and current color to print characters.
 
-        ;ACME 0.97
-        !cpu 6510
-        * = $c000
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
 
 main:
-        ; Clear screen
-        jsr $ff81
+            ; Clear screen
+            jsr $ff81
 
-        ; Background and border color
-        lda #0
-        sta $d020
-        sta $d021
+            ; Background and border color
+            lda #0
+            sta $d020
+            sta $d021
 
-        ; Set current color
-        lda #1
-        sta $0286
-        
-        ; @-Z
-        lda #'@'
-        sta current_char
-        lda #'Z'
-        sta stop_char
-        jsr print_chain
+            ; Set current color
+            lda #1
+            sta $0286
 
-        ; Blank character
-        lda #' '
-        jsr $ffd2
+            ; @-Z
+            lda #'@'
+            sta current_char
+            lda #'Z'
+            sta stop_char
+            jsr print_chain
 
-        ; 0-9
-        lda #'0'
-        sta current_char
-        lda #'9'
-        sta stop_char
-        jsr print_chain
+            ; Blank character
+            lda #' '
+            jsr $ffd2
 
-        ; Blank lines
-        lda #$0d
-        jsr $ffd2
-        jsr $ffd2
+            ; 0-9
+            lda #'0'
+            sta current_char
+            lda #'9'
+            sta stop_char
+            jsr print_chain
 
-        rts
+            ; Blank lines
+            lda #$0d
+            jsr $ffd2
+            jsr $ffd2
+
+            rts
 
 
 print_chain:
 -
-        lda current_char
-        jsr $ffd2
-        inc current_char
-        cmp stop_char
-        beq .done               ; stop char reached?
+            lda current_char
+            jsr $ffd2
+            inc current_char
+            cmp stop_char
+            beq .done                       ; stop char reached?
 
-        inc $0286               ; next color
-        lda $0286
-        and #$0f                ; keep low nyb
-        bne -                   ; color 0?
-        inc $0286               ; skip color 0
-        jmp -
+            inc $0286                       ; next color
+            lda $0286
+            and #$0f                        ; keep low nyb
+            bne -                           ; color 0?
+            inc $0286                       ; skip color 0
+            jmp -
 .done:
-        rts
+            rts
 
 
 current_char:
-        !byte 0
+            !byte 0
 stop_char:
-        !byte 0
+            !byte 0

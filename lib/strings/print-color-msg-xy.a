@@ -9,10 +9,10 @@
 ;           A = color
 ;           R1+R2 = address of message
 print_color_msg_at:
-            sta $0286                   ; color
+            sta $0286                       ; color
             clc
-            jsr $fff0                   ; cursor position
-            ldy #0                      ; msg index
+            jsr $fff0                       ; cursor position
+            ldy #0                          ; msg index
             beq +
 -
             jsr $ffd2

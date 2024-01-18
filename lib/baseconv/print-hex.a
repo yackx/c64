@@ -9,7 +9,7 @@
 print_hex:
             pha
 
-            ; HI nibble           
+            ; HI nibble
             and #%11110000
             lsr
             lsr
@@ -18,7 +18,7 @@ print_hex:
             tax
             lda .hex,x
             jsr $ffd2
-            
+
             ; LO nibble
             pla
             and #%00001111

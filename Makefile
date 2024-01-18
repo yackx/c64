@@ -8,6 +8,8 @@ PETCAT ?= petcat
 
 .PRECIOUS: %
 
+.PHONY: fmt
+
 all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 
 %.prg: %.a
@@ -30,6 +32,9 @@ bas: $(TARGET).bas
 
 run-bas: $(TARGET).prg	
 	$(X64) --args -autostart `pwd`/$(TARGET).prg
+
+fmt:
+	$(shell python3 -m scripts.y_acme_fmt $(TARGET).a)
 
 clean:
 	find -E . -type f -regex '.*\.(sym|prg|d64|d)' -exec rm {} \;

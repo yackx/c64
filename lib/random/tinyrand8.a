@@ -16,29 +16,29 @@
             !cpu 6510
 
 
-tiny_rand_8:	
+tiny_rand_8:
             b1=*+1
-	        lda #31
-	        asl
+            lda #31
+            asl
             a1=*+1
-	        eor #53
-	        sta b1
-	        adc a1
-	        sta a1
-	        rts
+            eor #53
+            sta b1
+            adc a1
+            sta a1
+            rts
 
 
 ; sets the seed based on the value in A
 ; always sets a1 and b1 so that a cycle with maximum period is chosen
 ; constants 217 and 21263 have been derived by simulation
 set_seed:
-	        pha
-	        and #217
-	        clc
-	        adc #<21263
-	        sta a1
-	        pla
-	        and #255-217
-	        adc #>21263
-	        sta b1
-	        rts
+            pha
+            and #217
+            clc
+            adc #<21263
+            sta a1
+            pla
+            and #255-217
+            adc #>21263
+            sta b1
+            rts

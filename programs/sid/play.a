@@ -23,6 +23,6 @@ irq_handler:
             jsr $1003                       ; Play the music
             jmp CINV_ACTUAL
 
-        
+
             * = $1000
             !bin <programs/sid/Wasted_All_These_Years.dat>, , 2

@@ -8,6 +8,6 @@
 
             ;ACME 0.97
             !cpu 6510
-            
-            * = $0400               ; Start of Screen RAM
+
+            * = $0400                       ; Start of Screen RAM
             !scr "hello, world!"

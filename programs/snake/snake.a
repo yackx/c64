@@ -12,7 +12,7 @@
 
             !addr SCREEN = $0400
 
-            DELAY = 15          ; 1/60th sec
+            DELAY = 15                      ; 1/60th sec
 
             ; Snake head or body part position
             ; (Re-assign pseudo-registers)
@@ -34,7 +34,7 @@
             ; WASD
             ;LEFT       = $57
             ;UP         = $41
-            ;DOWN       = $53 
+            ;DOWN       = $53
             ;RIGHT      = $44
 
             ; Keys
@@ -61,7 +61,7 @@
             clc
             ldy @struct+1
             ldx @struct+2
-            jsr $fff0                   ; set cursor position
+            jsr $fff0                       ; set cursor position
             +m_strout @struct+3
 }
 
@@ -86,7 +86,7 @@ intro_scr:
             jsr $ff9f
             jsr $ffe4
             cmp #$20
-            bne -                       ; wait for space
+            bne -                           ; wait for space
 
             ; Seed random number generator
             jsr init_rnd_sid
@@ -99,7 +99,7 @@ intro_scr:
 
 
 s_title:    !byte 1, 8, 8
-            !byte 14  ; lower case
+            !byte 14                        ; lower case
             !pet "B o r i n g   S N A K E", 0
 s_info1:    !byte 14, 5, 17
             !pet "ASM code available on GitHub", 0
@@ -116,7 +116,7 @@ s_start:    !byte 13, 9, 22
 ; ===========================================================================
 
 main_scr:
-            jsr $ff81                   ; clear screen
+            jsr $ff81                       ; clear screen
             jsr init_game
             jsr gen_food
             jsr init_kb
@@ -197,7 +197,7 @@ timer_handler:
 
             ; Perform game logic every n interrupts
             dec delay
-            bne +                       ; skip frame
+            bne +                           ; skip frame
 
             ; Actual game frame - reset delay
             lda #DELAY
@@ -208,7 +208,7 @@ timer_handler:
             jsr erase_tail
             jsr update_head
 +
-            jmp $ea31                   ; KERNAL std routine
+            jmp $ea31                       ; KERNAL std routine
 
 
 ; ---------------------------------------------------------------------------
@@ -220,19 +220,19 @@ handle_cursor:
             ; KERNAL SCANKEY & GETIN
             jsr $ff9f
             jsr $ffe4
-            beq +                       ; no key pressed
+            beq +                           ; no key pressed
 
             ldx #0
-.find_key:  cmp key_idx,x               ; find cursor key in table
+.find_key:  cmp key_idx,x                   ; find cursor key in table
             beq .key_found
             inx
             cpx #4
-            beq handle_cursor           ; not a cursor key
-            bne .find_key               ; try next cursor key
+            beq handle_cursor               ; not a cursor key
+            bne .find_key                   ; try next cursor key
 .key_found:
-            lda dir_idx,x               ; find corresponding direction
-            sta direction               ; store it
-+            
+            lda dir_idx,x                   ; find corresponding direction
+            sta direction                   ; store it
++
             rts
 
 
@@ -251,9 +251,9 @@ game_over:
             sta $d020
 
             ; Wait for key
--           jsr $ff9f                   ; SCANKEY
-            jsr $ffe4                   ; GETIN
-            beq -                       ; wait for key
+-           jsr $ff9f                       ; SCANKEY
+            jsr $ffe4                       ; GETIN
+            beq -                           ; wait for key
 
             ; Reset screen border to light blue
             lda #14
@@ -303,7 +303,7 @@ move_head:
             sta POS_Y
 
 .check_food_collision:
-            jsr char_at                 ; A = char at (POS_X, POS_Y)
+            jsr char_at                     ; A = char at (POS_X, POS_Y)
             cmp #CHAR_FOOD
             bne .check_body_collision
             ; Food eaten
@@ -331,16 +331,16 @@ move_head:
 
 ; Erase the tail
 erase_tail:
-            ldx max_idx             ; Last index of snake
+            ldx max_idx                     ; Last index of snake
 
             ; Skip erase tail when growing
             lda skip_tail
             beq .erase
             dec skip_tail
             inc max_idx
-            inx                     ; X = max_idx
+            inx                             ; X = max_idx
             jmp .draw
-.erase:            
+.erase:
             lda snake_x,x
             sta POS_X
             lda snake_y,x
@@ -357,10 +357,10 @@ erase_tail:
             sta char
 -
             lda snake_x,x
-            sta snake_x+1,x         ; snake_x+1 = snake_x
+            sta snake_x+1,x                 ; snake_x+1 = snake_x
             sta POS_X
             lda snake_y,x
-            sta snake_y+1,x         ; snake_y+1 = snake_y
+            sta snake_y+1,x                 ; snake_y+1 = snake_y
             sta POS_Y
             jsr display_char
             dex
@@ -428,11 +428,11 @@ char_at:
 gen_food:
             +push_ay
 -
-            lda $d41b                   ; random number
-            and #%00001111              ; 32 possible addresses
-            asl                         ; *2 for 2 bytes per address
+            lda $d41b                       ; random number
+            and #%00001111                  ; 32 possible addresses
+            asl                             ; *2 for 2 bytes per address
             tay
-            
+
             ; Load random screen address
             lda random_food_addr,y
             sta R1
@@ -443,11 +443,11 @@ gen_food:
             lda (R1),y
             cmp #CHAR_BLANK
             bne-
-            
+
             ; Display food
             lda #CHAR_FOOD
             ldy #0
-            sta (R1),y                  ; add food to screen
+            sta (R1),y                      ; add food to screen
 
             +pull_ay
             rts
@@ -470,11 +470,11 @@ delay       !byte 1
 ; row_lsb = 00 28 50 ... 18 ...
 ; row_msb = 04 04 04 ... 05 ...
 row_lsb:    !for .i, 0, 24 {
-                !byte <(SCREEN + .i*40)
+            !byte <(SCREEN + .i*40)
             }
 
 row_msb:    !for .i, 0, 24 {
-                !byte >(SCREEN + .i*40)
+            !byte >(SCREEN + .i*40)
             }
 
 ; Keyboard / direction mapping

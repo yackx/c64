@@ -11,7 +11,7 @@ main:
 -           jsr CHROUT
             inx
 +           lda hello, x
-            bne -                
+            bne -
             rts
 
 hello:      !pet "hello 64", 13, 0

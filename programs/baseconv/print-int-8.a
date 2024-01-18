@@ -17,15 +17,15 @@ main:
 ; This routine does not use BCD.
 
 print_int_8:
-            ldx #0                  ; Index UNITS
-            ldy #0                  ; Always 0
+            ldx #0                          ; Index UNITS
+            ldy #0                          ; Always 0
             sty DIGIT
 .loop:
-            cmp UNITS,X             ; Number smaller than unit?
-            bcc .print_digit        ; Print it
+            cmp UNITS,X                     ; Number smaller than unit?
+            bcc .print_digit                ; Print it
             sec
-            sbc UNITS,X             ; Decrease number by current unit
-            inc DIGIT               ; Increase digit
+            sbc UNITS,X                     ; Decrease number by current unit
+            inc DIGIT                       ; Increase digit
             jmp .loop
 .print_digit:
             pha
@@ -34,13 +34,13 @@ print_int_8:
             adc #48
             jsr $ffd2
             pla
-            
-            sty DIGIT               ; Reset digit
-            inx                     ; Next unit
-            cpx #3                  ; All units done?
+
+            sty DIGIT                       ; Reset digit
+            inx                             ; Next unit
+            cpx #3                          ; All units done?
             bne .loop
 
             rts
 
-DIGIT:      !byte 0                 ; Current digit
-UNITS:      !byte 100, 10, 1        ; Successive units
+DIGIT:      !byte 0                         ; Current digit
+UNITS:      !byte 100, 10, 1                ; Successive units

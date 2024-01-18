@@ -19,5 +19,5 @@ clear_screen:
             sta $0700,x
             inx
             bne -
-            
+
             rts

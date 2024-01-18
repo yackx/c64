@@ -13,16 +13,16 @@
 
 ; @TODO Make more efficient
 
-                ;ACME 0.97
-                !cpu 6510
+                                            ;ACME 0.97
+            !cpu 6510
 
 
 strout:
-                ldy #0
-                beq +
--               jsr $ffd2
-                iny
-+               lda (R1),y
-                bne -
-                
-                rts
+            ldy #0
+            beq +
+-           jsr $ffd2
+            iny
++           lda (R1),y
+            bne -
+
+            rts

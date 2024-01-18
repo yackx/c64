@@ -3,56 +3,56 @@
 ; Hires bitmap color demo
 
 
-        ;ACME 0.97
-        !cpu 6510
+            ;ACME 0.97
+            !cpu 6510
 
-        * = $0810       ; SYS 2064
-        
-        PRG_BITMAP = $2002
+            * = $0810                       ; SYS 2064
+
+            PRG_BITMAP = $2002
 
 
 main:
-        ; Copy picture to $2000
-        ldx #250
+            ; Copy picture to $2000
+            ldx #250
 -
-        lda picture+PRG_BITMAP,x
-        sta $2000,x
-        lda picture+PRG_BITMAP+250,x
-        sta $2000+250,x
-        lda picture+PRG_BITMAP+500,x
-        sta $2000+500,x
-        lda picture+PRG_BITMAP+750,x
-        sta $2000+750,x
-        dex
-        bne -
+            lda picture+PRG_BITMAP,x
+            sta $2000,x
+            lda picture+PRG_BITMAP+250,x
+            sta $2000+250,x
+            lda picture+PRG_BITMAP+500,x
+            sta $2000+500,x
+            lda picture+PRG_BITMAP+750,x
+            sta $2000+750,x
+            dex
+            bne -
 
-        ; Screen control register #1
-        ; Enable hires mode
-        ; Disable extended background mode
-        lda $d011
-        ora #%00100000
-        and #%01000000
-        sta $d011
+            ; Screen control register #1
+            ; Enable hires mode
+            ; Disable extended background mode
+            lda $d011
+            ora #%00100000
+            and #%01000000
+            sta $d011
 
-        ; Multicolor mode
-        lda $d016
-        ora #%00010000
-        sta $d016
+            ; Multicolor mode
+            lda $d016
+            ora #%00010000
+            sta $d016
 
-        ; Border color
-        lda #$0
-        sta $d020
+            ; Border color
+            lda #$0
+            sta $d020
 
-        ; Background color
-        sta $d021
+            ; Background color
+            sta $d021
 
-        ; Point screen memory to $0c00
-        lda #$38
-        sta $d018
+            ; Point screen memory to $0c00
+            lda #$38
+            sta $d018
 
-        jmp *
+            jmp *
 
 picture:
-        ; Underscore postfix to protect from .gitignore
-        !bin <programs/hires/mountain.prg_>
+            ; Underscore postfix to protect from .gitignore
+            !bin <programs/hires/mountain.prg_>
 picture_end:

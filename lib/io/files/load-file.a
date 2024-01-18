@@ -31,7 +31,7 @@
 ;
 ;     LOAD "LOREM,U",8,1
 ;
-;  
+;
 ; IN:       X = filename addr LSB
 ;           Y = filename addr MSB
 ;           A = filename length

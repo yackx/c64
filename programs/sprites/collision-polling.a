@@ -4,114 +4,114 @@
 ;
 ; Sprite #0 - move accross X and detects collision with
 ; Sprite #1 - static
-; 
+;
 ; Screen border goes red and animation stops when
 ; a collision is detected.
 ;
 ; VIC2SPSPCOL $d01e is polled during the animation.
 ; If bit #0 is set -> sprite #0 collision
 
-        ;ACME 0!97
-        !cpu 6510
-        * = $c000
+            ;ACME 0!97
+            !cpu 6510
+            * = $c000
 
-        !src <lib/registers/pseudo-registers.a>
-        !src <lib/registers/m-registers.a>
-        !src <lib/layout/main.a>
-        !src <lib/layout/kernal.a>
-        !src <lib/mem/m-mem.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/registers/m-registers.a>
+            !src <lib/layout/main.a>
+            !src <lib/layout/kernal.a>
+            !src <lib/mem/m-mem.a>
 
-        SPRITE_COUNT = 2
-        DELAY_16 = 255*2        ; busy wait delay
-        SPRITE_BLOCK = 13       ; block*64 = data
+            SPRITE_COUNT = 2
+            DELAY_16 = 255*2                ; busy wait delay
+            SPRITE_BLOCK = 13               ; block*64 = data
 
 
 main:
-        jsr common
-        jsr init_sprites
-        jmp animate_sprite_0    ; no jsr - endless
+            jsr common
+            jsr init_sprites
+            jmp animate_sprite_0            ; no jsr - endless
 
 
 common:
-        ; clear screen
-        jsr CINT
+            ; clear screen
+            jsr CINT
 
-        ; copy data to sprite block (same for both sprites)
-        +copy_bytes_8 .sprite_data, $0340, 63
+            ; copy data to sprite block (same for both sprites)
+            +copy_bytes_8 .sprite_data, $0340, 63
 
-        ; activate sprites #0 and #1
-        lda #%00000011
-        sta VIC2SPE
+            ; activate sprites #0 and #1
+            lda #%00000011
+            sta VIC2SPE
 
-        ; busy wait
-        lda >DELAY_16
-        sta R5
-        lda <DELAY_16
-        sta R6
+            ; busy wait
+            lda >DELAY_16
+            sta R5
+            lda <DELAY_16
+            sta R6
 
-        rts
+            rts
 
 
 init_sprites:
-        ldx #SPRITE_COUNT
--       jsr init_sprite
-        dex
-        bne -
-        rts
+            ldx #SPRITE_COUNT
+-           jsr init_sprite
+            dex
+            bne -
+            rts
 
 
 init_sprite:
-        +push_ax
-        
-        dex                     ; X=n => sprite #(n-1)
+            +push_ax
 
-        ; Sprite color
-        lda .sprites_colors,x
-        sta VIC2SPCOL0,x
+            dex                             ; X=n => sprite #(n-1)
 
-        ; sprite pointer to SPRITE_BLOCK*64=832=$0340
-        lda #SPRITE_BLOCK
-        sta DEFAULT_SPRITE_PTR_AREA,x
+            ; Sprite color
+            lda .sprites_colors,x
+            sta VIC2SPCOL0,x
 
-        ; X <- X*2
-        txa
-        asl
-        tax
+            ; sprite pointer to SPRITE_BLOCK*64=832=$0340
+            lda #SPRITE_BLOCK
+            sta DEFAULT_SPRITE_PTR_AREA,x
 
-        ; Sprite position
-        lda .sprites_init_pos,x
-        sta VIC2M0X,x
-        lda .sprites_init_pos+1,x
-        sta VIC2M0Y,x
-        inx
+            ; X <- X*2
+            txa
+            asl
+            tax
 
-        +pull_xa
-        rts
+            ; Sprite position
+            lda .sprites_init_pos,x
+            sta VIC2M0X,x
+            lda .sprites_init_pos+1,x
+            sta VIC2M0Y,x
+            inx
+
+            +pull_xa
+            rts
 
 
 animate_sprite_0:
--       inc VIC2M0X             ; move sprite #0 1 pixel right
-        lda VIC2SPSPCOL
-        lsr                     ; poll collisiton sprite #0
-        bcs process_collision
-        jsr busy_wait
-        jmp -
+-           inc VIC2M0X                     ; move sprite #0 1 pixel right
+            lda VIC2SPSPCOL
+            lsr                             ; poll collisiton sprite #0
+            bcs process_collision
+            jsr busy_wait
+            jmp -
 
 
 process_collision:
-        lda #2
-        sta VIC2BORDER          ; screen border red
-        jmp *
+            lda #2
+            sta VIC2BORDER                  ; screen border red
+            jmp *
 
 
 .sprites_colors
-        !byte 1, 7
-.sprites_init_pos               ; 7 bits only (x, y)
-        !byte 15, 80
-        !byte 200, 95
+            !byte 1, 7
+.sprites_init_pos                           ; 7 bits only (x, y)
+            !byte 15, 80
+            !byte 200, 95
 
 .sprite_data:
-        !bin <programs/sprites/balloon.bin>
+            !bin <programs/sprites/balloon.bin>
 
 
-        !src <lib/misc/busy-wait.a>
+            !src <lib/misc/busy-wait.a>

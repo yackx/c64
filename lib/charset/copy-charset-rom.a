@@ -1,8 +1,8 @@
-        ;ACME 0.97
-        !cpu 6510
+            ;ACME 0.97
+            !cpu 6510
 
-        !src <lib/registers/pseudo-registers.a>
-        !src <lib/layout/main.a>
+            !src <lib/registers/pseudo-registers.a>
+            !src <lib/layout/main.a>
 
 
 ; Copy the character set from ROM to RAM.
@@ -13,28 +13,28 @@
 ; IN:   Y = destination page MSB
 ; USE:  A X Y R1 R2
 copy_charset_to_ram:
-        sei
-        
-        ; Make the CPU see the character ROM
-        lda R6510
-        sta .r6510
-        and #%11111011
-        sta R6510
+            sei
 
-        ; Copy the character set
-        lda #8
-        ldx #>CHARROM
-        jsr copy_mem_pages
-        
-        ; Restore original I/O register value
-        lda .r6510
-        sta R6510
+            ; Make the CPU see the character ROM
+            lda R6510
+            sta .r6510
+            and #%11111011
+            sta R6510
 
-        cli
+            ; Copy the character set
+            lda #8
+            ldx #>CHARROM
+            jsr copy_mem_pages
 
-        rts
+            ; Restore original I/O register value
+            lda .r6510
+            sta R6510
 
-.r6510  !byte 0
+            cli
+
+            rts
+
+.r6510      !byte 0
 
 
-        !src <lib/mem/copy-mem-pages.a>
+            !src <lib/mem/copy-mem-pages.a>

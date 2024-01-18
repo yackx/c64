@@ -24,7 +24,7 @@
 ; We use 3 raster IRQs to work around the 2 shared colors limitation.
 ;
 ; 2. Sprites
-; 
+;
 ; Forming the word "hello" and moving horizontally
 ; on a sine function.
 ;
@@ -53,7 +53,7 @@
 
             ;ACME 0.97
             !cpu 6510
-        
+
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
             !src <lib/strings/m-print-color-msg-xy.a>
@@ -63,7 +63,7 @@
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12
-            RASTER_BADGE_1 = 48  ; early
+            RASTER_BADGE_1 = 48             ; early
             RASTER_BADGE_2 = RASTER_BADGE_1 + 2 + RASTER_BADGE_OFFSET
             RASTER_BADGE_3 = RASTER_BADGE_1 + RASTER_BADGE_OFFSET*2
             RASTER_HELLO = SPRITE_HELLO_Y - 2
@@ -87,9 +87,9 @@ main:
             jsr init_scroll
             jsr init_sprites
             jsr init_charset
-            
+
             ; Enable 1st raster IRQ
-            +init_raster_irq RASTER_BADGE_1, irq_badge_1            
+            +init_raster_irq RASTER_BADGE_1, irq_badge_1
 
             jmp *
 
@@ -181,7 +181,7 @@ print_line:
 
 
 init_sprites:
-            SPRITE_BLOCK = 13               
+            SPRITE_BLOCK = 13
             SPRITE_HELLO_X = 160
             SPRITE_HELLO_Y = 90
 
@@ -190,17 +190,17 @@ init_sprites:
 
             ; sprite colors
             lda #1
-            sta $d027               
-            sta $d028             
-            sta $d029             
+            sta $d027
+            sta $d028
+            sta $d029
 
             ; sprites pointers
             lda #SPRITE_BLOCK
-            sta $07f8               
+            sta $07f8
             lda #SPRITE_BLOCK+1
-            sta $07f9              
+            sta $07f9
             lda #SPRITE_BLOCK+2
-            sta $07fa              
+            sta $07fa
 
             ; activate sprites
             lda #%00000111
@@ -236,11 +236,11 @@ init_scroll:
             ; Text color
             SCROLL_SCR_CLR_START = $d800 + 24*40
             +fill_bytes_8 SCROLL_SCR_CLR_START, 40, 13
-    
+
             rts
 
 scroll_count:                               ; will trigger hard scroll
-            !byte 1                         ; on 1st IRQ    
+            !byte 1                         ; on 1st IRQ
 scroll_frame_skip:                          ; do not skip 1st frame
             !byte 1
 
@@ -305,7 +305,7 @@ irq_hello:
             sta $d002
             clc
             adc #24
-            sta $d004 
+            sta $d004
             inc sprite_hello_x_idx
 
             ; Single color mode
@@ -326,7 +326,7 @@ irq_text:
 
             dec .skip_fr
             bne ++
-            
+
             lda #TEXT_SKIP_FRAMES
             sta .skip_fr
 
@@ -353,7 +353,7 @@ irq_text:
 irq_sid:
             +set_border_color 1
             +set_raster_irq RASTER_SOFT_SCROLL, irq_soft_scroll
-            jsr $1003                   ; Play the music
+            jsr $1003                       ; Play the music
             +set_border_color 0
             +ack_short_kernal
 
@@ -361,14 +361,14 @@ irq_sid:
 irq_soft_scroll:
             SCROLL_SKIP_FRAMES = 5
             SCROLL_SCR_MEM_START = $0400 + 24*40
-            
+
             +set_border_color 1
             +set_raster_irq RASTER_HARD_SCROLL, irq_hard_scroll
 
             ; Set horizontal scroll (bits #2-#0)
             lda $d016
-            and #%11111000               ; masks for scr ctrl reg
-            ora scroll_count             ; set how many scroll pixels
+            and #%11111000                  ; masks for scr ctrl reg
+            ora scroll_count                ; set how many scroll pixels
             sta $d016
 
             ; One less pixel on the scroll.
@@ -378,11 +378,11 @@ irq_soft_scroll:
             ; and cause a glitch.
             dec scroll_count
             bpl .soft_scroll_done
-        
-           ; Wrap scroll pixel count from 0 to 7
-           ; to trigger a hard scroll.
-           lda #7
-           sta scroll_count
+
+            ; Wrap scroll pixel count from 0 to 7
+            ; to trigger a hard scroll.
+            lda #7
+            sta scroll_count
 
 .soft_scroll_done:
             +set_border_color 0
@@ -404,14 +404,14 @@ irq_hard_scroll:
             !addr .msg_offset_addr = *+1
 -           lda marquee,x
             beq .end_of_msg
-    
+
             ; Update one character.
             ; Check for end of line.
-            sta SCROLL_SCR_MEM_START,x 
+            sta SCROLL_SCR_MEM_START,x
             dex
             bpl -
 
-            inc .msg_offset_addr        ; next msg is offset by 1 char
+            inc .msg_offset_addr            ; next msg is offset by 1 char
 
 .hard_scroll_done:
             +set_border_color 0
@@ -440,7 +440,7 @@ stripe_1:   !byte 85,85,85,0,0,0,170,170
 stripe_2:   !byte 170,0,0,0,85,85,85,0
 stripe_3:   !byte 0,0,170,170,170,0,0,0
 stripe_4:   !byte 85,85,85,0,0,0,0,0
-            
+
             NB_OF_CHARS = (* - stripes_chars) / 8
 
 stripe_colors:
@@ -466,8 +466,8 @@ stripe_colors:
 ; +127+24       Shift to positive values (values from 91 to 211)
 sprite_hello_x_table:
             !for x, 0, 255 {
-		      !byte sin(float(x)/255 * 2*PI) / 2 * 120 + 127 + 24
-	        }
+            !byte sin(float(x)/255 * 2*PI) / 2 * 120 + 127 + 24
+            }
 
 ; Current X position in the table
 sprite_hello_x_idx:
@@ -483,11 +483,11 @@ sprite_data:
 ; ---------------------------------------------------------------------------
 
 !macro check_len_40 @from, @to, @msg {
-    !set @length = (@to - @from)
-    !if @length != 40 {
-        !warn "Text line length is not 40 chars: " +  @msg
-        !error @length
-    }
+            !set @length = (@to - @from)
+            !if @length != 40 {
+            !warn "Text line length is not 40 chars: " +  @msg
+            !error @length
+            }
 }
 
 text:

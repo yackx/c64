@@ -20,4 +20,4 @@
             !byte $1F, $FF, $00
             !byte $0F, $FE, $00
             !byte $03, $F8, $00
-            !fill 1, 0 ; padding
+            !fill 1, 0                      ; padding

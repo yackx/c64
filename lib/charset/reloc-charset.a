@@ -2,7 +2,7 @@
 ;
 ; Register A must contain the bitmask for bits #1-#3
 ; at $d018 (VIC2MPTR).
-; 
+;
 ; Bits #1-#3 - In text mode, pointer to character memory:
 ; %000, 0: $0000-$07FF, 0-2047.
 ; %001, 1: $0800-$0FFF, 2048-4095.
@@ -16,24 +16,24 @@
 ; IN    A = Memory setup register mask (#1-#3 at VIC2MPTR)
 ; USE   A
 
-        ;ACME 0.97
-        !cpu 6510
+            ;ACME 0.97
+            !cpu 6510
 
-        !src <lib/layout/main.a>
+            !src <lib/layout/main.a>
 
 
 !zone z_set_charset_loc
 set_charset_loc:
-        sta .mask
+            sta .mask
 
-        sei
+            sei
 
-        lda VIC2MPTR
-        ora .mask 
-        sta VIC2MPTR
+            lda VIC2MPTR
+            ora .mask
+            sta VIC2MPTR
 
-        cli
-        rts
+            cli
+            rts
 
 
-.mask   !byte 0
+.mask       !byte 0

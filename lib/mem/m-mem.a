@@ -6,12 +6,12 @@ DEF_m_men = 1
 ;
 ; USE:  A X
 !macro fill_bytes_8 @dest_addr, @count, @value {
-        ldx #@count
-        lda #@value
+            ldx #@count
+            lda #@value
 -
-        sta @dest_addr-1,x
-        dex
-        bne -
+            sta @dest_addr-1,x
+            dex
+            bne -
 }
 
 
@@ -19,20 +19,20 @@ DEF_m_men = 1
 ;
 ; USE:  A X Y
 !macro fill_bytes_16 @dest_addr, @count, @value {
-        !set @target = @dest_addr + 256 * >@count
-        ldy #1 + >@count
-        ldx #(<@count) - 1
-        lda #>@value
-        sta @target
+            !set @target = @dest_addr + 256 * >@count
+            ldy #1 + >@count
+            ldx #(<@count) - 1
+            lda #>@value
+            sta @target
 -
-        .target = *+1
-        sta @target,x
-        dex
-        cpx #$ff
-        bne -
-        dec .target+1
-        dey
-        bne -
+            .target = *+1
+            sta @target,x
+            dex
+            cpx #$ff
+            bne -
+            dec .target+1
+            dey
+            bne -
 }
 
 
@@ -44,9 +44,9 @@ DEF_m_men = 1
             ldy #0
             lda #@char
 -
-            !byte $99                   ; STA Y-indirect indexed absolute
-            !byte 0                     ; page LSB
-            !byte @page                 ; page MSB
+            !byte $99                       ; STA Y-indirect indexed absolute
+            !byte 0                         ; page LSB
+            !byte @page                     ; page MSB
 
             iny
             bne -
@@ -62,9 +62,9 @@ DEF_m_men = 1
             lda #@char
 -
             .page = *+2
-            !byte $99                   ; STA Y-indirect indexed absolute
-            !byte 0                     ; page LSB
-            !byte @start_page           ; page MSB
+            !byte $99                       ; STA Y-indirect indexed absolute
+            !byte 0                         ; page LSB
+            !byte @start_page               ; page MSB
 
             iny
             bne -
@@ -81,12 +81,12 @@ DEF_m_men = 1
 ;
 ; USE: A X
 !macro copy_bytes_8 @src_addr, @dest_addr, @count {
-        ldx #@count
+            ldx #@count
 -
-        lda @src_addr-1,x
-        sta @dest_addr-1,x
-        dex
-        bne -
+            lda @src_addr-1,x
+            sta @dest_addr-1,x
+            dex
+            bne -
 }
 
 
@@ -94,26 +94,26 @@ DEF_m_men = 1
 ;
 ; USE: A X Y
 !macro copy_bytes_16 @src_addr, @dest_addr, @count {
-        !set @src = @src_addr + 256 * >@count
-        !set @dest = @dest_addr + 256 * >@count
-        ldy #1 + >@count
-        ldx #(<@count) - 1
-        lda @src
-        sta @dest
+            !set @src = @src_addr + 256 * >@count
+            !set @dest = @dest_addr + 256 * >@count
+            ldy #1 + >@count
+            ldx #(<@count) - 1
+            lda @src
+            sta @dest
 -
-        .src = *+1
-        lda @src,x
-        .dest = *+1
-        sta @dest,x
+            .src = *+1
+            lda @src,x
+            .dest = *+1
+            sta @dest,x
 
-        dex
-        cpx #$ff
-        bne -
+            dex
+            cpx #$ff
+            bne -
 
-        dec .src+1
-        dec .dest+1
-        dey
-        bne -
+            dec .src+1
+            dec .dest+1
+            dey
+            bne -
 }
 
 
@@ -123,13 +123,13 @@ DEF_m_men = 1
 !macro copy_page @src_page_msb, @dest_page_msb {
             ldy #0
 -
-            !byte $b9                   ; LDA Y-indirect indexed absolute
-            !byte 0                     ; page LSB
-            !byte @src_page_msb         ; page MSB
+            !byte $b9                       ; LDA Y-indirect indexed absolute
+            !byte 0                         ; page LSB
+            !byte @src_page_msb             ; page MSB
 
-            !byte $99                   ; STA Y-indirect indexed absolute
-            !byte 0                     ; page LSB
-            !byte @dest_page_msb        ; page MSB
+            !byte $99                       ; STA Y-indirect indexed absolute
+            !byte 0                         ; page LSB
+            !byte @dest_page_msb            ; page MSB
 
             iny
             bne -
@@ -144,14 +144,14 @@ DEF_m_men = 1
             ldx #@count
 -
             .src = *+2
-            !byte $b9                   ; LDA Y-indirect indexed absolute
-            !byte 0                     ; page LSB
-            !byte @src_page_msb         ; page MSB
+            !byte $b9                       ; LDA Y-indirect indexed absolute
+            !byte 0                         ; page LSB
+            !byte @src_page_msb             ; page MSB
 
             .dest = *+2
-            !byte $99                   ; STA Y-indirect indexed absolute
-            !byte 0                     ; page LSB
-            !byte @dest_page_msb        ; page MSB
+            !byte $99                       ; STA Y-indirect indexed absolute
+            !byte 0                         ; page LSB
+            !byte @dest_page_msb            ; page MSB
 
             iny
             bne -
@@ -181,5 +181,5 @@ DEF_m_men = 1
             lda @src+750,x
             sta @dest+750,x
             dex
-            bne -        
+            bne -
 }

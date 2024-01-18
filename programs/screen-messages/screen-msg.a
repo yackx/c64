@@ -2,7 +2,7 @@
 ;
 ; This is faster than using the KERNAL routine CHROUT,
 ; and is not necessarily more cumbersome as we avoid
-; manipulating the registers as we would 
+; manipulating the registers as we would
 ; to set the cursor position if we used CHROUT.
 
             ;ACME 0.97
@@ -14,23 +14,23 @@
             !src <lib/layout/kernal.a>
 
 
-main:   
-            jsr CINT           
-            lda #$0e                    ; Lower case font
+main:
+            jsr CINT
+            lda #$0e                        ; Lower case font
             jsr CHROUT
-            lda #$08                    ; Font case toggle disabled
+            lda #$08                        ; Font case toggle disabled
             jsr CHROUT
 
-            ldx #0                      ; idx text_scr
+            ldx #0                          ; idx text_scr
             cld
 .print_msg:
-            ldy #0                      ; idx char in text
+            ldy #0                          ; idx char in text
             lda text_scr,x
             sta R1
             lda text_scr+1,x
             sta R2
 .print_char:
-            lda text,y                  ; self-mod address
+            lda text,y                      ; self-mod address
             cmp #EOT
             beq .next_msg
             sta (R1),y
@@ -44,7 +44,7 @@ main:
             sta .print_char+1
             bcc +
             inc .print_char+2
-+            
++
             inx
             inx
             cpx #TEXT_COUNT * 2

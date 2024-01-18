@@ -2,7 +2,7 @@
             !cpu 6510
             * = $c000
 
-            DELAY       = 7             ; 1/60th sec
+            DELAY       = 7                 ; 1/60th sec
 
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
@@ -11,7 +11,7 @@
 
 
 main:
-            jsr $ff81                   ; clrscr
+            jsr $ff81                       ; clrscr
 
             ; set up timer interrupt
             sei
@@ -30,10 +30,10 @@ main:
 ; 24-bit counter, wraps around after 24 hours.
 ; Values: $000000-$4F19FF, 0-518399.
 timer_handler:
-            dec delay                   ; skip frames
+            dec delay                       ; skip frames
             bne +
 
-            lda #DELAY                  ; reset delay
+            lda #DELAY                      ; reset delay
             sta delay
 
             +m_strout .msg_ti0
@@ -50,9 +50,9 @@ timer_handler:
             lda $00a2
             jsr print_hex
 
-            jsr $e566                   ; cursor home
+            jsr $e566                       ; cursor home
 +
-            jmp $ea31                   ; KERNAL std routine
+            jmp $ea31                       ; KERNAL std routine
 
 
             !src <lib/baseconv/print-hex.a>

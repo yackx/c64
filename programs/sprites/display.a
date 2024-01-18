@@ -2,11 +2,11 @@
 ;
 ; Display the C64 balloon.
 
-        ;ACME 0.97
-        !cpu 6510
-        * = $c000
-        
-        !src <lib/mem/m-mem.a>
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <lib/mem/m-mem.a>
 
 ; sprite pointers (8 bytes)
 ; = start of text screen RAM + 1016
@@ -23,25 +23,25 @@
 ; A / 64 = 13
 
 main:
-        jsr $ff81               ; clear screen
+            jsr $ff81                       ; clear screen
 
-        +copy_bytes_8 .sprite_data, $0340, 63
+            +copy_bytes_8 .sprite_data, $0340, 63
 
-        lda #%00000001
-        sta $d015               ; activate sprite #0
+            lda #%00000001
+            sta $d015                       ; activate sprite #0
 
-        lda #1
-        sta $d027               ; sprite #0 color
+            lda #1
+            sta $d027                       ; sprite #0 color
 
-        lda #50
-        sta $d000               ; sprite #0 X position
-        lda #100
-        sta $d001               ; sprite #0 Y position
+            lda #50
+            sta $d000                       ; sprite #0 X position
+            lda #100
+            sta $d001                       ; sprite #0 Y position
 
-        lda #13                 ; sprite block
-        sta $07f8               ; sprite #0 data at 13*64=832=$0340
+            lda #13                         ; sprite block
+            sta $07f8                       ; sprite #0 data at 13*64=832=$0340
 
-        rts
+            rts
 
 .sprite_data:
-        !bin <programs/sprites/balloon.bin>
+            !bin <programs/sprites/balloon.bin>

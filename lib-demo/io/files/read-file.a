@@ -15,7 +15,7 @@
             !cpu 6510
 
             !addr SCREEN_MEM = $0400
-            
+
             FILE_HANDLER = 2
             DEVICE = 8
             SECONDARY = 2
@@ -42,7 +42,7 @@ main:
             rts
 
 
-filename:   !pet "lorem no la,u"                  ; "LOREM NO LA.USR" on disk
+filename:   !pet "lorem no la,u"            ; "LOREM NO LA.USR" on disk
 filename_end:
 
             !src <lib/io/files/read-file.a>

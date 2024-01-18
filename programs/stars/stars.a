@@ -1,87 +1,87 @@
 ; A stars animation.
 
-                ;ACME 0.97
-                !cpu 6510
+                                            ;ACME 0.97
+            !cpu 6510
 
-                * = $c000
+            * = $c000
 
-                !src <lib/layout/main.a>
-                !src <lib/layout/kernal.a>
+            !src <lib/layout/main.a>
+            !src <lib/layout/kernal.a>
 
-                HIRES = $2000
-                HIRES_END = $4000
+            HIRES = $2000
+            HIRES_END = $4000
 
 
 main:
-                lda #%00010000                  ; white pixels on black background
-                jsr clear_screen
-                jsr color_screen
-                jsr set_hires
-                jsr init_rnd
--               jsr fill_random
-                jmp -
+            lda #%00010000                  ; white pixels on black background
+            jsr clear_screen
+            jsr color_screen
+            jsr set_hires
+            jsr init_rnd
+-           jsr fill_random
+            jmp -
 
 
 color_screen:
-                lda #0
-                sta VIC2BORDER
-                sta VIC2B0C                 ; background
-                rts
+            lda #0
+            sta VIC2BORDER
+            sta VIC2B0C                     ; background
+            rts
 
 
 set_hires:
-                lda #$3b
-                sta VIC2CR1
-                lda #$08
-                sta VIC2CR2
-                lda #$18
-                sta VIC2MPTR
-                rts
+            lda #$3b
+            sta VIC2CR1
+            lda #$08
+            sta VIC2CR2
+            lda #$18
+            sta VIC2MPTR
+            rts
 
 
 ; https://www.atarimagazines.com/compute/issue72/random_numbers.php
 init_rnd:
-                lda CHROUT                  ; maximum frequency value
-                sta SID3FR                  ; voice 3 frequency low byte
-                sta SID3FR+1                ; voice 3 frequency high byte
-                lda #$80                    ; noise waveform, gate bit off
-                sta SID3CR                  ; voice 3 control register
-                rts
+            lda CHROUT                      ; maximum frequency value
+            sta SID3FR                      ; voice 3 frequency low byte
+            sta SID3FR+1                    ; voice 3 frequency high byte
+            lda #$80                        ; noise waveform, gate bit off
+            sta SID3CR                      ; voice 3 control register
+            rts
 
 
 fill_random:
-                ;lda #0
-                ;sta fill_random.label-1
-                ;lda #$20
-                ;sta fill_random.label
-                
-                ldx #<HIRES
-                lda #>HIRES
-                sta .page
-.loop:  
-                lda SID3WFOUT               ; obtain RND from SID
-                cmp #8
-                bcs .no_star
+                                            ;lda #0
+                                            ;sta fill_random.label-1
+                                            ;lda #$20
+                                            ;sta fill_random.label
+
+            ldx #<HIRES
+            lda #>HIRES
+            sta .page
+.loop:
+            lda SID3WFOUT                   ; obtain RND from SID
+            cmp #8
+            bcs .no_star
 .star:
-                tay        
-                lda #%00000001
-.shift:         rol
-                dey
-                bne .shift
-                jmp .light
+            tay
+            lda #%00000001
+.shift:     rol
+            dey
+            bne .shift
+            jmp .light
 .no_star:
-                lda #0
+            lda #0
 .light:
-                .page = * +2
-                sta HIRES,x                 ; Self-mod
-                inx
-                bne .loop
-                inc .page
-                lda .page
-                cmp #>HIRES_END
-                bne .loop
+            .page = * +2
+            sta HIRES,x                     ; Self-mod
+            inx
+            bne .loop
+            inc .page
+            lda .page
+            cmp #>HIRES_END
+            bne .loop
 
-                rts
+            rts
 
 
-                !src <lib/screen/clear-screen.a>
+            !src <lib/screen/clear-screen.a>

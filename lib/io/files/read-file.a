@@ -98,7 +98,7 @@ read_file_to_address:
             pla
             rts
             ; CHKIN error: for further information,
-            ; the drive error channel has to be read.            
+            ; the drive error channel has to be read.
 
 .close:
             ; Close the file and clear the channel.

@@ -13,11 +13,11 @@
 DEF_MEM_ADDR_ROM = 1
 
 !addr {
-    ; ACTUAL means the address of the actual routine, not the jump vector.
-    ; For example:
-    ; CINV        $0314-$0315 = Vector to IRQ Interrupt Routine $EA31.
-    ; CINV_ACTUAL $ea31       = IRQ Interrupt Routine proper
+            ; ACTUAL means the address of the actual routine, not the jump vector.
+            ; For example:
+            ; CINV        $0314-$0315 = Vector to IRQ Interrupt Routine $EA31.
+            ; CINV_ACTUAL $ea31       = IRQ Interrupt Routine proper
 
-    CINV_ACTUAL = $ea31                         ; IRQ Interrupt Routine
-    ROM_IRQ_HANDLER = CINV_ACTUAL
+            CINV_ACTUAL = $ea31             ; IRQ Interrupt Routine
+            ROM_IRQ_HANDLER = CINV_ACTUAL
 }

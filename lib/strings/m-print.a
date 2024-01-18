@@ -15,6 +15,6 @@
             ldy @x
             ldx @y
             jsr $fff0
-            
+
             +m_strout @msg_addr
 }

@@ -6,18 +6,18 @@
 ;
 ; USE: -
 
-        !src <lib/registers/m-registers.a>
+            !src <lib/registers/m-registers.a>
 
 busy_wait:
-        +push_all
+            +push_all
 
-        ldy R5
---      dey
-        beq +
-        ldx R6
--       dex
-        bne -
-        beq --
+            ldy R5
+--          dey
+            beq +
+            ldx R6
+-           dex
+            bne -
+            beq --
 
-+       +pull_all
-        rts
++           +pull_all
+            rts

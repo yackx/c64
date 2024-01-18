@@ -4,51 +4,51 @@
 DEF_M_REGISTERS = 1
 
 !macro push_x {
-        txa
-        pha
+            txa
+            pha
 }
 
 !macro pull_x {
-        pla
-        tax
+            pla
+            tax
 }
 
 !macro push_ax {
-        pha
-        txa
-        pha
+            pha
+            txa
+            pha
 }
 
 !macro pull_xa {
-        pla
-        tax
-        pla
+            pla
+            tax
+            pla
 }
 
 !macro push_ay {
-        pha
-        tya
-        pha
+            pha
+            tya
+            pha
 }
 
 !macro pull_ay {
-        pla
-        tay
-        pla
+            pla
+            tay
+            pla
 }
 
 !macro push_all {
-        pha
-        txa
-        pha
-        tya
-        pha
+            pha
+            txa
+            pha
+            tya
+            pha
 }
 
 !macro pull_all {
-        pla
-        tay
-        pla
-        tax
-        pla
+            pla
+            tay
+            pla
+            tax
+            pla
 }

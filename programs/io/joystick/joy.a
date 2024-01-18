@@ -21,7 +21,7 @@ main:
 
 
 !macro cursor_at @x, @y {
-            clc                         ; set cursor
+            clc                             ; set cursor
             ldy #@x
             ldx #@y
             jsr $fff0
@@ -50,7 +50,7 @@ init_scr_fixed:
             +scr_char_at 9, 11, 'l'-CHAR_TO_SCR
             +scr_char_at 11, 13, 'd'-CHAR_TO_SCR
             +scr_char_at 13, 11, 'r'-CHAR_TO_SCR
-            +scr_char_at 11, 11, 81 
+            +scr_char_at 11, 11, 81
 
 
             ; Joystick #2
@@ -58,7 +58,7 @@ init_scr_fixed:
             +scr_char_at 26, 11, 'l'-CHAR_TO_SCR
             +scr_char_at 28, 13, 'd'-CHAR_TO_SCR
             +scr_char_at 30, 11, 'r'-CHAR_TO_SCR
-            +scr_char_at 28, 11, 81    
+            +scr_char_at 28, 11, 81
 
             rts
 
@@ -70,14 +70,14 @@ init_scr_fixed:
 
 
 read_joysticks:
-            lda $dc01                   ; read joystick port 1
+            lda $dc01                       ; read joystick port 1
             sta joy_reg
             ldx #0
             jsr read_joystick
-            
-            lda $dc00                   ; read joystick port 2
+
+            lda $dc00                       ; read joystick port 2
             sta joy_reg
-            ldx #17                     ; display offset
+            ldx #17                         ; display offset
             jsr read_joystick
 
             rts
@@ -95,7 +95,7 @@ read_joystick:
             bcc ++
 +           lda #COLOR_NEUTRAL
 ++          +scr_color_at 11, 9
-.test_down 
+.test_down
             lsr joy_reg
             bcs +
             lda #COLOR_ACTIVE

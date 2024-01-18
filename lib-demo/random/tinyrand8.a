@@ -7,12 +7,12 @@
             !src <lib/strings/m-strout.a>
 
 main:
-            jsr $ff81                   ; clear screen
-            
+            jsr $ff81                       ; clear screen
+
             +m_strout .msg_intro
--           jsr $ff9f                   ; SCANKEY
-            jsr $ffe4                   ; GETIN
-            beq -                       ; wait for key
+-           jsr $ff9f                       ; SCANKEY
+            jsr $ffe4                       ; GETIN
+            beq -                           ; wait for key
 
             lda $00a2
             jsr set_seed

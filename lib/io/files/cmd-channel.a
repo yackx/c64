@@ -54,9 +54,9 @@ open_15_d_15:
             lda #15
             tay
             jsr SETLFS
-            
+
             jsr OPEN
-            
+
             rts
 
 
@@ -98,7 +98,7 @@ read_store_status:
 -           jsr READST
             bne +
             jsr CHRIN
-            .target = * + 1   
+            .target = * + 1
             sta $ffff,x
             inx
             bne -

@@ -8,14 +8,14 @@
 
 
 main:
-            jsr $ff81                   ; clrscr
+            jsr $ff81                       ; clrscr
 
             ; Press key to start.
             ; This introduces entropy for RNPG.
             +m_strout .msg_start
--           jsr $ff9f                   ; SCANKEY
-            jsr $ffe4                   ; GETIN
-            beq -                       ; wait for key
+-           jsr $ff9f                       ; SCANKEY
+            jsr $ffe4                       ; GETIN
+            beq -                           ; wait for key
 
             ; Init SID random number generator
             jsr init_rnd_sid
@@ -24,14 +24,14 @@ main:
             +m_strout .msg_d41b
             ldy #$ff
 -
-            jsr rnd_range_0_24          ; Get random number
+            jsr rnd_range_0_24              ; Get random number
             jsr print_hex
             lda #' '
-            jsr $ffd2                   ; CHROUT
-            
+            jsr $ffd2                       ; CHROUT
+
             dey
             bne -
-            
+
             rts
 
             !src <lib/random/rnd-sid-range8.a>

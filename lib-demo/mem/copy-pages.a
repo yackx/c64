@@ -2,10 +2,10 @@
 ;
 ; Copy the 1st and 2nd page of text screen on the 3rd and 4th page
 
-        !cpu 6510
-        !src <lib/misc/upstart.a>
-        !src <lib/mem/m-mem.a>
+            !cpu 6510
+            !src <lib/misc/upstart.a>
+            !src <lib/mem/m-mem.a>
 
 main:
-        +copy_pages $04, $06, 2
-        rts
+            +copy_pages $04, $06, 2
+            rts
