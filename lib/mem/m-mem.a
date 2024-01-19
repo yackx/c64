@@ -53,9 +53,9 @@ DEF_m_men = 1
 }
 
 
-; Fill a memory page.
+; Fill several memory pages.
 ;
-; USES:     A, Xm Y
+; USES:     A, X, Y
 !macro fill_pages @start_page, @count, @char {
             ldy #0
             ldx #@count

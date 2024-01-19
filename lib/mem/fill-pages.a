@@ -1,0 +1,21 @@
+; Fill several memory pages.
+;
+; IN:       A = value to fill with
+;           X = number of pages to fill
+;           Y = start page
+; USES:     X, Y
+fill_pages:
+            sty .page
+            ldy #0                          ; Index in page
+-
+            .page = *+2
+            sta $0000,y                     ; Self-modifying code
+            iny
+            bne -
+
+            dex
+            beq +
+            inc .page
+            jmp -
++
+            rts

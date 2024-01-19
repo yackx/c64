@@ -1,0 +1,76 @@
+; Display pixels on a bitmap screen.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/layout/main.a>
+            !src <lib/misc/upstart.a>
+
+            BITMAP_PAGE = $20
+            SCREEN_PAGE = $04
+
+
+main:
+            ; Clear bitmap memory.
+            ; 32 pages, filled with 0.
+            lda #0
+            ldx #32
+            ldy #BITMAP_PAGE
+            jsr fill_pages
+
+            ; Clear screen memory.
+            ; 4 pages, filled with $10
+            ; (white pixels on black background).
+            lda #$10
+            ldx #4
+            ldy #SCREEN_PAGE
+            jsr fill_pages
+            
+            ; Switch to bitmap mode.
+            lda #$3b
+            sta VIC2CR1
+            lda #$08
+            sta VIC2CR2
+            lda #$18
+            sta VIC2MPTR
+
+            ; Prepare common parameters.
+            lda #BITMAP_PAGE
+            sta plot_param_screen_addr_page
+            lda #7
+            sta plot_param_color
+            lda #0
+            sta plot_param_x_bit_8
+
+            ; Plot a single pixel.
+            lda #20
+            sta plot_param_x_bits_0_7
+            lda #10
+            sta plot_param_y
+            jsr plot
+
+            ; Plot a line, pixel by pixel.
+            lda #200
+            sta .line_x
+            sta .line_y
+
+-           lda .line_x
+            sta plot_param_x_bits_0_7
+            lda .line_y
+            sta plot_param_y
+            jsr plot
+            dec .line_x
+            dec .line_y
+            bne -
+            jmp *
+
+            ; Halt.
+            jmp *
+
+
+.line_x:    !byte 0
+.line_y:    !byte 0
+
+
+            !src <lib/hires/plot.a>
+            !src <lib/mem/fill-pages.a>
