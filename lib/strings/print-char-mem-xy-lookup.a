@@ -10,7 +10,9 @@
 ;
 ; IN:       X = row
 ;           Y = column
-;           A = character (screen code
+;           A = character (screen code)
+;
+; CYCLES:   33/36
 print_char_xy:
             pha
 
