@@ -1,0 +1,20 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.a>
+
+
+; Print a character at a given position using direct screen memory access.
+;
+; IN:       X = row
+;           Y = column
+;           A = character (screen code)
+main:
+            ldx #19
+            ldy #15
+            lda #0
+            jsr print_char_xy
+
+            rts
+
+            !src<lib/strings/print-char-mem-xy.a>
