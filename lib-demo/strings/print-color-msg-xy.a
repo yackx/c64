@@ -1,14 +1,16 @@
             !cpu 6510
             !src <lib/misc/upstart.a>
             !src <lib/strings/m-print-color-msg-xy.a>
+            !src <lib/layout/main.a>
+            !src <lib/layout/kernal.a>
 
 
 main:
-            jsr $ff81
+            jsr CINT
 
             lda #0
-            sta $d020
-            sta $d021
+            sta VIC2BORDER
+            sta VIC2BACKGROUND
 
             +m_print_color_msg_at .text1, .text1+1, .text1+2, .text1+3
             +m_print_color_msg_struct_at .text2

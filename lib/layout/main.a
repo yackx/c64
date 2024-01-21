@@ -10,6 +10,7 @@ DEF_MEMORY_MAP = 1
 !addr {
             R6510 = $01                     ; 6510 On-Chip I/O Port
             FA = $ba                        ; Current device number
+            COLOR = $0286                   ; Current color    
             XMAX = $0289                    ; Maximum Keyboard Buffer Size
             RPTFLA = $028a                  ; Keyboard Repeat Flag
             RPTFLG = RPTFLA
@@ -38,6 +39,7 @@ DEF_MEMORY_MAP = 1
 
             VIC2BORDER = $d020              ; Border color
             VIC2B0C = $d021                 ; Background color 0
+            VIC2BACKGROUND = VIC2B0C
             VIC2B1C = $d022                 ; Background color 1
             VIC2B2C = $d023                 ; Background color 2
             VIC2B3C = $d024                 ; Background color 3
