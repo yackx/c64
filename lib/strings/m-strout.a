@@ -1,4 +1,4 @@
-                                            ;ACME 0.97
+            ;ACME 0.97
             !cpu 6510
 
 !macro m_strout @msg_addr {
