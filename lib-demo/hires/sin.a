@@ -1,0 +1,69 @@
+; Display pixels on a bitmap screen.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/layout/main.a>
+            !src <lib/misc/math.a>
+            !src <lib/misc/upstart.a>
+
+            BITMAP_PAGE = $20
+            SCREEN_PAGE = $04
+
+
+main:
+            ; Clear bitmap memory.
+            ; 32 pages, filled with 0.
+            lda #0
+            ldx #32
+            ldy #BITMAP_PAGE
+            jsr fill_pages
+
+            ; Clear screen memory.
+            ; 4 pages, filled with $10
+            ; (white pixels on black background).
+            lda #$10
+            ldx #4
+            ldy #SCREEN_PAGE
+            jsr fill_pages
+            
+            ; Switch to bitmap mode.
+            lda #$3b
+            sta VIC2CR1
+            lda #$08
+            sta VIC2CR2
+            lda #$18
+            sta VIC2MPTR
+
+            ; Prepare common parameters.
+            lda #BITMAP_PAGE
+            sta plot_param_screen_addr_page
+            lda #7
+            sta plot_param_color
+            lda #0
+            sta plot_param_x_bit_8
+
+            ; Plot sine wave.
+-           ldx .wave_x
+            stx plot_param_x_bits_0_7
+            lda .y_pos, x
+            sta plot_param_y
+            jsr plot
+            dec .wave_x
+            bne -
+
+            ; Halt.
+            jmp *
+
+
+.wave_x:    !byte $ff
+
+            !align $ff, 0, 0
+.y_pos:
+            !for x, 0, 255 {
+                !byte sin(float(x) / 255 * PI * 4) * 30 + 100 + 0.5
+            }
+
+
+            !src <lib/hires/plot.a>
+            !src <lib/mem/fill-pages.a>
