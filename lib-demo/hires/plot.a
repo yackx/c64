@@ -39,10 +39,19 @@ main:
             sta plot_param_screen_addr_page
             lda #7
             sta plot_param_color
+
+            ; Plot a single pixel - X bit 8 set.
+            lda #1
+            sta plot_param_x_bit_8
+            lda #20
+            sta plot_param_x_bits_0_7
+            lda #10
+            sta plot_param_y
+            jsr plot
+
+            ; Plot a single pixel - X bit 8 clear.
             lda #0
             sta plot_param_x_bit_8
-
-            ; Plot a single pixel.
             lda #20
             sta plot_param_x_bits_0_7
             lda #10
