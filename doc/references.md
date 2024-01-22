@@ -88,7 +88,6 @@
 ## Articles
 
 - [How MOS 6502 Illegal Opcodes really work](https://www.pagetable.com/?p=39)
-- [HiRes fast screen clearing routine](https://retro64.altervista.org/blog/hi-res-bitmap-graphics-with-commodore-64-basic-2-0-fast-screen-clearing-routine/)
 - [Demo general presentation](https://codebase64.org/doku.php?id=base:demo_coding_introduction) by Puterman aka Linus Åkerlund
 - [Random numbers](https://www.atarimagazines.com/compute/issue72/random_numbers.php) - Atari magazine
 - [LOAD"$",8](https://www.pagetable.com/?p=273) - Explains how directory listing works. ASM example.
