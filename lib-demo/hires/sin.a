@@ -46,17 +46,36 @@ main:
             ; Plot sine wave.
 -           ldx .wave_x
             stx plot_param_x_bits_0_7
+
             lda .y_pos, x
             sta plot_param_y
             jsr plot
-            dec .wave_x
+
+            ; Are we on the left side (0 < x < 255)?
+            lda plot_param_x_bit_8
+            bne .right_side
+
+            ; Next X (left side)
+            inc .wave_x
             bne -
 
-            ; Halt.
-            jmp *
+            ; Switch to right side (255 < x < 319).
+            inc plot_param_x_bit_8
+            lda plot_param_x_bit_8
+            and #2
+            bne .done
+
+.right_side:
+            lda .wave_x
+            cmp #319-255-1
+            beq .done
+            inc .wave_x
+            bne -
+
+.done:      jmp *
 
 
-.wave_x:    !byte $ff
+.wave_x:    !byte 0
 
             !align $ff, 0, 0
 .y_pos:
