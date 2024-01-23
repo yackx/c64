@@ -1,0 +1,101 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+; Colors for the current theme.
+;
+; Stored as screen colors.
+; Will have to be converted to PETSCII colors
+; when using CHROUT.
+theme_colors:
+theme_color_primary:
+            !byte COLOR_WHITE
+theme_color_highlight:
+            !byte COLOR_WHITE
+theme_color_muted:
+            !byte COLOR_GRAY1
+theme_color_border:
+            !byte COLOR_BLACK
+theme_color_background:
+            !byte COLOR_BLACK
+theme_color_action:
+            !byte COLOR_YELLOW
+theme_color_error:
+            !byte COLOR_RED
+
+            ENTRIES_PER_THEME = * - theme_color_primary
+
+
+; Display and handle the color theme screen.
+!zone zone_screen_color_theme {
+screen_color_theme:
+            lda #PETSCII_CLR
+            jsr CHROUT
+
+            lda #PETSCII_REVOFF
+            jsr CHROUT
+
+            lda theme_color_action
+            jsr chrout_petscii_to_color
+            +m_strout .msg_title
+            
+            lda theme_color_primary
+            jsr chrout_petscii_to_color
+            +m_strout .msg_themes
+
+            lda theme_color_muted
+            jsr chrout_petscii_to_color
+            +m_strout .msg_back
+
+.key        jsr keypress
+            cmp #PETSCII_ARROW_LEFT
+            beq .done
+
+            cmp #'1'
+            bne +
+            ldx #ENTRIES_PER_THEME * 0
+            jmp .set_theme
+
++           cmp #'2'
+            bne +
+            ldx #ENTRIES_PER_THEME * 1
+            jmp .set_theme
+
++           cmp #'3'
+            bne .key
+            ldx #ENTRIES_PER_THEME * 2
+
+.set_theme: ldy #0
+-           lda themes,x
+            sta theme_colors,y
+            iny
+            cpy #ENTRIES_PER_THEME
+            beq .done
+            inx
+            jmp -
+
+.done:      rts
+
+
+.msg_title: 
+            !pet "COLOR THEME", 13, 13, 0
+.msg_themes:
+            !pet "1. Dark mode", 13
+            !pet "2. Bright mode", 13
+            !pet "3. C64 Dream", 13, 13, 0
+.msg_back:  
+            !pet PETSCII_ARROW_LEFT, "  Back", 0
+
+
+; Themes colors.
+themes:
+theme_1:    !byte COLOR_WHITE, COLOR_GRAY3, COLOR_GRAY1
+            !byte COLOR_BLACK, COLOR_BLACK, COLOR_YELLOW
+            !byte COLOR_RED
+theme_2:    !byte COLOR_BLACK, COLOR_GRAY1, COLOR_GRAY3
+            !byte COLOR_WHITE, COLOR_WHITE, COLOR_LBLUE
+            !byte COLOR_RED
+theme_3:    !byte COLOR_LBLUE, COLOR_BLUE, COLOR_ORANGE
+            !byte COLOR_LBLUE, COLOR_BLUE, COLOR_GREEN
+            !byte COLOR_RED
+}

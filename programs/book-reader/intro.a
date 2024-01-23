@@ -1,0 +1,44 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+; Display the intro screen.
+!zone zone_screen_intro {
+screen_intro:
+            lda #PETSCII_CLR
+            jsr CHROUT
+
+            lda #PETSCII_REVOFF
+            jsr CHROUT
+
+            lda theme_color_action
+            jsr chrout_petscii_to_color
+            +m_strout .msg_title
+            
+            lda theme_color_highlight
+            jsr chrout_petscii_to_color
+            +m_strout .msg_intro
+
+            lda theme_color_action
+            jsr chrout_petscii_to_color
+            +m_strout .msg_start
+
+.key        jsr keypress
+            rts
+
+
+.msg_title:  
+            !pet "BOOK READER", 13, 13, 0
+.msg_intro:  
+            !pet "A simple book reader for the C64.", 13,13
+            !pet "Keys available while reading:", 13, 13
+.msg_keys:
+            !pet "F1 Display this page", 13
+            !pet "F5 Next page", 13
+            !pet "F3 Previous page", 13
+            !pet "C. Color theme", 13
+            !pet "G. Go to page", 13
+            !pet "Q. Quit", 13, 13, 13, 0
+.msg_start:
+            !pet "Press any key to start reading", 0
+}

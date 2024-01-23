@@ -1,0 +1,30 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+; Display a color bar at the bottom of the screen
+;
+; IN:       A = PETSCII color
+; USES:     R5, A, X, Y
+display_color_bar:
+            sta R5
+            +set_cursor_at 0, 24
+
+            lda R5
+            jsr chrout_petscii_to_color
+
+            lda #PETSCII_REVON
+            jsr CHROUT
+
+            ; Access the screen memory and color RAM directly.
+            ; Using CHROUT would force a new line when the cursor
+            ; reaches the end of the line.
+            ldx #39
+-           lda #$e0
+            sta SCREEN_MEM+24*40,x
+            lda R5
+            sta COLOR_RAM+24*40,x
+            dex
+            bne -
+
+            rts

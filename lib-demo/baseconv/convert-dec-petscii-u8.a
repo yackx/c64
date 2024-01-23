@@ -1,0 +1,133 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            ; !src <lib/strings/m-print.a>
+            !src <lib/strings/m-strout.a>
+            !src <lib/misc/upstart.a>
+
+
+; @impl
+; Lots of copy-paste for readability. This is just a demo.
+main:
+            ldx #0
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'0'
+            sta convert_dec_petscii_to_u8_params
+            ldx #1
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'1'
+            sta convert_dec_petscii_to_u8_params
+            ldx #1
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'1'
+            sta convert_dec_petscii_to_u8_params
+            lda #'5'
+            sta convert_dec_petscii_to_u8_params+1
+            ldx #2
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'1'
+            sta convert_dec_petscii_to_u8_params
+            lda #'6'
+            sta convert_dec_petscii_to_u8_params+1
+            ldx #2
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'9'
+            sta convert_dec_petscii_to_u8_params
+            lda #'9'
+            sta convert_dec_petscii_to_u8_params+1
+            ldx #2
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'1'
+            sta convert_dec_petscii_to_u8_params
+            lda #'0'
+            sta convert_dec_petscii_to_u8_params+1
+            lda #'0'
+            sta convert_dec_petscii_to_u8_params+2
+            ldx #3
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'2'
+            sta convert_dec_petscii_to_u8_params
+            lda #'5'
+            sta convert_dec_petscii_to_u8_params+1
+            lda #'5'
+            sta convert_dec_petscii_to_u8_params+2
+            ldx #3
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'2'
+            sta convert_dec_petscii_to_u8_params
+            lda #'5'
+            sta convert_dec_petscii_to_u8_params+1
+            lda #'6'
+            sta convert_dec_petscii_to_u8_params+2
+            ldx #3
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+
+            lda #'9'
+            sta convert_dec_petscii_to_u8_params
+            lda #'9'
+            sta convert_dec_petscii_to_u8_params+1
+            lda #'9'
+            sta convert_dec_petscii_to_u8_params+2
+            ldx #3
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+    
+            rts
+
+
+; Print A in hexa, safekeeping carry flag.
+print_hex_safe_c:
+            bcs +
+            jsr print_hex
+            clc
+            rts
++           jsr print_hex
+            sec
+            rts
+
+
+validity_check:
+            bcs .invalid
+            +m_strout .msg_valid
+            rts
+.invalid:
+            +m_strout .msg_invalid
+            rts
+
+
+.msg_valid: 
+            !pet " valid", 13, 0
+.msg_invalid: 
+            !pet " invalid", 13, 0
+
+
+            !src <lib/baseconv/convert-dec-petscii-u8.a>
+            !src <lib/baseconv/print-hex.a>
+            !src <lib/strings/strout.a>

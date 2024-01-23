@@ -1,0 +1,20 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+; CHROUT a screen color as a PETSCII color.
+;
+; This routines takes care of the conversion
+; from screen color to PETSCII color.
+;
+; IN:       A = screen color
+; USES:     R5, R6
+chrout_petscii_to_color:
+            sta R5
+            stx R6
+            tax
+            lda petscii_colors,x
+            jsr CHROUT
+            ldx R6
+            lda R5
+            rts

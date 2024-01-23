@@ -1,0 +1,31 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+read_info:
+            lda #<info_filename
+            sta read_file_param_filename_addr
+            lda #>info_filename
+            sta read_file_param_filename_addr+1
+            lda #info_filename_end - info_filename
+            sta read_file_param_filename_len
+
+            lda #<read_info_chr_vect
+            sta read_file_param_char_vect
+            lda #>read_info_chr_vect
+            sta read_file_param_char_vect+1
+
+            jsr read_file
+
+            rts
+
+
+read_info_chr_vect:
+            sta max_page
+
+            rts
+
+
+info_filename:
+            !pet "info,u"
+info_filename_end:

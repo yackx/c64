@@ -1,0 +1,10 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/layout/main.a>
+
+
+!macro switch_lower_case {
+            lda #$17
+            sta VIC2MPTR
+}

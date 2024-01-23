@@ -1,0 +1,38 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/pseudo-registers.a>
+
+            !addr ZP_LO_BYTE = R3
+            !addr ZP_HI_BYTE = R4
+
+
+; Multiply A by 10.
+;
+; IN:       A
+; OUT:      R3 R4
+
+mul_10:
+            pha
+            sta ZP_LO_BYTE                  ; Store A
+            lda #0
+            sta ZP_HI_BYTE
+            pla
+
+            asl
+            rol ZP_HI_BYTE                  ; A * 2
+            
+            asl
+            rol ZP_HI_BYTE                  ; A * 4
+
+            clc
+            adc ZP_LO_BYTE
+            bcc +
+            inc ZP_HI_BYTE                  ; A * 5
+
++           asl
+            rol ZP_HI_BYTE                  ; A * 10
+
+            sta ZP_LO_BYTE
+
+            rts

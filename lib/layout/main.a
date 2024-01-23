@@ -52,4 +52,6 @@ DEF_MEMORY_MAP = 1
             SID3FR = $d40e                  ; SID voice 3 frequency (2 bytes)
             SID3CR = $d412                  ; SID voice 3 control register
             SID3WFOUT = $d41b               ; SID voice 3 waveform output
+
+            COLOR_RAM = $d800               ; Color RAM
 }

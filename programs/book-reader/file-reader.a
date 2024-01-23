@@ -1,0 +1,99 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            ; Channels and device
+            FILE_HANDLER = 2
+            DEVICE = 8
+            SECONDARY = 2
+
+
+; Read file parameters.
+;
+; Whenever a file is read, this routine will JSR to the
+; vectore in read_file_param_char_vect.
+read_file_params:
+read_file_param_filename_addr:
+            !byte 0, 0
+read_file_param_filename_len:
+            !byte 0 
+read_file_param_char_vect:
+            !byte 0, 0
+
+
+; Read a file from disk.
+;
+; The file is read one byte at a time,
+; and the routine JSR to a vector provided in
+; read_file_param_char_vect after each byte read.
+;
+; IN:       read_file_params
+!zone read_file {
+read_file:
+            lda read_file_param_char_vect
+            sta .chr_target
+            lda read_file_param_char_vect + 1
+            sta .chr_target + 1
+
+            ldx read_file_param_filename_addr
+            ldy read_file_param_filename_addr + 1
+            lda read_file_param_filename_len
+            jsr SETNAM
+
+            lda #FILE_HANDLER
+            ldx #DEVICE
+            ldy #SECONDARY
+            jsr SETLFS
+
+            jsr OPEN
+            bcs .error
+
+            ldx #FILE_HANDLER
+            jsr CHKIN                       ; Set input channel
+
+            ldy #0
+
+.loop       jsr CHRIN                       ; Read a byte from the file
+            .chr_target = *+1
+            jsr $0000
+            jsr READST                      ; Read status byte
+            bne .status
+            jmp .loop
+
+.status:
+            cmp #$40                        ; Check for EOF
+            bne .error
+
+.eof:
+            jsr .close
+            clc                             ; No error
+            rts
+
+.error:
+            pha
+            lda theme_color_error
+            jsr display_color_bar
+            +set_cursor_at 0, 24
+            +m_strout .err_read
+            pla
+            jsr .close
+
+-           jsr keypress
+            cmp #PETSCII_RETURN
+            bne -
+
+            sec
+            rts
+            ; CHKIN error: for further information,
+            ; the drive error channel has to be read.
+
+
+; Close the file and clear the channel.
+.close:
+            lda #FILE_HANDLER
+            jsr CLOSE
+            jsr CLRCHN
+            rts
+
+
+.err_read:  !pet "Read error [RETURN]", 0
+}

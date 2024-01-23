@@ -1,0 +1,16 @@
+
+            ; ACME 0.97
+            !cpu 6510
+
+            !src <lib/layout/kernal.a>
+
+
+; Set the cursor at the given position
+;
+; USES:     A, X, Y
+!macro set_cursor_at @x, @y {
+            clc                             ; set
+            ldy #@x
+            ldx #@y
+            jsr PLOT
+}

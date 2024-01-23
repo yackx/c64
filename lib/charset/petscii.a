@@ -1,0 +1,58 @@
+; From ACME's petscii.a
+;ACME 0.94.4
+
+!ifdef LIB_PETSCII !eof
+LIB_PETSCII = 1
+
+            ; color codes
+            PETSCII_BLACK        = 144
+            PETSCII_WHITE        =   5
+            PETSCII_RED        =  28
+            PETSCII_CYAN        = 159
+            PETSCII_PURPLE        = 156
+            PETSCII_GREEN        =  30
+            PETSCII_BLUE        =  31
+            PETSCII_YELLOW        = 158
+            PETSCII_ORANGE        = 129
+            PETSCII_BROWN        = 149
+            PETSCII_LRED        = 150
+            PETSCII_GRAY1        = 151
+            PETSCII_GRAY2        = 152
+            PETSCII_LGREEN        = 153
+            PETSCII_LBLUE        = 154
+            PETSCII_GRAY3        = 155
+
+            ; Control codes
+            PETSCII_RETURN =  13
+            PETSCII_DEL =  20
+            PETSCII_HOME =  19
+            PETSCII_CLR = 147
+            PETSCII_STOP =  3
+            PETSCII_REVON =  18
+            PETSCII_REVOFF = 146
+
+            ; Cursor
+            PETSCII_CURSOR_LEFT = 157
+            PETSCII_CURSOR_RIGHT = 29
+            PETSCII_CURSOR_UP = 145
+            PETSCII_CURSOR_DOWN = 17
+
+            ; Arrow
+            PETSCII_ARROW_LEFT =  95
+            PETSCII_ARROW_UP =  94
+
+            ; Switching character set
+            PETSCII_LOCK        =   8             ; forbid CBM-shift (C128 uses 11)
+            PETSCII_UNLOCK        =   9           ; allow CBM-shift (C128 uses 12)
+            PETSCII_LOWERCASE    =  14         ; switch to lowercase/uppercase character set
+            PETSCII_UPPERCASE    = 142         ; switch to uppercase/graphics character set
+
+            ; function keys
+            PETSCII_F1        = 133
+            PETSCII_F2        = 137
+            PETSCII_F3        = 134
+            PETSCII_F4        = 138
+            PETSCII_F5        = 135
+            PETSCII_F6        = 139
+            PETSCII_F7        = 136
+            PETSCII_F8        = 140

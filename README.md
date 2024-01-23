@@ -7,10 +7,16 @@
 In this repository:
 
 - [lib](/lib/) - Reusable routines and macros written for ACME cross-assembler.
-- [lib-demo](/lib-demo/) - Sample code (routines in action)
-- [programs](/programs) - Illustrations of basic techniques, [Boring Snake](/programs/snake), [c64 rules](/programs/c64-rules/), one part in one day of [Advent of Code](/programs/aoc/) and minor experiments.
+- [lib-demo](/lib-demo/) - Sample code (routines in action).
+- [programs](/programs) - Illustrations of basic techniques:
+  - [Boring Snake](/programs/snake)
+  - [c64 rules demo](/programs/c64-rules/)
+  - one part in one day of [Advent of Code](/programs/aoc/)
+  - a simple [book reader]()
+  - and some other random experiments.
 - [doc](/doc/) - [Addressing modes](/doc/addressing_modes.txt) summary, assemblers, editor code completion, IDE and [Awesome references](/doc/references.md).
-- [scripts](/scripts/) - Python utility scripts, including [y-acme-fmt](/scripts/y-acme-fmt.py) to format ACME source code.
+- [scripts](/scripts/) - Python utility scripts:
+  - [y-acme-fmt](/scripts/y-acme-fmt.py) to format ACME source code.
 
 Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
 

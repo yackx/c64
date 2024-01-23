@@ -1,0 +1,33 @@
+; Print a decimal number
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.a>
+            !src <lib/strings/m-print.a>
+
+
+main:
+            lda #numbers_end - numbers
+            sta target
+            ldx #0
+
+-           lda index
+            tax
+            lda numbers,x
+            jsr print_int_8
+            +new_line
+            inc index
+            lda index
+            target = *+1
+            cmp #0
+            bne -
+
+            rts
+
+
+numbers:    !byte 213, 42, 6, 0, 102
+numbers_end:
+index:      !byte 0
+
+            !src <lib/baseconv/print-int-8.a>
