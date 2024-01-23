@@ -104,6 +104,18 @@ Invoke `make`from the root of the repository to assemble, create a symbol table 
 ```bash
 # Assemble and package `many.a`
 make TARGET=programs/sprites/many
+```
+
+This will create:
+
+- `many.prg` - Program file
+- `many.a.sym` - Symbol table
+- `many.d64` - Disk image
+- `many.d` - Disassembled source code
+
+Then run the program with:
+
+```bash
 # Launch emulator and auto-load
 make TARGET=programs/sprites/many run
 ```
@@ -113,8 +125,9 @@ Programs in this repository are located at `$c000` by convention or use BASIC up
 - If the program contains a Program Counter (PC) directive, for instance `*=$c000`, type `SYS 49152` to run it from BASIC.
 - If the program includes `common/upstart.a`, a [neat trick](common/upstart.a) will cause the asm program to run with `RUN`. Thanks to Vice `-autostart` option, the emulator will automatically load and run the program.
 
-Note: the `Makefile` will automatically detect the PC directive and adjust the disassembler command accordingly.
+> **NOTE**
+> The `Makefile` will automatically detect the PC directive and adjust the disassembler command accordingly.
 
-The `Makefile` will look for a local `Makefile` in the target directory. If found, it will be invoked. This allows for instance to add files to the generic disk image.
+The `Makefile` will also look for a local `Makefile` in the target directory. If found, it will be invoked. This allows for instance to add files to the generic disk image.
 
 ![C64 rules intro screen](/demo/c64-rules.gif)
