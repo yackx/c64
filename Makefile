@@ -17,6 +17,8 @@ all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 
 %.d64: %.prg
 	$(C1541) -format "foobar,1" d64 `pwd`/$@ -write `pwd`/$< $(*F)
+	# Execute local Makefile if it exists
+	if [ -f `dirname $<`/Makefile ]; then make -C `dirname $<` C1541=$(C1541) BASENAME=`basename $(TARGET)`; fi
 
 %.d: START_PC = $(shell python3 -m scripts.detect_start_pc $(TARGET).a)
 %.d: D_SKIP_BYTES = $(shell python3 -m scripts.compute_skip_bytes $(START_PC))
