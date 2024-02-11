@@ -16,6 +16,10 @@
 - [area51.dev](https://area51.dev/c64/kernal/memorymap/) - Synthetic memory map and tables
 - [sta.c64.org screen codes](https://sta.c64.org/cbm64scr.html) - Screen codes
 
+## Routine libraries
+
+- [TobyLobster/multiply_test](https://github.com/TobyLobster/multiply_test) - Comparing 6502 multiply routines
+
 ## Programming websites
 
 - [c64-wiki.com](https://www.c64-wiki.com) - Coding, games, glossary, graphics, music and more
