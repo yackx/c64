@@ -11,6 +11,7 @@ In this repository:
 - [programs](/programs) - Illustrations of basic techniques:
   - [Boring Snake](/programs/snake)
   - [c64 rules demo](/programs/c64-rules/)
+  - [Pacmunch](/programs/pacmunch/)
   - one part in one day of [Advent of Code](/programs/aoc/)
   - a simple [book reader]()
   - and some other random experiments.

@@ -13,3 +13,4 @@
 - [HiRes bitmap](hires) - Display a HiRes bitmap including Koala format.
 - [Advent of Code 2023](aoc) - Limited to 2023 - day 1 - part 1 (enough headaches for now).
 - [Book reader](book-reader) - A simple book reader.
+- [Pacmunch](pacmunch) - Crazy Pacman has decided to eat the characters on your screen.
