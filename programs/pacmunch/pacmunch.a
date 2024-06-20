@@ -117,6 +117,7 @@ x_right:    inc $d000                       ; move one pixel to the right
             sta $d010                       ; sprite #0: x to 0 (left)
 
             lda #7
+            clc
             adc $d001                       ; sprite #0: y to next text line
 
             cmp #END_ROW
