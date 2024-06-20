@@ -1,3 +1,7 @@
+; Pac-munch
+;
+; This crazy pacman will eat all characters on the screen.
+
             ;ACME 0.97
             !cpu 6510
 
