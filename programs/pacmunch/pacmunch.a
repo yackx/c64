@@ -105,7 +105,7 @@ munch_it:   lda #MUNCHED_CHAR               ; pacman is on a new char
 x_test:     lda $d010                       ; sprite #0: x > 255 ?
             bne x_right                     ; sprite #0 has x > 255
 
-; Sprite #0 on the left part of the screen (x <= 255)
+; Sprite #0 on the left part of the screen (x-coord <= 255)
 x_left:     nop                             ; slow things down a little: less cycles
             nop                             ; take place on the left part of screen
             inc $d000                       ; move one pixel to the right
@@ -113,7 +113,7 @@ x_left:     nop                             ; slow things down a little: less cy
             inc $d010                       ; sprite #0: x bit #8 (right)
             jmp cycle_sprite
 
-; Sprite #0 on the right part of the screen (x > 255)
+; Sprite #0 on the right part of the screen (x-coord > 255)
 x_right:    inc $d000                       ; move one pixel to the right
             
             lda $d000
