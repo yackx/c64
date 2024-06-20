@@ -28,7 +28,6 @@ main:
             jsr munch
             rts
 
-
 print_msg:
             lda #<msg
             sta R1
@@ -36,7 +35,6 @@ print_msg:
             sta R2
             jsr strout
             rts
-
 
 setup_sprites:
             ldy #0
@@ -62,9 +60,9 @@ setup_sprites:
             lda #1
             sta VIC2SPE                     ; enable sprite #0
 
-            lda #<$0400 + 3*40              ; current char location
+            lda #<DEFAULT_SCREEN_MEM + 3*40 ; current char location
             sta CURRENT_CHAR                ; is the first col of 3rd row
-            lda #>$0400 + 3*40
+            lda #>DEFAULT_SCREEN_MEM + 3*40
             sta CURRENT_CHAR + 1
 
             ldx #SPRITE_CYCLE_SKIP          ; load sprite cycle skip counter
