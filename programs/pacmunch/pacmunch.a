@@ -82,7 +82,7 @@ setup_counters:
             lda #SPRITE_FRAME_COUNT
             sta CURR_SPRITE_FRAME           ; init sprite frame counter
             
-            ldy #0
+            ldy #0                          ; current pixel in char
 
             rts
 
@@ -99,7 +99,7 @@ munch:
             cmp #320-255-1                  ; sprite #0 x out of screen (right)?
             bcs x_test                      ; then don't try to munch char
 
-; Test if we are on a character (every PIXELS_PER_CHAR)
+; Test if we are on a character (every PIXELS_PER_CHAR - using Y register)
 on_char:    iny                             ; pacman is on a char
             cpy #PIXELS_PER_CHAR            ; have we reached the next char?
             bne x_test
