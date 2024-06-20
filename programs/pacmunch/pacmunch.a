@@ -14,13 +14,13 @@
             BITMAP_ADDR = $2000             ; Sprite bitmap address
             RASTER_LINE = 251               ; 251th line not visible on screen
             FRAME_SKIP = 1                  ; Skip frames each tick
-            SPRITE_CYCLE_SKIP = 4           ; Move 4 pixels before animating sprite
+            CYCLE_SPRITE_SKIPS = 4          ; Move 4 pixels before animating sprite
             PACMAN_FRAMES = 4               ; Pacman is composed of 4 frames
             PIXELS_PER_CHAR = 8             ; Encounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 240
             CURRENT_CHAR = R1
-            CURRENT_SPRITE_FRAME = R5
+            CURR_CYCLE_SPRITE_SKIP = R5
 
 
 main:
@@ -73,8 +73,11 @@ setup_sprites:
 
 
 setup_counters:
-            ldx #SPRITE_CYCLE_SKIP          ; init sprite cycle skip counter
+            lda #CYCLE_SPRITE_SKIPS         ; init sprite cycle skip counter
+            sta CURR_CYCLE_SPRITE_SKIP
+
             ldy #0
+
             rts
 
 
@@ -136,9 +139,12 @@ x_right:    inc $d000                       ; move one pixel to the right
 
 ; Animate the sprite #0 by cycling through the bitmap
 cycle_sprite:
-            dex
+            dec CURR_CYCLE_SPRITE_SKIP
             bne munch
-            ldx #SPRITE_CYCLE_SKIP
+            
+            lda #CYCLE_SPRITE_SKIPS
+            sta CURR_CYCLE_SPRITE_SKIP
+            
             inc DEFAULT_SPRITE_PTR_AREA     ; cycle through the sprite map
             lda DEFAULT_SPRITE_PTR_AREA     ; in order to animate our pacman
             cmp #$80 + PACMAN_FRAMES - 1
