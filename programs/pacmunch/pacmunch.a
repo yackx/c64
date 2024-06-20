@@ -6,19 +6,19 @@
             !cpu 6510
 
             !src <lib/misc/upstart.a>
+            !src <lib/registers/pseudo-registers.a>
 
             RASTER_LINE = 251               ; 251th line not visible on screen
-            FRAME_SKIP = 1                  ; skip frames each tick
-            SPRITE_CYCLE_SKIP = 4           ; we move 4 pixels before animating sprite
-            PACMAN_FRAMES = 4               ; pacman is composed of 4 frames
-            PIXELS_PER_CHAR = 8             ; encounter one char every 8 pixels
-            MUNCHED_CHAR = $20              ; white space
+            FRAME_SKIP = 1                  ; Skip frames each tick
+            SPRITE_CYCLE_SKIP = 4           ; Move 4 pixels before animating sprite
+            PACMAN_FRAMES = 4               ; Pacman is composed of 4 frames
+            PIXELS_PER_CHAR = 8             ; Wncounter one char every 8 pixels
+            MUNCHED_CHAR = ' '              ; White space
             END_ROW = 240
 
-            CURRENT_CHAR = $12
-            TMP_PTR = $10                   ; general purpose temporary ZP pointer
+            CURRENT_CHAR = R1
+            TMP_PTR = R2                    ; Temporary ZP pointer
 
-            !src <lib/registers/pseudo-registers.a>
 
 
 main:
