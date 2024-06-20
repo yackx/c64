@@ -110,19 +110,19 @@ x_left:     nop                             ; slow things down a little: less cy
             nop                             ; take place on the left part of screen
             inc $d000                       ; move one pixel to the right
             bne cycle_sprite                ; not reached yet end of left screen part
-            inc $d010                       ; set sprite #0 8th bit x to screen right part
+            inc $d010                       ; sprite #0: x bit #8 (right)
             jmp cycle_sprite
 
 ; Sprite #0 on the right part of the screen (x > 255)
 x_right:    inc $d000                       ; move one pixel to the right
-            lda $d000
             
+            lda $d000
             cmp #10+320-255+20              ; reached right border?
             bne cycle_sprite
             
             lda #0                          ; border reached
-            sta $d000
-            sta $d010                       ; sprite #0: x to 0 (left)
+            sta $d000                       ; sprite #0: x=0
+            sta $d010                       ; sprite #0: x bit #8 (left)
 
             lda #7
             clc
