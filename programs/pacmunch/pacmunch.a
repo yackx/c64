@@ -20,6 +20,7 @@
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 240
             CURRENT_CHAR = R1
+            CURRENT_SPRITE_FRAME = R5
 
 
 main:
@@ -68,10 +69,13 @@ setup_sprites:
             lda #>DEFAULT_SCREEN_MEM + 3*40
             sta CURRENT_CHAR + 1
 
+            rts
+
 
 setup_counters:
             ldx #SPRITE_CYCLE_SKIP          ; init sprite cycle skip counter
-            ldy #0                          ; init pixels in char counter
+            ldy #0
+            rts
 
 
 ; Munch character if applicable
