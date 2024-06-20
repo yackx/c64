@@ -5,9 +5,13 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/misc/upstart.a>
+            !src <lib/layout/main.a>
+            !src <lib/screen/color.a>
             !src <lib/registers/pseudo-registers.a>
 
+            !src <lib/misc/upstart.a>
+
+            BITMAP_ADDR = $2000             ; Sprite bitmap address
             RASTER_LINE = 251               ; 251th line not visible on screen
             FRAME_SKIP = 1                  ; Skip frames each tick
             SPRITE_CYCLE_SKIP = 4           ; Move 4 pixels before animating sprite
@@ -35,28 +39,28 @@ print_msg:
 
 
 setup_sprites:
-            ldy #$00
--           lda sprite, y                   ; move sprite bitmaps
-            sta $2000, y                    ; to $2000
+            ldy #0
+-           lda sprite, y
+            sta BITMAP_ADDR, y              ; move sprite bitmaps
             iny
             bne -
 
             lda #$80
-            sta $07f8                       ; sprite #0 at $2000
+            sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0 at $2000
 
-            lda #$00
+            lda #0
             sta $d010                       ; sprite #0 8th bit x left part
 
-            lda #00
+            lda #0
             sta $d000
             lda #66
             sta $d001                       ; sprite #0: x=0, y=66
 
-            lda #$07
-            sta $d027                       ; sprite #0 is yellow
+            lda #COLOR_YELLOW
+            sta VIC2SPCOL0                  ; sprite #0 is yellow
 
-            lda #$01
-            sta $d015                       ; enable sprite #0
+            lda #1
+            sta VIC2SPE                     ; enable sprite #0
 
             lda #<$0400 + 3*40              ; current char location
             sta CURRENT_CHAR                ; is the first col of 3rd row
@@ -64,12 +68,12 @@ setup_sprites:
             sta CURRENT_CHAR + 1
 
             ldx #SPRITE_CYCLE_SKIP          ; load sprite cycle skip counter
-            ldy #00                         ; load pixels per char counter
+            ldy #0                          ; load pixels per char counter
 
 
 munch:
             lda #RASTER_LINE
-.wait_rast: cmp $d012                       ; busy wait for next raster line
+.wait_rast: cmp VIC2RASTER                  ; busy wait for next raster line
             bne .wait_rast
 
 ;Munch character if applicable
@@ -124,12 +128,12 @@ cycle_sprite:
             dex
             bne munch
             ldx #SPRITE_CYCLE_SKIP
-            inc $07f8                       ; cycle through the sprite map
-            lda $07f8                       ; in order to animate our pacman
+            inc DEFAULT_SPRITE_PTR_AREA     ; cycle through the sprite map
+            lda DEFAULT_SPRITE_PTR_AREA     ; in order to animate our pacman
             cmp #$80 + PACMAN_FRAMES - 1
             bne munch
             lda #$80
-            sta $07f8                       ; back to first bitmap bank
+            sta DEFAULT_SPRITE_PTR_AREA     ; back to first bitmap bank
             bne munch
 
 end:
