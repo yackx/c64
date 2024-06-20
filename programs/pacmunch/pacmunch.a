@@ -75,8 +75,6 @@ setup_counters:
 
 
 ; Munch character if applicable
-;
-; Y
 munch:
             lda #RASTER_LINE
 .wait_rast: cmp VIC2RASTER                  ; busy wait for next raster line
