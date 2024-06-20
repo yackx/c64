@@ -21,6 +21,7 @@
             END_ROW = 240
             CURRENT_CHAR = R1
             CURR_CYCLE_SPRITE_SKIP = R5
+            CURR_SPRITE_FRAME = R6
 
 
 main:
@@ -76,6 +77,9 @@ setup_counters:
             lda #CYCLE_SPRITE_SKIPS         ; init sprite cycle skip counter
             sta CURR_CYCLE_SPRITE_SKIP
 
+            lda #PACMAN_FRAMES
+            sta CURR_SPRITE_FRAME           ; init sprite frame counter
+            
             ldy #0
 
             rts
@@ -139,18 +143,20 @@ x_right:    inc $d000                       ; move one pixel to the right
 
 ; Animate the sprite #0 by cycling through the bitmap
 cycle_sprite:
-            dec CURR_CYCLE_SPRITE_SKIP
+            dec CURR_CYCLE_SPRITE_SKIP      ; skip some cycles
             bne munch
             
-            lda #CYCLE_SPRITE_SKIPS
+            lda #CYCLE_SPRITE_SKIPS         ; reset cycle skip counter
             sta CURR_CYCLE_SPRITE_SKIP
             
-            inc DEFAULT_SPRITE_PTR_AREA     ; cycle through the sprite map
-            lda DEFAULT_SPRITE_PTR_AREA     ; in order to animate our pacman
-            cmp #$80 + PACMAN_FRAMES - 1
+            dec CURR_SPRITE_FRAME           ; next frame
+            beq +
+            inc DEFAULT_SPRITE_PTR_AREA
             bne munch
++           lda #PACMAN_FRAMES
+            sta CURR_SPRITE_FRAME
             lda #$80
-            sta DEFAULT_SPRITE_PTR_AREA     ; back to first bitmap bank
+            sta DEFAULT_SPRITE_PTR_AREA     ; reset to first frame
             bne munch
 
 end:
