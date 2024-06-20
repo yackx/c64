@@ -16,7 +16,7 @@
             FRAME_SKIP = 1                  ; Skip frames each tick
             SPRITE_CYCLE_SKIP = 4           ; Move 4 pixels before animating sprite
             PACMAN_FRAMES = 4               ; Pacman is composed of 4 frames
-            PIXELS_PER_CHAR = 8             ; Wncounter one char every 8 pixels
+            PIXELS_PER_CHAR = 8             ; Encounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 240
             CURRENT_CHAR = R1
