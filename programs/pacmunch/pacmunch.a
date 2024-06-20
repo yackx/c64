@@ -15,10 +15,7 @@
             PIXELS_PER_CHAR = 8             ; Wncounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 240
-
             CURRENT_CHAR = R1
-            TMP_PTR = R2                    ; Temporary ZP pointer
-
 
 
 main:
