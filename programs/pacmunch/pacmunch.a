@@ -11,15 +11,16 @@
 
             !src <lib/misc/upstart.a>
 
-            BITMAP_ADDR = $2000             ; Sprite bitmap address
-            SPRITE_PAGE = BITMAP_ADDR / 64  ; Sprite bitmap page
-            RASTER_LINE = 251               ; 251th line not visible on screen
+            SPRITE_BASE_ADDR = $2000        ; Sprite bitmap address
+            SPRITE_PAGE = SPRITE_BASE_ADDR / 64
+            RASTER_LINE = 251               ; Not visible on screen
             FRAME_SKIP = 1                  ; Skip frames each tick
             CYCLE_SPRITE_SKIPS = 4          ; Move 4 pixels before animating sprite
-            PACMAN_FRAMES = 4               ; Pacman is composed of 4 frames
+            SPRITE_FRAME_COUNT = 4          ; Pacman is composed of 4 frames
             PIXELS_PER_CHAR = 8             ; Encounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 240
+            
             CURRENT_CHAR = R1
             CURR_CYCLE_SPRITE_SKIP = R5
             CURR_SPRITE_FRAME = R6
@@ -45,7 +46,7 @@ print_msg:
 setup_sprites:
             ldy #0
 -           lda sprite, y
-            sta BITMAP_ADDR, y              ; move sprite bitmaps
+            sta SPRITE_BASE_ADDR, y         ; move sprite bitmaps
             iny
             bne -
 
@@ -78,7 +79,7 @@ setup_counters:
             lda #CYCLE_SPRITE_SKIPS         ; init sprite cycle skip counter
             sta CURR_CYCLE_SPRITE_SKIP
 
-            lda #PACMAN_FRAMES
+            lda #SPRITE_FRAME_COUNT
             sta CURR_SPRITE_FRAME           ; init sprite frame counter
             
             ldy #0
@@ -154,7 +155,7 @@ cycle_sprite:
             beq +
             inc DEFAULT_SPRITE_PTR_AREA
             bne munch
-+           lda #PACMAN_FRAMES
++           lda #SPRITE_FRAME_COUNT
             sta CURR_SPRITE_FRAME
             lda #SPRITE_PAGE
             sta DEFAULT_SPRITE_PTR_AREA     ; reset to first frame
