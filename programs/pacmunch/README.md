@@ -1,10 +1,9 @@
 # Pacmunch
 
-🍔 This code was imported from a former project. It does not follow the conventions of this repository and does not compile with ACME.
+**Crazy Pacman is eating the characters on your screen**
 
-**Crazy Pacman has decided to eat the characters on your screen.**
-
-Written with [Kick Assembler 3.36](http://www.theweb.dk/KickAssembler/Main.php).
+- [Original version](./pacmunch.asm) for [Kick Assembler 3.36](http://www.theweb.dk/KickAssembler/Main.php)
+- [Ported version](./pacmunch.acme) for [ACME 0.97](https://sourceforge.net/projects/acme-crossass/)
 
 ![](pacmunch.png)
 
