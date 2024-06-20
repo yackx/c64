@@ -25,8 +25,10 @@
 main:
             jsr print_msg
             jsr setup_sprites
+            jsr setup_counters
             jsr munch
             rts
+
 
 print_msg:
             lda #<msg
@@ -35,6 +37,7 @@ print_msg:
             sta R2
             jsr strout
             rts
+
 
 setup_sprites:
             ldy #0
@@ -65,33 +68,38 @@ setup_sprites:
             lda #>DEFAULT_SCREEN_MEM + 3*40
             sta CURRENT_CHAR + 1
 
-            ldx #SPRITE_CYCLE_SKIP          ; load sprite cycle skip counter
-            ldy #0                          ; load pixels per char counter
+
+setup_counters:
+            ldx #SPRITE_CYCLE_SKIP          ; init sprite cycle skip counter
+            ldy #0                          ; init pixels in char counter
 
 
+; Munch character if applicable
+;
+; Y
 munch:
             lda #RASTER_LINE
 .wait_rast: cmp VIC2RASTER                  ; busy wait for next raster line
             bne .wait_rast
 
-;Munch character if applicable
             lda $d010                       ; sprite #0: x > 255 ?
             beq on_char                     ; sprite #0 has x > 255
             lda $d000
             cmp #320-255-1                  ; sprite #0 x out of screen (right)?
             bcs x_test                      ; then don't try to munch char
 
+; Test if we are on a character (every PIXELS_PER_CHAR)
 on_char:    iny                             ; pacman is on a char
             cpy #PIXELS_PER_CHAR            ; have we reached the next char?
             bne x_test
 
 munch_it:   lda #MUNCHED_CHAR               ; pacman is on a new char
-            ldy #0                          ; reset pixels per char counter
+            ldy #0                          ; reset pixels in char counter
             sta (CURRENT_CHAR), y           ; munch the char
             lda #PIXELS_PER_CHAR
-            inc CURRENT_CHAR                ; store new char location
+            inc CURRENT_CHAR                ; next char location low byte
             bne x_test
-            inc CURRENT_CHAR + 1            ; new char location high byte
+            inc CURRENT_CHAR + 1            ; next char location high byte
 
 ; Test on which part of the screen is sprite #0
 x_test:     lda $d010                       ; sprite #0: x > 255 ?
@@ -102,7 +110,7 @@ x_left:     nop                             ; slow things down a little: less cy
             nop                             ; take place on the left part of screen
             inc $d000                       ; move one pixel to the right
             bne cycle_sprite                ; not reached yet end of left screen part
-            inc $d010                       ; set sprite #0 8th bit x to right part
+            inc $d010                       ; set sprite #0 8th bit x to screen right part
             jmp cycle_sprite
 
 ; Sprite #0 on the right part of the screen (x > 255)
