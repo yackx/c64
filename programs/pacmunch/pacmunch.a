@@ -88,7 +88,7 @@ on_char:    iny                             ; pacman is on a char
             bne x_test
 
 munch_it:   lda #MUNCHED_CHAR               ; pacman is on a new char
-            ldy #00                         ; reset pixels per char counter
+            ldy #0                          ; reset pixels per char counter
             sta (CURRENT_CHAR), y           ; munch the char
             lda #PIXELS_PER_CHAR
             inc CURRENT_CHAR                ; store new char location
@@ -110,14 +110,16 @@ x_left:     nop                             ; slow things down a little: less cy
 ; Sprite #0 on the right part of the screen (x > 255)
 x_right:    inc $d000                       ; move one pixel to the right
             lda $d000
+            
             cmp #10+320-255+20              ; reached right border?
             bne cycle_sprite
-            lda #$00
+            
+            lda #0                          ; border reached
             sta $d000
-            sta $d010                       ; sprite #0: reset x to 0
+            sta $d010                       ; sprite #0: x to 0 (left)
 
             lda #7
-            adc $d001                       ; sprite #0: set y to next text line
+            adc $d001                       ; sprite #0: y to next text line
 
             cmp #END_ROW
             bcs end                         ; done if reached bottom of screen
