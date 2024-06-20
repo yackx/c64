@@ -12,6 +12,7 @@
             !src <lib/misc/upstart.a>
 
             BITMAP_ADDR = $2000             ; Sprite bitmap address
+            SPRITE_PAGE = BITMAP_ADDR / 64  ; Sprite bitmap page
             RASTER_LINE = 251               ; 251th line not visible on screen
             FRAME_SKIP = 1                  ; Skip frames each tick
             CYCLE_SPRITE_SKIPS = 4          ; Move 4 pixels before animating sprite
@@ -48,7 +49,7 @@ setup_sprites:
             iny
             bne -
 
-            lda #$80
+            lda #SPRITE_PAGE
             sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0 at $2000
 
             lda #0
@@ -155,7 +156,7 @@ cycle_sprite:
             bne munch
 +           lda #PACMAN_FRAMES
             sta CURR_SPRITE_FRAME
-            lda #$80
+            lda #SPRITE_PAGE
             sta DEFAULT_SPRITE_PTR_AREA     ; reset to first frame
             bne munch
 
