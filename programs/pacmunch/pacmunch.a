@@ -117,15 +117,15 @@ x_right:    inc $d000                       ; move one pixel to the right
             lda $d000
             cmp #10+320-255+20              ; reached right border?
             bne cycle_sprite
-            
+
+.right_border_reached:            
             lda #0                          ; border reached
             sta $d000                       ; sprite #0: x=0
             sta $d010                       ; sprite #0: x bit #8 (left)
 
             lda #7
             clc
-            adc $d001                       ; sprite #0: y to next text line
-
+            adc $d001                       ; sprite #0: y-coord next text line
             cmp #END_ROW
             bcs end                         ; done if reached bottom of screen
             sta $d001                       ; next text line: add 8 pixels to y
