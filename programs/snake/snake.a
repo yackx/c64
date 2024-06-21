@@ -338,9 +338,17 @@ erase_tail:
             lda skip_tail
             beq .erase
             dec skip_tail
+
             inc max_idx
+            beq .max_length_reached         
+
             inx                             ; X = max_idx
             jmp .draw
+
+.max_length_reached:
+            dec max_idx
+            jmp .draw
+
 .erase:
             lda snake_x,x
             sta POS_X
