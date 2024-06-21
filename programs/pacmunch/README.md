@@ -1,6 +1,6 @@
 # Pacmunch
 
-**Crazy Pacman is eating the characters on your screen**
+**Crazy Pacmunch is eating the characters on your screen**
 
 ![](pacmunch.png)
 

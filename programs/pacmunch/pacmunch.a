@@ -1,6 +1,6 @@
 ; Pac-munch
 ;
-; This crazy pacman will eat all characters on the screen.
+; This crazy pacmunch will eat all characters on the screen.
 
             ;ACME 0.97
             !cpu 6510
@@ -18,7 +18,7 @@
             RASTER_LINE = 251               ; Not visible on screen
             FRAME_SKIP = 1                  ; Skip frames each tick
             CYCLE_SPRITE_SKIPS = 4          ; Move 4 pixels before animating sprite
-            SPRITE_FRAME_COUNT = 4          ; Pacman is composed of 4 frames
+            SPRITE_FRAME_COUNT = 4          ; Pacmunch is composed of 4 frames
             PIXELS_PER_CHAR = 8             ; Encounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 200
@@ -104,11 +104,11 @@ munch:
             bcs x_test                      ; then don't try to munch char
 
 ; Test if we are on a character (every PIXELS_PER_CHAR - using Y register)
-on_char:    iny                             ; pacman is on a char
+on_char:    iny                             ; pacmunch is on a char
             cpy #PIXELS_PER_CHAR            ; have we reached the next char?
             bne x_test
 
-munch_it:   lda #MUNCHED_CHAR               ; pacman is on a new char
+munch_it:   lda #MUNCHED_CHAR               ; pacmunch is on a new char
             ldy #0                          ; reset pixels in char counter
             sta (CURRENT_CHAR), y           ; munch the char
             lda #PIXELS_PER_CHAR
@@ -171,7 +171,7 @@ end:
 
 msg:
             !fill 13, 32
-            !pet "crazy pacman"
+            !pet "crazy pacmunch"
             !byte 13, 13
             !fill 11, 32
             !pet "is on  ur screen"
