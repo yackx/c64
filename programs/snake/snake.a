@@ -427,7 +427,6 @@ char_at:
 ;
 ; USES:     R1, R2, A, Y
 gen_food:
-            +push_ay
 -
             lda $d41b                       ; random number
             and #%00001111                  ; 32 possible addresses
@@ -450,8 +449,6 @@ gen_food:
             sta food
             lda R2
             sta food+1
-
-            +pull_ay
 
             rts
 
