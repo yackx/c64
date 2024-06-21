@@ -121,11 +121,11 @@ x_test:     lda $d010                       ; sprite #0: x > 255 ?
             bne x_right                     ; sprite #0 has x > 255
 
 ; Sprite #0 on the left part of the screen (x-coord <= 255)
-x_left:     nop                             ; slow things down a little: less cycles
-            nop                             ; take place on the left part of screen
+x_left:     nop                             ; slow things down
+            nop                             ; when on the left part of screen
             inc $d000                       ; move one pixel to the right
-            bne cycle_sprite                ; not reached yet end of left screen part
-            inc $d010                       ; sprite #0: x bit #8 (right)
+            bne cycle_sprite                ; not reached yet x-coord=255
+            inc $d010                       ; sprite #0: x-coord bit #8
             jmp cycle_sprite
 
 ; Sprite #0 on the right part of the screen (x-coord > 255)
@@ -138,7 +138,7 @@ x_right:    inc $d000                       ; move one pixel to the right
 .right_border_reached:            
             lda #0                          ; border reached
             sta $d000                       ; sprite #0: x=0
-            sta $d010                       ; sprite #0: x bit #8 (left)
+            sta $d010                       ; sprite #0: x bit #8
 
             lda #7
             clc
