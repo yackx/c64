@@ -11,8 +11,8 @@
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
             !src <lib/screen/color.a>
-            !src <lib/layout/main.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/kernal.a>
             !src <lib/charset/petscii.a>
             !src <lib/charset/m-charset.a>
             !src <lib/screen/m-screen.a>

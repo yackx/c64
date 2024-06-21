@@ -2,7 +2,7 @@
             !cpu 6510
 
             !src <lib/registers/pseudo-registers.a>
-            !src <lib/layout/main.a>
+            !src <lib/mmap/main.a>
 
 
 ; Copy the character set from ROM to RAM.

@@ -3,7 +3,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/vic-ii.a>
+            !src <lib/mmap/vic-ii.a>
             !src <lib/misc/upstart.a>
 
 main:

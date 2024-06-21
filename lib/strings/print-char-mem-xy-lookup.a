@@ -1,7 +1,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/main.a>
+            !src <lib/mmap/main.a>
 
             BASE = DEFAULT_SCREEN_MEM
 

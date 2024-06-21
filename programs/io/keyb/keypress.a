@@ -5,8 +5,8 @@
 
             !src <lib/misc/upstart.a>
             !src <lib/strings/m-print.a>
-            !src <lib/layout/kernal.a>
-            !src <lib/layout/main.a>
+            !src <lib/mmap/kernal.a>
+            !src <lib/mmap/main.a>
 
 
 main:

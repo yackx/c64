@@ -6,10 +6,10 @@
             * = $c000
 
             !src <lib/screen/color.a>
-            !src <lib/layout/main.a>
-            !src <lib/layout/vic-ii.a>
-            !src <lib/layout/sid.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
+            !src <lib/mmap/sid.a>
+            !src <lib/mmap/kernal.a>
 
             HIRES = $2000
             HIRES_END = $4000

@@ -9,8 +9,8 @@
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
             !src <lib/mem/m-mem.a>
-            !src <lib/layout/vic-ii.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/vic-ii.a>
+            !src <lib/mmap/kernal.a>
 
                                             ; Charset location
             !addr CHAR_SET_LOC = $3800

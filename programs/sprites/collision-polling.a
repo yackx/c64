@@ -19,9 +19,9 @@
             !src <lib/registers/pseudo-registers.a>
             !src <lib/registers/m-registers.a>
             !src <lib/screen/color.a>
-            !src <lib/layout/main.a>
-            !src <lib/layout/vic-ii.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
+            !src <lib/mmap/kernal.a>
             !src <lib/mem/m-mem.a>
 
             SPRITE_COUNT = 2
