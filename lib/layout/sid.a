@@ -1,0 +1,13 @@
+; SID - Sound Interface Device
+; $D400-$D7FF, 54272-55295
+
+!ifdef DEF_MEM_MAP_SID !eof
+DEF_MEM_MAP_SID = 1
+
+!addr {
+            SID_FREQ_LO_3 = $d40e           ; Voice 3 frequency low byte
+            SID_FREQ_HI_3 = $d40f           ; Voice 3 frequency high byte
+            SID_CR_3 = $d412                ; Voice 3 control register
+            SID_WFOUT_3 = $d41b             ; Voice 3 waveform output
+            SID_RANDOM = SID_WFOUT_3        ; Random number generator
+}
