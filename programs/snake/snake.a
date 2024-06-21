@@ -458,22 +458,15 @@ gen_food:
 
 ; Display food
 display_food:
-            ; .food_addr = *+1
-            ; sta $0000,x
-
-            ; TODO Use self mod ,x instead
-
-            +push_ay
-
+            pha
             lda food
-            sta R1
+            sta .food_addr
             lda food+1
-            sta R2
-            ldy #0
+            sta .food_addr+1
             lda #CHAR_FOOD
-            sta (R1),y                      ; add food to screen
-
-            +pull_ay
+            .food_addr = *+1
+            sta $0000                       ; self-modifying code
+            pla
             rts
 
 
