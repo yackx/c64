@@ -216,7 +216,7 @@ timer_handler:
 ; GAME ROUTINES
 ; ---------------------------------------------------------------------------
 
-; Handle keyboard input to change snake direction
+; Handle keyboard input to change snake direction.
 handle_cursor:
             ; KERNAL SCANKEY & GETIN
             jsr $ff9f
@@ -456,7 +456,7 @@ gen_food:
             rts
 
 
-; Display food
+; Display food.
 display_food:
             pha
             lda food
