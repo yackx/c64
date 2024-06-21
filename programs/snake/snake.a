@@ -425,29 +425,19 @@ char_at:
 
 ; Generate food at a random position
 ;
-; USES:     R1, R2, A, Y
+; USES:     A, Y
 gen_food:
--
+            ; Pick a random address
             lda $d41b                       ; random number
             and #%00001111                  ; 32 possible addresses
             asl                             ; *2 for 2 bytes per address
             tay
 
             ; Load random screen address
+            ; and it as food position (will be displayed later)
             lda random_food_addr,y
-            sta R1
-            lda random_food_addr+1,y
-            sta R2
-
-            ; Check if food is already there
-            lda (R1),y
-            cmp #CHAR_BLANK
-            bne-
-
-            ; Store food position (will be displayed later)
-            lda R1
             sta food
-            lda R2
+            lda random_food_addr+1,y
             sta food+1
 
             rts
