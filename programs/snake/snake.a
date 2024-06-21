@@ -335,11 +335,11 @@ move_head:
             rts
 
 
-; Erase the tail
+; Erase the last bit of the tail
 erase_tail:
             ldx max_idx                     ; Last index of snake
 
-            ; Skip erase tail when growing
+            ; Skip erase when growing
             lda skip_tail
             beq .erase
             dec skip_tail
