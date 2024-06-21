@@ -4,6 +4,7 @@
             !cpu 6510
 
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/layout/kernal.a>
 
             !src <lib/misc/upstart.a>
@@ -32,11 +33,11 @@ main:
             
             ; Switch to bitmap mode.
             lda #$3b
-            sta VIC2CR1
+            sta VIC2_CR1
             lda #$08
-            sta VIC2CR2
+            sta VIC2_CR2
             lda #$18
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
 
             ; Halt.
             jmp *

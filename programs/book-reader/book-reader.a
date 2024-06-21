@@ -124,9 +124,9 @@ clear_screen:
             +switch_lower_case
             
             lda theme_color_border
-            sta VIC2BORDER
+            sta BORDER_COLOR
             lda theme_color_background
-            sta VIC2BACKGROUND
+            sta BACKGROUND_COLOR
 
             lda theme_color_primary
             jsr chrout_petscii_to_color

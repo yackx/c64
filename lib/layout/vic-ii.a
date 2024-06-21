@@ -1,0 +1,86 @@
+; VIC-II video display
+; $D000-$D3FF, 53248-54271
+;
+; Conventions based on "Mapping the Commodore 64" by Sheldon Leemon
+; with extra aliases for improved readability.
+
+!ifdef DEF_MEM_MAP_VIC_II !eof
+DEF_MEM_MAP_VIC_II = 1
+
+!addr {
+            SP0X = $d000                    ; Sprite #0 X position
+            SP0Y = $d001                    ; Sprite #0 Y position
+            SP1X = $d002                    ; Sprite #1 X position
+            SP1Y = $d003                    ; Sprite #1 Y position
+            SP2X = $d004                    ; Sprite #2 X position
+            SP2Y = $d005                    ; Sprite #2 Y position
+            SP3X = $d006                    ; Sprite #3 X position
+            SP3Y = $d007                    ; Sprite #3 Y position
+            SP4X = $d008                    ; Sprite #4 X position
+            SP4Y = $d009                    ; Sprite #4 Y position
+            SP5X = $d00a                    ; Sprite #5 X position
+            SP5Y = $d00b                    ; Sprite #5 Y position
+            SP6X = $d00c                    ; Sprite #6 X position
+            SP6Y = $d00d                    ; Sprite #6 Y position
+            SP7X = $d00e                    ; Sprite #7 X position
+            SP7Y = $d00f                    ; Sprite #7 Y position
+            MSIGX = $d010                   ; MSB of sprites #0-#7 X positions
+
+            SCROLY = $d011                  ; Vert scroll + Control register 1
+            VERTICAL_SCROLL = SCROLY
+            VIC2_CR1 = SCROLY
+
+            RASTER = $d012                  ; Raster counter
+            LPENX = $d013                   ; Light pen X position
+            LPENY = $d014                   ; Light pen Y position
+            SPENA = $d015                   ; Sprite enable register
+            
+            SCROLX = $d016                  ; Horz scroll + Control register 2
+            HORZONTAL_SCROLL = SCROLX
+            VIC2_CR2 = SCROLX
+            
+            YXPAND = $d017                  ; Sprite vertical expansion reg
+            SPRITE_Y_EXPAND_REG = YXPAND
+            
+            VMCSB = $d018                   ; VIC-II chip memory control reg
+            VIC2_MEM_PTR = VMCSB
+            
+            VICIRQ = $d019                  ; Interrupt control register
+            VIC2_IRQ = VICIRQ
+            
+            IRQMSK = $d01a                  ; Interrupt mask register
+            VIC2_IRQ_MASK = IRQMSK
+            
+            SPBGPR = $d01b                  ; Sprite to foreground priority reg
+            SPRITE_FGRND_PRIO_REG = SPBGPR
+            
+            SPMC = $d01c                    ; Sprite multicolor register
+            SPRITE_MULTICOLOR_REG = SPMC
+            
+            XXPAND = $d01d                  ; Sprite horizontal expansion reg
+            SPRITE_X_EXPAND_REG = XXPAND
+
+            SPSPCL = $d01e                  ; Sprite-sprite collision register
+            SPRITE_SPRITE_COLLISION_REG = SPSPCL
+
+            SPBGCL = $d01f                  ; Sprite-background collision reg
+            SPRITE_BGND_COLLISION_REG = SPBGCL
+
+            BORDER_COLOR = $d020            ; Border color register
+            BGCOL0 = $d021                  ; Background color #0
+            BACKGROUND_COLOR = BGCOL0
+            BGCOL1 = $d022                  ; Background color #1
+            BGCOL2 = $d023                  ; Background color #2
+            BGCOL3 = $d024                  ; Background color #3
+            SPMC0 = $d025                   ; Sprite multicolor register #0
+            SPMC1 = $d026                   ; Sprite multicolor register #1
+
+            SP0COLOR = $d027                ; Sprite #0 color
+            SP1COLOR = $d028                ; Sprite #1 color
+            SP2COLOR = $d029                ; Sprite #2 color
+            SP3COLOR = $d02a                ; Sprite #3 color
+            SP4COLOR = $d02b                ; Sprite #4 color
+            SP5COLOR = $d02c                ; Sprite #5 color
+            SP6COLOR = $d02d                ; Sprite #6 color
+            SP7COLOR = $d02e                ; Sprite #7 color
+}

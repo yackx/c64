@@ -45,12 +45,12 @@ main:
 
                                             ; Multicolor characters
             lda #BG_COLOR
-            sta VIC2BORDER
-            sta VIC2B0C
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
             lda #MULTI_COLOR_1
-            sta VIC2B1C
+            sta BGCOL1
             lda #MULTI_COLOR_2
-            sta VIC2B2C
+            sta BGCOL2
 
                                             ; Fill color RAM
             +fill_pages $d8, 4, CHAR_COLOR

@@ -1,11 +1,12 @@
 ; A stars animation.
 
-                                            ;ACME 0.97
+            ;ACME 0.97
             !cpu 6510
 
             * = $c000
 
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/layout/kernal.a>
 
             HIRES = $2000
@@ -23,19 +24,19 @@ main:
 
 
 color_screen:
-            lda #0
-            sta VIC2BORDER
-            sta VIC2B0C                     ; background
+            lda #COLOR_BLACK
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
             rts
 
 
 set_hires:
             lda #$3b
-            sta VIC2CR1
+            sta VIC2_CR1
             lda #$08
-            sta VIC2CR2
+            sta VIC2_CR2
             lda #$18
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
             rts
 
 

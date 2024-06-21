@@ -65,7 +65,7 @@ fail:
             +new_line
 
             lda #COLOR_RED
-            sta VIC2BORDER
+            sta BORDER_COLOR
             
             rts
 

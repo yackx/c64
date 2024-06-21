@@ -6,6 +6,7 @@
             !cpu 6510
 
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/screen/color.a>
             !src <lib/registers/pseudo-registers.a>
 
@@ -65,10 +66,10 @@ setup_sprites:
             sta $d001                       ; sprite #0: x=0, y=66
 
             lda #COLOR_YELLOW
-            sta VIC2SPCOL0                  ; sprite #0 is yellow
+            sta SP0COLOR                    ; sprite #0 is yellow
 
             lda #1
-            sta VIC2SPE                     ; enable sprite #0
+            sta SPENA                       ; enable sprite #0
 
             lda #<DEFAULT_SCREEN_MEM + 3*40 ; current char location
             sta CURRENT_CHAR                ; is the first col of 3rd row
@@ -94,7 +95,7 @@ setup_counters:
 ; Munch characters
 munch:
             lda #RASTER_LINE
-.wait_rast: cmp VIC2RASTER                  ; busy wait for next raster line
+.wait_rast: cmp RASTER                      ; busy wait for next raster line
             bne .wait_rast
 
             lda $d010                       ; sprite #0: x > 255 ?

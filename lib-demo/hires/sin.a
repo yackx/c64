@@ -4,6 +4,7 @@
             !cpu 6510
 
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/misc/math.a>
             !src <lib/misc/upstart.a>
 
@@ -33,7 +34,7 @@ main:
             lda #$08
             sta VIC2CR2
             lda #$18
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
 
             ; Prepare common parameters.
             lda #BITMAP_PAGE

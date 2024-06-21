@@ -8,16 +8,18 @@
 ; Screen border goes red and animation stops when
 ; a collision is detected.
 ;
-; VIC2SPSPCOL $d01e is polled during the animation.
+; Sprite to sprite collision register ($d01e) is polled during the animation.
 ; If bit #0 is set -> sprite #0 collision
 
             ;ACME 0!97
             !cpu 6510
+
             * = $c000
 
             !src <lib/registers/pseudo-registers.a>
             !src <lib/registers/m-registers.a>
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/layout/kernal.a>
             !src <lib/mem/m-mem.a>
 
@@ -41,7 +43,7 @@ common:
 
             ; activate sprites #0 and #1
             lda #%00000011
-            sta VIC2SPE
+            sta SPENA
 
             ; busy wait
             lda >DELAY_16
@@ -67,7 +69,7 @@ init_sprite:
 
             ; Sprite color
             lda .sprites_colors,x
-            sta VIC2SPCOL0,x
+            sta SP0COLOR,x
 
             ; sprite pointer to SPRITE_BLOCK*64=832=$0340
             lda #SPRITE_BLOCK
@@ -80,9 +82,9 @@ init_sprite:
 
             ; Sprite position
             lda .sprites_init_pos,x
-            sta VIC2M0X,x
+            sta SP0X,x
             lda .sprites_init_pos+1,x
-            sta VIC2M0Y,x
+            sta SP0Y,x
             inx
 
             +pull_xa
@@ -90,23 +92,25 @@ init_sprite:
 
 
 animate_sprite_0:
--           inc VIC2M0X                     ; move sprite #0 1 pixel right
-            lda VIC2SPSPCOL
+-           inc SP0X                        ; move sprite #0 1 pixel right
+            
+            lda SPRITE_SPRITE_COLLISION_REG
             lsr                             ; poll collisiton sprite #0
             bcs process_collision
+            
             jsr busy_wait
             jmp -
 
 
 process_collision:
-            lda #2
-            sta VIC2BORDER                  ; screen border red
+            lda #COLOR_RED
+            sta BORDER_COLOR                ; screen border red
             jmp *
 
 
 .sprites_colors
-            !byte 1, 7
-.sprites_init_pos                           ; 7 bits only (x, y)
+            !byte #COLOR_WHITE, #COLOR_YELLOW
+.sprites_init_pos                           ; (x, y) - x-coord 8 bits only
             !byte 15, 80
             !byte 200, 95
 
