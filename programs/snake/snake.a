@@ -456,7 +456,12 @@ gen_food:
             rts
 
 
-; Display food.
+; Display food
+;
+; The food is displayed after the snake head and body
+; to avoid the food being erased.
+; A flickering is visible if the food is on the snake's path
+; as the head or body are overwritten.
 display_food:
             pha
             lda food
