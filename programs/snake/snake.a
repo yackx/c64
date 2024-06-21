@@ -13,9 +13,10 @@
             !addr SCREEN = $0400
 
             DELAY = 15                      ; 1/60th sec
+            INIT_LENGTH = 4
+            GROW = 4
 
             ; Snake head or body part position
-            ; (Re-assign pseudo-registers)
             POS_X       = R5
             POS_Y       = R6
 
@@ -117,8 +118,9 @@ s_start:    !byte 13, 9, 22
 
 main_scr:
             jsr $ff81                       ; clear screen
-            jsr init_game
+            jsr init_snake
             jsr gen_food
+            jsr display_food
             jsr init_kb
             jsr set_timer
             jmp *
@@ -131,15 +133,18 @@ main_scr:
 ; ---------------------------------------------------------------------------
 
 ; Initialize game state
-init_game:
+init_snake:
             lda #12
             sta head_x
             lda #5
             sta head_y
+            
             lda #LEFT
             sta direction
-            lda #4
+            
+            lda #INIT_LENGTH
             sta max_idx
+            
             lda #12
             sta snake_x
             lda #13
@@ -207,6 +212,7 @@ timer_handler:
             jsr move_head
             jsr erase_tail
             jsr update_head
+            jsr display_food
 +
             jmp $ea31                       ; KERNAL std routine
 
@@ -215,7 +221,7 @@ timer_handler:
 ; GAME ROUTINES
 ; ---------------------------------------------------------------------------
 
-; Handle keyboard input to change snake direction
+; Handle keyboard input to change snake direction.
 handle_cursor:
             ; KERNAL SCANKEY & GETIN
             jsr $ff9f
@@ -311,7 +317,7 @@ move_head:
             sta char
             jsr display_char
             ; Let the snake grow
-            lda #4
+            lda #GROW
             sta skip_tail
             ; Generate new food
             jsr gen_food
@@ -329,17 +335,25 @@ move_head:
             rts
 
 
-; Erase the tail
+; Erase the last bit of the tail
 erase_tail:
             ldx max_idx                     ; Last index of snake
 
-            ; Skip erase tail when growing
+            ; Skip erase when growing
             lda skip_tail
             beq .erase
             dec skip_tail
+
             inc max_idx
+            beq .max_length_reached         
+
             inx                             ; X = max_idx
             jmp .draw
+
+.max_length_reached:
+            dec max_idx
+            jmp .draw
+
 .erase:
             lda snake_x,x
             sta POS_X
@@ -424,32 +438,40 @@ char_at:
 
 ; Generate food at a random position
 ;
-; USES:     R1, R2, A, Y
+; USES:     A, Y
 gen_food:
-            +push_ay
--
+            ; Pick a random address
             lda $d41b                       ; random number
             and #%00001111                  ; 32 possible addresses
             asl                             ; *2 for 2 bytes per address
             tay
 
             ; Load random screen address
+            ; and it as food position (will be displayed later)
             lda random_food_addr,y
-            sta R1
+            sta food
             lda random_food_addr+1,y
-            sta R2
+            sta food+1
 
-            ; Check if food is already there
-            lda (R1),y
-            cmp #CHAR_BLANK
-            bne-
+            rts
 
-            ; Display food
+
+; Display food
+;
+; The food is displayed after the snake head and body
+; to avoid the food being erased.
+; A flickering is visible if the food is on the snake's path
+; as the head or body are overwritten.
+display_food:
+            pha
+            lda food
+            sta .food_addr
+            lda food+1
+            sta .food_addr+1
             lda #CHAR_FOOD
-            ldy #0
-            sta (R1),y                      ; add food to screen
-
-            +pull_ay
+            .food_addr = *+1
+            sta $0000                       ; self-modifying code
+            pla
             rts
 
 
@@ -483,6 +505,9 @@ dir_idx:    !byte UP, DOWN, LEFT, RIGHT
 
 ; Character to print
 char:       !byte CHAR_HEAD
+
+; Food position
+food:       !word 0
 
 ; Head is temporarily stored.
 ; It will be copied to the first byte of the snake body (x and y)
