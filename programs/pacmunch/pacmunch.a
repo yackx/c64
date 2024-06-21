@@ -35,7 +35,7 @@ main:
             jsr munch
             rts
 
-
+; Print some text on the screen so that pacmunch can eat it
 print_msg:
             lda #<msg
             sta R1
@@ -45,6 +45,7 @@ print_msg:
             rts
 
 
+; Setup sprite #0
 setup_sprites:
             ldy #0
 -           lda sprite, y
@@ -77,6 +78,7 @@ setup_sprites:
             rts
 
 
+; Setup some counters
 setup_counters:
             lda #CYCLE_SPRITE_SKIPS         ; init sprite cycle skip counter
             sta CURR_CYCLE_SPRITE_SKIP
@@ -89,7 +91,7 @@ setup_counters:
             rts
 
 
-; Munch character if applicable
+; Munch characters
 munch:
             lda #RASTER_LINE
 .wait_rast: cmp VIC2RASTER                  ; busy wait for next raster line
