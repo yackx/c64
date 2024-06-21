@@ -118,7 +118,7 @@ s_start:    !byte 13, 9, 22
 
 main_scr:
             jsr $ff81                       ; clear screen
-            jsr init_game
+            jsr init_snake
             jsr gen_food
             jsr display_food
             jsr init_kb
@@ -133,7 +133,7 @@ main_scr:
 ; ---------------------------------------------------------------------------
 
 ; Initialize game state
-init_game:
+init_snake:
             lda #12
             sta head_x
             lda #5
