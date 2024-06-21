@@ -23,7 +23,8 @@ all: $(TARGET).d64 $(TARGET).d $(TARGET).prg
 %.d: START_PC = $(shell python3 -m scripts.detect_start_pc $(TARGET).a)
 %.d: D_SKIP_BYTES = $(shell python3 -m scripts.compute_skip_bytes $(START_PC))
 %.d: %.prg
-	if [ -z "$(START_PC)" ]; then echo "No PC directive found" && exit 1; fi
+	if [ -z "$(START_PC)" ]; then echo "START_PC: no PC directive found" && exit 1; else echo "START_PC set $(START_PC)"; fi
+	echo "D_SKIP_BYTES set $(D_SKIP_BYTES)"
 	$(DCC6502) -c -d -s $(D_SKIP_BYTES) -o $(START_PC) $< > $@
 
 run: $(TARGET).d64
