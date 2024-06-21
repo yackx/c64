@@ -1,0 +1,30 @@
+; Memory mapping aliases.
+;
+; See:
+; https://www.pagetable.com/c64ref/c64mem
+; https://area51.dev/c64/kernal/memorymap/
+
+!ifdef DEF_MEM_MAP !eof
+DEF_MEM_MAP = 1
+
+!addr {
+            R6510 = $01                     ; 6510 On-Chip I/O Port
+            FA = $ba                        ; Current device number
+            COLOR = $0286                   ; Current color    
+            XMAX = $0289                    ; Maximum Keyboard Buffer Size
+            RPTFLA = $028a                  ; Keyboard Repeat Flag
+            RPTFLG = RPTFLA
+            CINV = $0314                    ; IRQ interrupt routine vector
+            DEFAULT_SCREEN_MEM = $0400      ; Default screen memory
+            
+            ; $0400-$07FF, 1024-2047
+            ; Default screen memory
+            DEFAULT_SPRITE_PTR_AREA = $07f8 ; Default area sprite pointers
+
+            ; $D000-$DFFF, 53248-57343
+            ; I/O Area or Character ROM
+            ; depends on the value of bits #0-#2 of the processor port at $0001.
+            CHARROM = $d000                 ; Character ROM
+
+            COLOR_RAM = $d800               ; Color RAM
+}

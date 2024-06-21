@@ -10,7 +10,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/kernal.a>
 
 
 print_int_8:

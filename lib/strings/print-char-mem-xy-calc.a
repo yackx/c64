@@ -2,7 +2,7 @@
             !cpu 6510
 
             !src <lib/registers/pseudo-registers.a>
-            !src <lib/layout/main.a>
+            !src <lib/mmap/main.a>
 
             !addr BASE_ADDR = DEFAULT_SCREEN_MEM
             !addr ROW = R3

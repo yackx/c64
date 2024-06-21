@@ -3,10 +3,10 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/main.a>
+            !src <lib/mmap/vic-ii.a>
             !src <lib/misc/upstart.a>
 
 main:
-            inc VIC2BORDER                  ; Next border color
+            inc BORDER_COLOR                ; Next border color
             nop                             ; Slow down
             jmp main                        ; Endless loop

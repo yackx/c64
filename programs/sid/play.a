@@ -8,8 +8,9 @@
 
             !src <lib/misc/upstart.a>
             !src <lib/raster/m-raster.a>
-            !src <lib/layout/main.a>
-            !src <lib/layout/rom.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
+            !src <lib/mmap/rom.a>
 
 
 main:
@@ -19,7 +20,7 @@ main:
 
 irq_handler:
             lda #$01
-            sta VIC2INTR                    ; ACK any raster IRQs
+            sta VIC2_IRQ                    ; ACK any raster IRQs
             jsr $1003                       ; Play the music
             jmp CINV_ACTUAL
 

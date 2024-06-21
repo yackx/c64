@@ -1,10 +1,11 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/main.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
 
 
 !macro switch_lower_case {
             lda #$17
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
 }

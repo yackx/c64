@@ -11,8 +11,8 @@
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
             !src <lib/screen/color.a>
-            !src <lib/layout/main.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/kernal.a>
             !src <lib/charset/petscii.a>
             !src <lib/charset/m-charset.a>
             !src <lib/screen/m-screen.a>
@@ -124,9 +124,9 @@ clear_screen:
             +switch_lower_case
             
             lda theme_color_border
-            sta VIC2BORDER
+            sta BORDER_COLOR
             lda theme_color_background
-            sta VIC2BACKGROUND
+            sta BACKGROUND_COLOR
 
             lda theme_color_primary
             jsr chrout_petscii_to_color

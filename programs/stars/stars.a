@@ -1,12 +1,15 @@
 ; A stars animation.
 
-                                            ;ACME 0.97
+            ;ACME 0.97
             !cpu 6510
 
             * = $c000
 
-            !src <lib/layout/main.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/screen/color.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
+            !src <lib/mmap/sid.a>
+            !src <lib/mmap/kernal.a>
 
             HIRES = $2000
             HIRES_END = $4000
@@ -23,29 +26,29 @@ main:
 
 
 color_screen:
-            lda #0
-            sta VIC2BORDER
-            sta VIC2B0C                     ; background
+            lda #COLOR_BLACK
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
             rts
 
 
 set_hires:
             lda #$3b
-            sta VIC2CR1
+            sta VIC2_CR1
             lda #$08
-            sta VIC2CR2
+            sta VIC2_CR2
             lda #$18
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
             rts
 
 
 ; https://www.atarimagazines.com/compute/issue72/random_numbers.php
 init_rnd:
             lda CHROUT                      ; maximum frequency value
-            sta SID3FR                      ; voice 3 frequency low byte
-            sta SID3FR+1                    ; voice 3 frequency high byte
+            sta SID_FREQ_LO_3               ; voice 3 frequency low byte
+            sta SID_FREQ_HI_3               ; voice 3 frequency high byte
             lda #$80                        ; noise waveform, gate bit off
-            sta SID3CR                      ; voice 3 control register
+            sta SID_CR_3                    ; voice 3 control register
             rts
 
 
@@ -59,7 +62,7 @@ fill_random:
             lda #>HIRES
             sta .page
 .loop:
-            lda SID3WFOUT                   ; obtain RND from SID
+            lda SID_RANDOM                  ; obtain RND from SID
             cmp #8
             bcs .no_star
 .star:

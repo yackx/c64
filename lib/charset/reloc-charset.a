@@ -1,7 +1,7 @@
 ; Relocate the character set to RAM.
 ;
 ; Register A must contain the bitmask for bits #1-#3
-; at $d018 (VIC2MPTR).
+; at $d018 (VIC2_MEM_PTR).
 ;
 ; Bits #1-#3 - In text mode, pointer to character memory:
 ; %000, 0: $0000-$07FF, 0-2047.
@@ -13,13 +13,14 @@
 ; %110, 6: $3000-$37FF, 12288-14335.
 ; %111, 7: $3800-$3FFF, 14336-16383.
 ;
-; IN    A = Memory setup register mask (#1-#3 at VIC2MPTR)
+; IN    A = Memory setup register mask (#1-#3 at VIC2_MEM_PTR)
 ; USE   A
 
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/main.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
 
 
 !zone z_set_charset_loc
@@ -28,9 +29,9 @@ set_charset_loc:
 
             sei
 
-            lda VIC2MPTR
+            lda VIC2_MEM_PTR
             ora .mask
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
 
             cli
             rts

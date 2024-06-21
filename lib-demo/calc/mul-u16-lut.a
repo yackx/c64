@@ -16,8 +16,9 @@
 
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
-            !src <lib/layout/main.a>
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
+            !src <lib/mmap/kernal.a>
             !src <lib/screen/color.a>
             !src <lib/strings/m-print.a>
             !src <lib/strings/m-strout.a>
@@ -65,7 +66,7 @@ fail:
             +new_line
 
             lda #COLOR_RED
-            sta VIC2BORDER
+            sta BORDER_COLOR
             
             rts
 

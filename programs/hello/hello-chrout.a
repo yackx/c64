@@ -3,7 +3,7 @@
             !cpu 6510
             * = $c000
 
-            !src <lib/layout/kernal.a>
+            !src <lib/mmap/kernal.a>
 
 
 main:

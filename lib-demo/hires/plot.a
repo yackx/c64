@@ -3,7 +3,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/layout/main.a>
+            !src <lib/mmap/main.a>
+            !src <lib/mmap/vic-ii.a>
             !src <lib/misc/upstart.a>
 
             BITMAP_PAGE = $20
@@ -28,11 +29,11 @@ main:
             
             ; Switch to bitmap mode.
             lda #$3b
-            sta VIC2CR1
+            sta VIC2_CR1
             lda #$08
-            sta VIC2CR2
+            sta VIC2_CR2
             lda #$18
-            sta VIC2MPTR
+            sta VIC2_MEM_PTR
 
             ; Prepare common parameters.
             lda #BITMAP_PAGE
