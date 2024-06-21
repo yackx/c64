@@ -4,8 +4,8 @@
 ; https://www.pagetable.com/c64ref/c64mem
 ; https://area51.dev/c64/kernal/memorymap/
 
-!ifdef DEF_MEMORY_MAP !eof
-DEF_MEMORY_MAP = 1
+!ifdef DEF_MEM_MAP !eof
+DEF_MEM_MAP = 1
 
 !addr {
             R6510 = $01                     ; 6510 On-Chip I/O Port

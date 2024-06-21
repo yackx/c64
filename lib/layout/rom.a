@@ -9,8 +9,8 @@
 ; https://www.pagetable.com/c64ref/c64disasm/
 ; https://sta.c64.org/cbm64mem.html
 
-!ifdef DEF_MEM_ADDR_ROM !eof
-DEF_MEM_ADDR_ROM = 1
+!ifdef DEF_MEM_MAP_ROM !eof
+DEF_MEM_MAP_ROM = 1
 
 !addr {
             ; ACTUAL means the address of the actual routine, not the jump vector.

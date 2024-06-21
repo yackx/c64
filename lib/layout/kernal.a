@@ -4,8 +4,8 @@
 ; https://c64os.com/post/c64kernalrom
 ; https://www.c64-wiki.com/wiki/KERNAL
 
-!ifdef DEF_MEM_ADDR_KERNAL !eof
-DEF_MEM_ADDR_KERNAL = 1
+!ifdef DEF_MEM_MAP_KERNAL !eof
+DEF_MEM_MAP_KERNAL = 1
 
 !addr {
             ; Screen
