@@ -15,9 +15,11 @@ In this repository:
   - one part in one day of [Advent of Code](/programs/aoc/)
   - a simple [book reader]()
   - and some other random experiments
-- [doc](/doc/) - [Addressing modes](/doc/addressing_modes.txt) summary, assemblers, editor code completion, IDE and [Awesome references](/doc/references.md)
-- [scripts](/scripts/) - Python utility scripts
-  - [y-acme-fmt](/scripts/y-acme-fmt.py) to format ACME source code
+- [doc](/doc/)
+  - [Addressing modes](/doc/addressing_modes.txt) summary
+  - assemblers, editor code completion, IDE...
+  - [Awesome references](/doc/references.md)
+- [scripts](/scripts/) - Python and bash utility scripts for this repository
 
 Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
 
@@ -51,7 +53,7 @@ See also:
 
 ## Toolchain ⛓️
 
-To use this repository, install the following tools:
+To use the routines in this repository, the following tools are assumed:
 
 - [ACME](https://github.com/meonwax/acme) - Cross-platform assembler.
 - [VICE](https://vice-emu.sourceforge.io/) - Multi-platform emulator for C64 and other Commodore products.
@@ -59,9 +61,13 @@ To use this repository, install the following tools:
 - Any decent editor, preferably with syntax highlighting for ACME (vim, VSC, ...).
 - `make` command.
 
-ACME is the only one mandatory. There are tons of 6502/6510 cross assemblers, but our routines are written for ACME.
+ACME is the only one mandatory. There exists several of 6502/6510 cross assemblers, but our routines are written for ACME.
 
-You can use any editor of your liking. `vim` and Visual Studio Code have plugins for ACME syntax highlighting. If you prefer an IDE, consider [CBM Studio](http://www.ajordison.co.uk/) or [WUDSN](https://www.wudsn.com/index.php/ide>).
+Any decent editor will suffice.
+
+- `vim` and Visual Studio Code have plugins for ACME syntax highlighting.
+- If you prefer an IDE, consider [CBM Studio](http://www.ajordison.co.uk/)
+- or [WUDSN](https://www.wudsn.com/index.php/ide).
 
 VICE ships with utilities that can be launched from the command line:
 
@@ -73,7 +79,7 @@ VICE ships with utilities that can be launched from the command line:
 
 Nothing beats the feel of real hardware, but emulators are certainly convenient.
 
-Deploying programs to an actual C64 (or anything close like a FPGA) is an option, but convenience, we will target and work with an emulator, a macro assembler from this era and a modern editor.
+Deploying programs to an actual C64 (or anything close like a FPGA) is an option, but for simplicity, we will target and work with an emulator, a macro assembler from this era and a modern editor.
 
 ## Setup 🛠️
 
