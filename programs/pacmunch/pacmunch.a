@@ -11,15 +11,17 @@
 
             !src <lib/misc/upstart.a>
 
-            SPRITE_BASE_ADDR = $2000        ; Sprite bitmap address
+            ; Sprite bitmap address and sprite page (always a multiple of 64)
+            SPRITE_BASE_ADDR = $2000
             SPRITE_PAGE = SPRITE_BASE_ADDR / 64
+
             RASTER_LINE = 251               ; Not visible on screen
             FRAME_SKIP = 1                  ; Skip frames each tick
             CYCLE_SPRITE_SKIPS = 4          ; Move 4 pixels before animating sprite
             SPRITE_FRAME_COUNT = 4          ; Pacman is composed of 4 frames
             PIXELS_PER_CHAR = 8             ; Encounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
-            END_ROW = 240
+            END_ROW = 200
             
             CURRENT_CHAR = R1
             CURR_CYCLE_SPRITE_SKIP = R5
@@ -51,7 +53,7 @@ setup_sprites:
             bne -
 
             lda #SPRITE_PAGE
-            sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0 at $2000
+            sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0
 
             lda #0
             sta $d010                       ; sprite #0 8th bit x left part
