@@ -15,7 +15,6 @@
             DELAY = 15                      ; 1/60th sec
 
             ; Snake head or body part position
-            ; (Re-assign pseudo-registers)
             POS_X       = R5
             POS_Y       = R6
 
@@ -119,6 +118,7 @@ main_scr:
             jsr $ff81                       ; clear screen
             jsr init_game
             jsr gen_food
+            jsr display_food
             jsr init_kb
             jsr set_timer
             jmp *
@@ -207,6 +207,7 @@ timer_handler:
             jsr move_head
             jsr erase_tail
             jsr update_head
+            jsr display_food
 +
             jmp $ea31                       ; KERNAL std routine
 
@@ -444,9 +445,32 @@ gen_food:
             cmp #CHAR_BLANK
             bne-
 
-            ; Display food
-            lda #CHAR_FOOD
+            ; Store food position (will be displayed later)
+            lda R1
+            sta food
+            lda R2
+            sta food+1
+
+            +pull_ay
+
+            rts
+
+
+; Display food
+display_food:
+            ; .food_addr = *+1
+            ; sta $0000,x
+
+            ; TODO Use self mod ,x instead
+
+            +push_ay
+
+            lda food
+            sta R1
+            lda food+1
+            sta R2
             ldy #0
+            lda #CHAR_FOOD
             sta (R1),y                      ; add food to screen
 
             +pull_ay
@@ -483,6 +507,9 @@ dir_idx:    !byte UP, DOWN, LEFT, RIGHT
 
 ; Character to print
 char:       !byte CHAR_HEAD
+
+; Food position
+food:       !word 0
 
 ; Head is temporarily stored.
 ; It will be copied to the first byte of the snake body (x and y)
