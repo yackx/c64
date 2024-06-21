@@ -4,6 +4,7 @@
             !cpu 6510
 
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/misc/upstart.a>
 
             BITMAP_PAGE = $20

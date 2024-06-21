@@ -2,6 +2,7 @@
             !src <lib/misc/upstart.a>
             !src <lib/strings/m-print-color-msg-xy.a>
             !src <lib/layout/main.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/layout/kernal.a>
 
 

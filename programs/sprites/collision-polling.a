@@ -18,6 +18,7 @@
 
             !src <lib/registers/pseudo-registers.a>
             !src <lib/registers/m-registers.a>
+            !src <lib/screen/color.a>
             !src <lib/layout/main.a>
             !src <lib/layout/vic-ii.a>
             !src <lib/layout/kernal.a>
@@ -109,7 +110,7 @@ process_collision:
 
 
 .sprites_colors
-            !byte #COLOR_WHITE, #COLOR_YELLOW
+            !byte COLOR_WHITE, COLOR_YELLOW
 .sprites_init_pos                           ; (x, y) - x-coord 8 bits only
             !byte 15, 80
             !byte 200, 95

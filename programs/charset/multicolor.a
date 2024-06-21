@@ -9,6 +9,7 @@
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
             !src <lib/mem/m-mem.a>
+            !src <lib/layout/vic-ii.a>
             !src <lib/layout/kernal.a>
 
                                             ; Charset location
@@ -39,9 +40,9 @@ main:
             jsr set_charset_loc
 
                                             ; Multicolor mode
-            lda VIC2CR2
+            lda VIC2_CR2
             ora #%00010000
-            sta VIC2CR2
+            sta VIC2_CR2
 
                                             ; Multicolor characters
             lda #BG_COLOR
