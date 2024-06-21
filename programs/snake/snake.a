@@ -13,6 +13,7 @@
             !addr SCREEN = $0400
 
             DELAY = 15                      ; 1/60th sec
+            INIT_LENGTH = 4
             GROW = 4
 
             ; Snake head or body part position
@@ -137,10 +138,13 @@ init_game:
             sta head_x
             lda #5
             sta head_y
+            
             lda #LEFT
             sta direction
-            lda #GROW
+            
+            lda #INIT_LENGTH
             sta max_idx
+            
             lda #12
             sta snake_x
             lda #13
