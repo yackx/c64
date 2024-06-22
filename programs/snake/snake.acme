@@ -10,13 +10,14 @@
             !src <lib/screen/color.acme>
             !src <lib/screen/codes.acme>
             !src <lib/charset/petscii.acme>
+            !src <lib/mmap/main.acme>
             !src <lib/mmap/kernal.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
             !src <lib/io/keyb/m-keypress.acme>
 
 
-            !addr SCREEN_ADDR = $0400
+            !addr SCREEN_ADDR = DEFAULT_SCREEN_MEM
 
             DELAY = 15                      ; 1/60th sec
             INIT_LENGTH = 4
