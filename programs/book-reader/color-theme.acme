@@ -47,7 +47,7 @@ screen_color_theme:
             jsr chrout_petscii_to_color
             +m_strout .msg_back
 
-.key        jsr keypress
+.key        jsr single_keypress
             cmp #PETSCII_ARROW_LEFT
             beq .done
 

@@ -15,7 +15,7 @@ display_goto:
 
             ldx #0                          ; Key index
 .key:       stx R6                          ; Save X
-            jsr keypress
+            jsr single_keypress
             ldx R6
             
             cmp #PETSCII_RETURN
@@ -60,7 +60,7 @@ display_goto:
             ; and wait for RETURN.
             +set_cursor_at 0, 24
             +m_strout .err_invalid
-            jsr keypress
+            jsr single_keypress
             cmp #PETSCII_RETURN
             bne .invalid
             jmp display_goto

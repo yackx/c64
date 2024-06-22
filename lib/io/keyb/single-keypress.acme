@@ -10,7 +10,7 @@
             !src <lib/mmap/main.acme>
 
 
-keypress:
+single_keypress:
             ; Keyboard buffer size
             lda #1
             sta XMAX

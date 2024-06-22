@@ -77,7 +77,7 @@ read_file:
             pla
             jsr .close
 
--           jsr keypress
+-           jsr single_keypress
             cmp #PETSCII_RETURN
             bne -
 

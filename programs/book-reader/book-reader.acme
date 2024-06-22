@@ -31,7 +31,7 @@ load_page:
             jsr read_page
             jsr footer
 
-.key        jsr keypress
+.key        jsr single_keypress
 
             cmp #PETSCII_F5
             beq next_page
@@ -156,7 +156,7 @@ page_filename_end:
             !src <lib/mem/fill-pages.acme>
             !src <lib/baseconv/convert-hex.acme>
             !src <lib/baseconv/print-int-8.acme>
-            !src <lib/io/keyb/keypress.acme>
+            !src <lib/io/keyb/single-keypress.acme>
             !src <lib/strings/strout.acme>
 
             !src <programs/book-reader/utils.acme>

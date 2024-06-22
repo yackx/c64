@@ -23,7 +23,7 @@ screen_intro:
             jsr chrout_petscii_to_color
             +m_strout .msg_start
 
-.key        jsr keypress
+.key        jsr single_keypress
             rts
 
 
