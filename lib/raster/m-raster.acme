@@ -7,9 +7,9 @@
             sta $d012
 
             lda #<@vector
-            sta $0314
+            sta CINV
             lda #>@vector
-            sta $0315
+            sta CINV+1
 }
 
 
