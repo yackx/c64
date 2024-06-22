@@ -1,19 +1,19 @@
             ; ACME 0.97
             !cpu 6510
 
-            COLOR_BLACK	= $0
-            COLOR_WHITE	= $1
-            COLOR_RED	= $2
-            COLOR_CYAN	= $3
-            COLOR_PURPLE	= $4
-            COLOR_GREEN	= $5
-            COLOR_BLUE	= $6
-            COLOR_YELLOW	= $7
-            COLOR_ORANGE	= $8
-            COLOR_BROWN	= $9
-            COLOR_LRED	= $a
-            COLOR_GRAY1	= $b
-            COLOR_GRAY2	= $c
-            COLOR_LGREEN	= $d
-            COLOR_LBLUE	= $e
-            COLOR_GRAY3	= $f
+            COLOR_BLACK	    = $0
+            COLOR_WHITE     = $1
+            COLOR_RED       = $2
+            COLOR_CYAN      = $3
+            COLOR_PURPLE    = $4
+            COLOR_GREEN     = $5
+            COLOR_BLUE      = $6
+            COLOR_YELLOW    = $7
+            COLOR_ORANGE    = $8
+            COLOR_BROWN     = $9
+            COLOR_LRED      = $a
+            COLOR_GRAY1     = $b
+            COLOR_GRAY2     = $c
+            COLOR_LGREEN    = $d
+            COLOR_LBLUE     = $e
+            COLOR_GRAY3     = $f
