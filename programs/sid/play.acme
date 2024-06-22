@@ -1,0 +1,29 @@
+; Play some nice music on the C64.
+;
+; The SID file load address and program entry point
+; vary from file to file.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+            !src <lib/raster/m-raster.acme>
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/vic-ii.acme>
+            !src <lib/mmap/rom.acme>
+
+
+main:
+            +init_raster_irq 0, irq_handler
+            jmp *
+
+
+irq_handler:
+            lda #$01
+            sta VIC2_IRQ                    ; ACK any raster IRQs
+            jsr $1003                       ; Play the music
+            jmp CINV_ACTUAL
+
+
+            * = $1000
+            !bin <programs/sid/Wasted_All_These_Years.dat>, , 2

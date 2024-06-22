@@ -1,0 +1,27 @@
+; Register a single keypress
+;
+; OUT:      A = key code
+; USES:     A X Y
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/main.acme>
+
+
+keypress:
+            ; Keyboard buffer size
+            lda #1
+            sta XMAX
+
+            ; No key repeat
+            lda #$40
+            sta RPTFLA
+
+            ; Loop on keypress
+-           jsr SCNKEY
+            jsr GETIN
+            beq -
+
+            rts

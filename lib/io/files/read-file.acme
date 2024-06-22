@@ -1,0 +1,108 @@
+; Read a file and store it into memory at a specified address
+;
+; See:
+; https://www.c64-wiki.com/wiki/OPEN
+; https://codebase64.org/doku.php?id=base:loading_a_file
+;
+; The validity of the parameters is not checked.
+;
+; Example:
+;           SCREEN = $0400
+;           FILE_HANDLER = 2
+;           DEVICE = 8
+;           SECONDARY = 2
+;           lda #<SCREEN
+;           sta R1
+;           lda #>SCREEN
+;           sta R2
+;           lda #FILE_HANDLER
+;           sta R3
+;           lda #DEVICE
+;           sta R4
+;           lda #SECONDARY
+;           sta R5
+;           ldx #<filename
+;           ldy #>filename
+;           lda #filename_end-filename
+;           jsr load_file_to_address
+;
+; The file will be read to memory as if the following BASIC program was entered -
+; assuming file on disk, handler #2, secondary #2 and destination address $0400:
+;
+;   10 LA=1024
+;   20 OPEN 2,8,2,"LOREM"
+;   30 IF ST<>0 THEN GOTO 60
+;   40 GET#2,A$ : IF A$="" THEN A$=CHR$(0)
+;   50 POKE LA,ASC(A$) : LA=LA+1 : GOTO 30
+;   60 CLOSE 2
+;
+;
+; IN:       X = filename addr LSB
+;           Y = filename addr MSB
+;           A = filename length
+;           R1 = load address LSB
+;           R2 = load address MSB
+;           R3 = logical file handler # (1-255)
+;           R4 = device # (1-2 or 8-15)
+;           R5 = secondary address (0-31)
+;
+; OUT:      C = error flag
+;           A = error code
+;
+; USES:     A X Y R1 R2
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/main.acme>
+
+
+read_file_to_address:
+            jsr SETNAM
+
+            lda R3
+            ldx R4
+            ldy R5
+            jsr SETLFS
+
+            jsr OPEN
+            bcs .error
+
+            ldx R3
+            jsr CHKIN                       ; Set input channel
+
+            ldy #0
+-           jsr READST                      ; Read status byte
+            bne .eof
+            jsr CHRIN                       ; Read a byte from the file
+            sta (R1),y                      ; Store it
+            inc R1
+            bne +
+            inc R2
++           jmp -
+
+.eof:
+            and #$40                        ; Check for EOF
+            beq .error
+            clc                             ; No error
+            jsr .close
+            rts
+
+.error:
+            ; Unified error handling for OPEN and CHKIN.
+            ; The error code in A is safe on the stack
+            ; while we close the file and clear the channel.
+            pha
+            jsr .close
+            pla
+            rts
+            ; CHKIN error: for further information,
+            ; the drive error channel has to be read.
+
+.close:
+            ; Close the file and clear the channel.
+            lda R3
+            jsr CLOSE
+            jsr CLRCHN
+            rts

@@ -1,0 +1,15 @@
+; Demo - Copy charset from ROM to RAM.
+;
+; Nothing to see though.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+
+main:
+            ldy #$20
+            jsr copy_charset_to_ram
+            rts
+
+            !src <lib/charset/copy-charset-rom.acme>

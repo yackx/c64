@@ -1,0 +1,142 @@
+; Sprite demo
+;
+; Display several C64 balloons sprites and move them accros X.
+;
+; x position:
+; $d000 bits #0-#7 sprite #0
+; $d002 bits #0-#7 sprite #1
+; ...
+; $d010 all sprites MSB
+
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/registers/m-registers.acme>
+            !src <lib/mem/m-mem.acme>
+
+            SPRITE_COUNT = 4
+            DELAY_16 = 255*2                ; busy wait delay
+            SPRITE_BLOCK = 13               ; block*64 = data
+
+
+main:
+            jsr common
+            jsr init_sprites
+            jmp animate                     ; no jsr - endless
+
+
+common:
+            ; clear screen
+            jsr $ff81
+
+            ; copy data to sprite block (same for all sprites)
+            +copy_bytes_8 .sprite_data, $0340, 63
+
+            ; activate sprites #0->#n
+            lda #%00001111
+            sta $d015
+
+            rts
+
+
+init_sprites:
+            ldx #SPRITE_COUNT
+-           jsr init_sprite
+            dex
+            bne -
+            rts
+
+
+init_sprite:
+            +push_ax
+            dex                             ; X=n => sprite #(n-1)
+
+            lda .sprites_colors,x
+            sta $d027,x                     ; sprite color
+
+            lda #SPRITE_BLOCK
+            sta $07f8,x                     ; sprite pointer to SPRITE_BLOCK*64=832=$0340
+
+            txa                             ; X <- X*2
+            asl
+            tax
+
+            lda .sprites_init_pos,x
+            sta $d000,x
+            inx
+            lda .sprites_init_pos,x
+            sta $d000,x                     ; sprite y position
+
+            +pull_xa
+
+            rts
+
+
+animate:
+            lda >DELAY_16
+            sta R5
+            lda <DELAY_16
+            sta R6                          ; busy wait params
+
+--          ldx #SPRITE_COUNT
+-           jsr move_sprite_x
+            dex
+            bne -
+            jsr busy_wait
+            jmp --
+
+
+move_sprite_x:
+            +push_ax
+
+            dex                             ; X=n => sprite #(n-1)
+            stx .sprite_idx
+
+            ; Multiply sprite # by 2.
+            ; Each sprite x pos register is previous + 2
+            ; (#0 -> $d000, #1 -> $d002, ...).
+            txa                             ; X <- X*2
+            clc
+            rol
+            tax
+
+            ; Move horizontally.
+            ; Notice how we STX before BNE.
+            ; This avoids a glitch when transitioning left/right.
+            stx .x_lsb
+            .x_lsb = *+1                    ; self mod x pos for pixel #X
+            inc $d000                       ; move right 1 pixel
+            bne +
+
+            ; Switch left/right by read-mod-write the x position.
+            ; MSB register at $d010.
+            ldx .sprite_idx
+            lda .msb_x_pos_masks,x
+            sta .x_msb_mask
+            lda $d010                       ; read sprites x pos MSB register
+            .x_msb_mask = *+1               ; self mod MSB
+            eor #%00000000                  ; flip sprite #x MSB
+            sta $d010                       ; update MSB register
+
++           +pull_xa
+            rts
+
+
+.sprite_idx:
+            !byte 0
+.sprites_colors
+            !byte 1, 7, 14, 10
+.sprites_init_pos                           ; 7 bits only (x, y)
+            !byte 15, 80
+            !byte 70, 120
+            !byte 45, 160
+            !byte 200, 200
+.msb_x_pos_masks:
+            !byte 1, 2, 4, 8, 16, 32, 64, 128
+
+.sprite_data:
+            !bin <programs/sprites/balloon.bin>
+
+            !src <lib/misc/busy-wait.acme>

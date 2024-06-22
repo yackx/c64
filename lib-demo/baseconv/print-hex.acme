@@ -1,0 +1,26 @@
+; Demo - print hex numbers
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+            !src <lib/strings/m-print.acme>
+
+
+main:
+            ldy #0
+-           lda numbers,y
+            jsr print_hex
+            +new_line
+            iny
+            cpy #HOW_MANY
+            bne -
+
+            rts
+
+
+numbers:
+            !byte $00, $01, $0a, $0f, $10, $aa, $ff
+            HOW_MANY = 7
+
+            !src <lib/baseconv/print-hex.acme>

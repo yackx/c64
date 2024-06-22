@@ -1,0 +1,78 @@
+; Reprogrammable raster line interrupt demo
+;
+; Built from and extended:
+; http://www.c64-wiki.com/index.php/Raster_interrupt
+;
+; Known issues:
+; - Sensitive to keyboard interrupts
+
+            ;ACME 0.97
+            !cpu 6510
+            !src <lib/registers/pseudo-registers.acme>
+            * = $c000
+
+            .LINE_ON  = 100                 ; 1st IRQ shall occur at that line
+            .LINE_OFF = 120                 ; 1st IRQ shall occur at that line
+
+main:
+            sei                             ; turn off interrupts -
+                                            ; otherwise incoming IRQ could occur as we
+                                            ; are modifying the IRQ vector
+
+            lda #%01111111
+            sta $dc0d                       ; switch off interrupt signals from CIA-1
+
+            and $d011
+            sta $d011                       ; scanline hi bit
+
+            lda #.LINE_ON
+            sta $d012                       ; set rasterline where interrupt shall occur
+
+            lda #<.irq_handler              ; set raster interrupt vector
+            sta $0314
+            lda #>.irq_handler
+            sta $0315
+
+            lda #%00000001                  ; enable raster interrupts
+            sta $d01a
+
+            lda #0                          ; stripe status. 0=off; 1=on
+            and R5
+
+            cli                             ; clear interrupt flag -
+                                            ; allow CPU to respond to interrupts
+            rts
+
+
+; Interrupt handler
+;
+; Display a stripe on the screen border (1st IRQ),
+; then go back to the original color.
+;
+; R5    Current stripe status: 0=off; 1=on
+;
+; USE:  R5
+
+.irq_handler:
+            lda R5
+            beq .stripe_on
+
+.stripe_off:
+            dec R5
+            lda #14                         ; change back border color
+            sta $d020
+            lda #.LINE_ON
+            sta $d012
+            asl $d019
+            jmp $ea81                       ; jump into KERNAL shorter ROM routine
+                                            ; to only restore registers from stack etc
+
+.stripe_on:
+            inc R5
+            lda #1
+            sta $d020                       ; border color stripe
+            lda #.LINE_OFF
+            sta $d012
+            asl $d019
+            jmp $ea31                       ; jump into KERNAL std interrupt service
+                                            ; routine to handle keyb scan, cursor etc

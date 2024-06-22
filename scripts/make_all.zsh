@@ -2,7 +2,7 @@
 
 set -e
 make clean
-for f in **/*.(a|asm); do
+for f in **/*.(a|acme); do
     if ! grep -q -E "upstart\.a|\* =" $f; then
         # No PC directory or no BASIC upstart found.
         # Must be a lib.

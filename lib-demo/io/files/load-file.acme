@@ -1,0 +1,114 @@
+; Demo - Load a file and display its contents on the screen.
+;
+; File format:
+; - The file must be in Screen code format to be displayed correctly
+;   (not PETSCII nor ASCII);
+; - The 2 first bytes of the file are the load address of the file
+;   (ignored here but used by the subroutine nonetheless).
+;
+; A utility Python script is provided to perform the conversion
+; from ASCII text file to a screen code file:
+;
+;     $ python convert_file.py
+;     $ make TARGET=d-load-file run
+;
+; To simulate an I/O error, either:
+; - change the filename to a non-existing file or
+; - change the device number to a non-existing device.
+;
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !addr SCREEN_MEM = $0400
+            FILE_HANDLER = 2
+            DEVICE = 8
+
+            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/misc/upstart.acme>
+            !src <lib/registers/pseudo-registers.acme>
+
+main:
+            ; Load the file to the screen memory
+            lda #<SCREEN_MEM
+            sta R1
+            lda #>SCREEN_MEM
+            sta R2
+            lda #FILE_HANDLER
+            sta R3
+            lda #DEVICE
+            sta R4
+            ldx #<filename
+            ldy #>filename
+            lda #filename_end-filename
+            jsr load_file_to_address
+
+            bcs .error
+            rts
+
+.error:
+            ; Store error code (A will be used)
+            sta error_code
+
+.print_error_code:
+            ; Print error code in hex
+            lda #<error_msg
+            sta R1
+            lda #>error_msg
+            sta R2
+            jsr strout
+            lda error_code
+            jsr print_hex
+            lda #$0d
+            jsr CHROUT
+
+.search_error_msg:
+            ; Search error message in the error message table.
+            ; X will contain the index in the table.
+            ldx #0
+-           lda msg_table,x
+            beq .print_error_msg            ; No match - default error msg
+            cmp error_code                  ; Check error code in table
+            beq .print_error_msg
+            inx
+            inx
+            inx                             ; 3 bytes per entry in table
+            bne -                           ; Keep searching
+
+.print_error_msg:
+            ; Print error message
+            lda msg_table+1,x
+            sta R1
+            lda msg_table+2,x
+            sta R2
+            jsr strout                      ; Print error message
+
+            rts
+
+
+filename:   !pet "lorem la,u"               ; "LOREM LA.USR" on disk
+filename_end:
+
+error_code: !byte 0
+error_msg:  !byte $0d
+            !pet "error ", 0
+
+msg_table:
+            ; Each entry is 3 bytes:
+            ; 1st byte: error code
+            ; 2nd + 3rd bytes: pointer to error message
+            !byte 4
+            !word msg_fnf
+            !byte 5
+            !word msg_dnr
+            !byte 0                         ; End of table marker and default
+            !word msg_other
+
+msg_fnf:    !pet "file not found", 0
+msg_dnr:    !pet "device not ready", 0
+msg_other:  !pet "other error", 0
+
+
+            !src <lib/io/files/load-file.acme>
+            !src <lib/strings/strout.acme>
+            !src <lib/baseconv/print-hex.acme>

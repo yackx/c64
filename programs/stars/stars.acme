@@ -1,0 +1,90 @@
+; A stars animation.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            * = $c000
+
+            !src <lib/screen/color.acme>
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/vic-ii.acme>
+            !src <lib/mmap/sid.acme>
+            !src <lib/mmap/kernal.acme>
+
+            HIRES = $2000
+            HIRES_END = $4000
+
+
+main:
+            lda #%00010000                  ; white pixels on black background
+            jsr clear_screen
+            jsr color_screen
+            jsr set_hires
+            jsr init_rnd
+-           jsr fill_random
+            jmp -
+
+
+color_screen:
+            lda #COLOR_BLACK
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
+            rts
+
+
+set_hires:
+            lda #$3b
+            sta VIC2_CR1
+            lda #$08
+            sta VIC2_CR2
+            lda #$18
+            sta VIC2_MEM_PTR
+            rts
+
+
+; https://www.atarimagazines.com/compute/issue72/random_numbers.php
+init_rnd:
+            lda CHROUT                      ; maximum frequency value
+            sta SID_FREQ_LO_3               ; voice 3 frequency low byte
+            sta SID_FREQ_HI_3               ; voice 3 frequency high byte
+            lda #$80                        ; noise waveform, gate bit off
+            sta SID_CR_3                    ; voice 3 control register
+            rts
+
+
+fill_random:
+                                            ;lda #0
+                                            ;sta fill_random.label-1
+                                            ;lda #$20
+                                            ;sta fill_random.label
+
+            ldx #<HIRES
+            lda #>HIRES
+            sta .page
+.loop:
+            lda SID_RANDOM                  ; obtain RND from SID
+            cmp #8
+            bcs .no_star
+.star:
+            tay
+            lda #%00000001
+.shift:     rol
+            dey
+            bne .shift
+            jmp .light
+.no_star:
+            lda #0
+.light:
+            .page = * +2
+            sta HIRES,x                     ; Self-mod
+            inx
+            bne .loop
+            inc .page
+            lda .page
+            cmp #>HIRES_END
+            bne .loop
+
+            rts
+
+
+            !src <lib/screen/clear-screen.acme>

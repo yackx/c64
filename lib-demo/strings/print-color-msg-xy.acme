@@ -1,0 +1,35 @@
+            !cpu 6510
+            !src <lib/misc/upstart.acme>
+            !src <lib/strings/m-print-color-msg-xy.acme>
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/vic-ii.acme>
+            !src <lib/mmap/kernal.acme>
+
+
+main:
+            jsr CINT
+
+            lda #0
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
+
+            +m_print_color_msg_at .msg_x, .msg_y, .msg_color, .msg_txt
+            +m_print_color_msg_struct_at .msg2
+            +m_print_color_msg_struct_at .msg3
+
+            rts
+
+
+.msg_x:     !byte 2
+.msg_y:     !byte 0
+.msg_color: !byte 1
+.msg_txt:   !pet "message using explicit params macro", 0
+
+.msg2:      !byte 4, 0, 7
+            !pet "message using struct macro", 0
+.msg3:      !byte 8, (44 - .msg_end + .msg3) / 2, 4
+            !pet "centered with acme arithmetic", 0
+.msg_end:
+
+
+            !src <lib/strings/print-color-msg-xy.acme>

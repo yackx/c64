@@ -1,0 +1,7 @@
+            !cpu 6510
+            !src <lib/misc/upstart.acme>
+            !src <lib/mem/m-mem.acme>
+
+main:
+            +fill_pages $04, 3, 0
+            rts

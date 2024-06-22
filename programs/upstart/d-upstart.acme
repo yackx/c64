@@ -1,0 +1,20 @@
+; BASIC upstart demo.
+;
+; LOAD and RUN.
+
+            ;ACME 0.97
+            !cpu 6510
+            !src <lib/misc/upstart.acme>
+            !src <lib/registers/pseudo-registers.acme>
+
+main:
+            lda #<.hello
+            sta R1
+            lda #>.hello
+            sta R2
+            jsr strout
+            rts
+
+.hello      !pet "hello basic upstart", 13, 0
+
+            !src <lib/strings/strout.acme>

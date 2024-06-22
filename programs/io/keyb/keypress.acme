@@ -1,0 +1,32 @@
+; Demo - Get a single keypress and print its code
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+            !src <lib/strings/m-print.acme>
+            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/main.acme>
+
+
+main:
+            ; Keyboard buffer size
+            lda #1
+            sta XMAX
+
+            ; No key repeat
+            lda #$40
+            sta RPTFLA
+
+            ; Loop on keypress
+-           jsr SCNKEY
+            jsr GETIN
+            beq -
+
+            ; Print key code
+            jsr print_hex
+            +new_line
+
+            jmp -
+
+            !src <lib/baseconv/print-hex.acme>

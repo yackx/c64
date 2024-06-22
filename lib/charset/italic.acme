@@ -1,0 +1,38 @@
+; Make charset italic.
+;
+; Shift the top 4 lines of each char 1 pixel right.
+;
+; IN    R3 Charset ptr LSB
+;       R4 Charset ptr MSB
+; USE   A X Y R3 R4
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/pseudo-registers.acme>
+
+
+!zone make_italic
+make_italic:
+            ldy #0                          ; memory page index
+            ldx #8                          ; loop 8 times (8x255 = 2Kb)
+.loop:
+            tya
+            and #4                          ; top four bytes in char?
+            bne +                           ; no
+
+            lda (R3),y
+            lsr                             ; italicize
+            sta (R3),y
++
+            iny
+            bne .loop                       ; copy 256 bytes
+
+            inc R4                          ; Next memory page
+            dex                             ; 8 pages reached?
+            bne .loop
+
+            +pull_r4
+            +pull_r3
+
+            rts

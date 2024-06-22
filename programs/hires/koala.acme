@@ -1,0 +1,77 @@
+; Hires bitmap color demo - KOALA file format
+;
+; See info on the file format at the bottom of this file.
+;
+; Caution - only 256 bytes of program before data!
+
+            ;ACME 0.97
+            !cpu 6510
+
+            * = $1f00                       ; SYS 7936
+
+            !src <lib/mem/m-mem.acme>
+
+
+main:
+            ; Picture alreay located at $2000
+
+            ; Copy screen RAM
+            +copy_1000_bytes $3f40, $0400
+
+            ; Copy color RAM
+            +copy_1000_bytes $4328, $d800
+
+            ; Shorter alternative:
+            ; Do not keep the existing bits
+            ; lda #$3b              ; Bitmap mode
+            ; sta $d011
+            ; lda #$18              ; Multicolor mode
+            ; sta $d016
+            ; lda #$18              ; Set up RAM locations
+            ; sta $d018
+
+            ; Screen control register #1
+            ; Enable hires mode
+            ; Disable extended background mode
+            lda $d011
+            and #%10011111                  ; mask #6 and #5
+            ora #%00100000                  ; set #5 clear #6
+            sta $d011
+
+            ; Multicolor mode
+            lda $d016
+            ora #%00010000
+            sta $d016
+
+            ; Border color
+            lda #$0
+            sta $d020
+
+            ; Background color
+            lda $4710
+            sta $d021
+
+            ; Point screen memory to $0400
+            lda $d018
+            and #%00000001
+            ora #%00011000
+            sta $d018
+
+            jmp *                           ; halt
+
+
+; Koala file.
+; We displace the content by -$4000 so that the bitmap
+; conveniently falls at $2000.
+;
+; Original        Displaced       Content
+; ===========     ===========     ==========
+; $6000-$7F3F     $2000-$3F3F     Bitmap
+; $7F40-$8327     $3F40-$4327     Screen RAM
+; $8328-$870F     $4328-$470F     Color RAM
+; $8710           $4710           Background color
+;
+; Drop the 2 first bytes (memory load address)
+            * = $2000 - 2
+data:
+            !bin <programs/hires/mountain.kla>

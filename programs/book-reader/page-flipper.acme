@@ -1,0 +1,75 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/m-registers.acme>
+
+
+!zone page_flipper {
+display_goto:
+            lda theme_color_action
+            jsr display_color_bar
+
+            ; Display input prompt
+            +set_cursor_at 0, 24
+            +m_strout .msg_goto
+
+            ldx #0                          ; Key index
+.key:       stx R6                          ; Save X
+            jsr keypress
+            ldx R6
+            
+            cmp #PETSCII_RETURN
+            beq .process_input
+
+            cmp #PETSCII_DEL                ; Delete?
+            bne +
+            cpx #0
+            beq .key                        ; No character to delete
+            dex                             ; Delete character
+            lda #PETSCII_CURSOR_LEFT        ; Left + space + left
+            jsr CHROUT                      ; as DEL would "pull" the bar
+            lda #' '                        ; one char to the left.
+            jsr CHROUT
+            lda #PETSCII_CURSOR_LEFT
+            jsr CHROUT
+
++           cmp #'0'
+            bcc .key                        ; Not a digit
+            cmp #'9'+1
+            bcs .key                        ; Not a digit
+            
+.output_key:
+            jsr CHROUT
+            sta convert_dec_petscii_to_u8_params,x
+            inx
+            jmp .key
+
+.process_input:
+            jsr convert_dec_petscii_to_u8
+            bcs .invalid                    ; C = input overflows u8
+            beq .invalid                    ; 0 = input is 0 (invalid)
+
+.set_page:  sta curr_page
+            jsr on_change_curr_page
+
+.done:
+            rts
+
+.invalid:
+            ; Display invalid input error message
+            ; and wait for RETURN.
+            +set_cursor_at 0, 24
+            +m_strout .err_invalid
+            jsr keypress
+            cmp #PETSCII_RETURN
+            bne .invalid
+            jmp display_goto
+
+
+.msg_goto:  !pet "Page? ", 0
+.err_invalid:
+            !pet "Invalid page number [RETURN]", 0
+
+
+            !src <lib/baseconv/convert-dec-petscii-u8.acme>
+}

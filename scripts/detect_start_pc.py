@@ -20,7 +20,8 @@ The PC will be returned as a string with 0x prefix, e.g. 0xc000.
 def detect_start_pc_directive(f: IO) -> Optional[str]:
     content = f.read()
 
-    # Look for upstart.a in the file content
+    # Look for upstart.a or upstart.acme in the file content
+    # (search on .a does both)
     if 'lib/misc/upstart.a' in content:
         return '0x080d'
 
@@ -34,7 +35,7 @@ def detect_start_pc_directive(f: IO) -> Optional[str]:
 
 """Print the start PC or exit."""
 def main():
-    if len(sys.argv) != 2 or not sys.argv[1].endswith(('.a', '.asm')):
+    if len(sys.argv) != 2 or not sys.argv[1].endswith(('.a', '.acme')):
         print('Usage: python detect_start_pc.py <filename.a|filename.asm>')
         sys.exit(1)
 

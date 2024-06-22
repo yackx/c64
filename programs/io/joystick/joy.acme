@@ -1,0 +1,129 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/strings/m-strout.acme>
+
+            !addr SCREEN_RAM = $0400
+            !addr SCREEN_COLOR_RAM = $d800
+
+            COLOR_NEUTRAL = 14
+            COLOR_ACTIVE = 1
+
+
+main:
+            jsr $ff81
+            jsr init_scr_fixed
+-
+            jsr read_joysticks
+            jmp -
+
+
+!macro cursor_at @x, @y {
+            clc                             ; set cursor
+            ldy #@x
+            ldx #@y
+            jsr $fff0
+}
+
+
+!macro scr_char_at @x, @y, @char {
+            +cursor_at @x, @y
+
+            lda #@char
+            sta SCREEN_RAM + @x + @y * 40
+}
+
+
+init_scr_fixed:
+            +cursor_at 23, 18
+            +m_strout .msg_joy_2
+
+            +cursor_at 6, 18
+            +m_strout .msg_joy_1
+
+            CHAR_TO_SCR = 96
+
+            ; Joystick #1
+            +scr_char_at 11, 9, 'u'-CHAR_TO_SCR
+            +scr_char_at 9, 11, 'l'-CHAR_TO_SCR
+            +scr_char_at 11, 13, 'd'-CHAR_TO_SCR
+            +scr_char_at 13, 11, 'r'-CHAR_TO_SCR
+            +scr_char_at 11, 11, 81
+
+
+            ; Joystick #2
+            +scr_char_at 28, 9, 'u'-CHAR_TO_SCR
+            +scr_char_at 26, 11, 'l'-CHAR_TO_SCR
+            +scr_char_at 28, 13, 'd'-CHAR_TO_SCR
+            +scr_char_at 30, 11, 'r'-CHAR_TO_SCR
+            +scr_char_at 28, 11, 81
+
+            rts
+
+.msg_joy_1  !pet "joystick #1", 0
+.msg_joy_2  !pet "joystick #2", 0
+
+            !src <lib/strings/strout.acme>
+
+
+
+read_joysticks:
+            lda $dc01                       ; read joystick port 1
+            sta joy_reg
+            ldx #0
+            jsr read_joystick
+
+            lda $dc00                       ; read joystick port 2
+            sta joy_reg
+            ldx #17                         ; display offset
+            jsr read_joystick
+
+            rts
+
+
+!macro scr_color_at @x, @y {
+            sta SCREEN_COLOR_RAM + @x + @y*40,x
+}
+
+read_joystick:
+.test_up
+            lsr joy_reg
+            bcs +
+            lda #COLOR_ACTIVE
+            bcc ++
++           lda #COLOR_NEUTRAL
+++          +scr_color_at 11, 9
+.test_down
+            lsr joy_reg
+            bcs +
+            lda #COLOR_ACTIVE
+            bcc ++
++           lda #COLOR_NEUTRAL
+++          +scr_color_at 11, 13
+.test_left
+            lsr joy_reg
+            bcs +
+            lda #COLOR_ACTIVE
+            bcc ++
++           lda #COLOR_NEUTRAL
+++          +scr_color_at 9, 11
+.test_right
+            lsr  joy_reg
+            bcs +
+            lda #COLOR_ACTIVE
+            bcc ++
++           lda #COLOR_NEUTRAL
+++          +scr_color_at 13, 11
+.test_fire
+            lsr joy_reg
+            bcs +
+            lda #COLOR_ACTIVE
+            bcc ++
++           lda #COLOR_NEUTRAL
+++          +scr_color_at 11, 11
+
+            rts
+
+joy_reg:    !byte 0

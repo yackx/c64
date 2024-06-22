@@ -1,0 +1,16 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+
+
+; Print a character using direct screen memory access and calculation.
+main:
+            ldx #15
+            ldy #19
+            lda #0
+            jsr print_char_xy
+
+            rts
+
+            !src <lib/strings/print-char-mem-xy-calc.acme>

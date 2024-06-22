@@ -1,0 +1,101 @@
+; Plot a pixel on the screen.
+;
+; This fast routine is applied from
+;
+;   "Assembly Language Programming with the C64", Marvin L. De Jong,
+;   Brady Communications Company, 1984, p. 210,
+;   ISBN 0-89303-319-7.
+;
+; Highlights:
+;
+;   ADH:ADL = base_addr + 320*INT(y/8) + (y AND 7) + 8*INT(x/8)
+;
+; Divide by 8 is done by shifting right 3 times.
+; Multiply by 8 is done by shifting left 3 times.
+; For 8*INT(x/8) instead of shifting right 3 times then shifting left 3 times,
+; we simply AND #$f8.
+;
+;   320*INT(y/8) = $140*INT(y/8) = $100*INT(y/8) + $40*INT(y/8)
+;
+; $100 is the same as multiplication by 256, which is equivalent
+; to eight shifts left. In other words, multiplication by $100
+; shifts a low byte to a high byte.
+;
+; IN:       See INPUT parameters below.
+; USES:     A X Y R1 R2 R6
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/pseudo-registers.acme>
+
+            !addr IAL = R1                  ; Indexed Address LSB
+            !addr IAH = R2                  ; Indexed Address MSB
+            !addr TEMP = R6
+
+
+; INPUT parameters.
+;
+; We avoid passing parameters with a vector to a structure
+; as it would be slightly slower.
+plot_param_screen_addr_page:
+            !byte 0
+plot_param_x_bits_0_7:
+            !byte 0
+plot_param_x_bit_8:
+            !byte 0
+plot_param_y:    
+            !byte 0
+plot_param_color:
+            !byte 0
+
+
+.adhadl:
+            lda #$f8
+            and plot_param_x_bits_0_7
+            sta TEMP
+            lda plot_param_y
+            and #$07
+            ora TEMP
+            tay
+
+            lda #0
+            sta IAH
+            lda #$f8
+            and plot_param_y
+            asl
+            rol IAH
+            asl
+            rol IAH
+            asl
+            rol IAH
+            sta IAL
+
+            lda plot_param_y
+            lsr
+            lsr
+            lsr
+            clc
+            adc plot_param_x_bit_8
+            adc plot_param_screen_addr_page
+            adc IAH
+            sta IAH
+
+            rts
+
+
+plot:
+            jsr .adhadl
+            lda plot_param_x_bits_0_7
+            and #$07
+            tax
+            inx
+            lda #0
+            sec
+-           ror
+            dex
+            bne -
+            ora (IAL),y
+            sta (IAL),y
+
+            rts

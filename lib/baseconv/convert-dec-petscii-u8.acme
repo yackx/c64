@@ -1,0 +1,55 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
+!zone zone_convert_dec_petscii_to_u8 {
+
+convert_dec_petscii_to_u8_params:
+            !fill 3, 0
+
+
+; Convert a decimal value in PETSCII to a byte.
+;
+; Example: user enters the digits 1, 2 and 3.
+; The PETSCII values in convert_dec_petscii_to_u8_params
+; are 49, 50, 51.
+; X = 3.
+; After invoking this routine, A = 123.
+convert_dec_petscii_to_u8:
+            stx .len
+            ldx #0
+            stx .value
+
+.loop       cpx .len
+            beq .done
+            lda .value
+            jsr mul_10
+            
+            lda R4
+            bne .invalid
+
+            lda convert_dec_petscii_to_u8_params,x
+            sec
+            sbc #'0'
+            clc
+            adc R3
+            sta .value
+            bcs .invalid
+
+            inx
+            jmp .loop
+
+.done:      lda .value
+            clc
+            rts
+
+.invalid:   sec
+            rts
+
+
+.len:       !byte 0
+.value:     !byte 0
+}
+
+
+            !src <lib/calc/mul-10.acme>

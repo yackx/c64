@@ -1,0 +1,19 @@
+            !cpu 6510
+            !src <lib/misc/upstart.acme>
+            !src <lib/mem/m-mem.acme>
+
+
+main:
+            ; clear screen
+            jsr $ff81
+
+            ; 7 lines starting on line 3
+            +fill_bytes_16 $0400+40*2, 40*7, 0
+
+            ; 2 lines starting on line 12
+            +fill_bytes_8 $0400+40*11, 40*2, 0
+
+            ; 1 char
+            +fill_bytes_8 $0400+40*14, 1, 0
+            +fill_bytes_16 $0400+40*16, 1, 0
+            rts

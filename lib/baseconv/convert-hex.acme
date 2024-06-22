@@ -1,0 +1,38 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/kernal.acme>
+
+
+; Convert a value to hexadecimal.
+;
+; IN:       A = value to convert
+; OUT:      convert_hex_buffer (2 bytes buffer HI LO)
+; USES:     A X
+convert_hex:
+            pha
+
+            ; HI nibble
+            and #$f0
+            lsr
+            lsr
+            lsr
+            lsr
+            tax
+            lda .hex,x
+            sta convert_hex_buffer
+
+            ; LO nibble
+            pla
+            and #$0f
+            tax
+            lda .hex,x
+            sta convert_hex_buffer+1
+
+            rts
+
+
+.hex:       !pet "0123456789abcdef"
+
+convert_hex_buffer:
+            !byte 0, 0

@@ -1,0 +1,55 @@
+            ; Hard text scroll demo
+
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <lib/registers/pseudo-registers.acme>
+
+            SCREEN = $0400
+            LINE = 1
+            START_OF_LINE = SCREEN + 40 * LINE
+            DELAY_16 = 25 * 30
+
+
+main:
+            lda >DELAY_16
+            sta R5
+            lda <DELAY_16
+            sta R6                          ; busy wait params
+            lda #0
+            sta R1                          ; message index
+
+scroll:
+            ldy #39                         ; how many chars
+            ldx #0                          ; current char
+-           lda START_OF_LINE+1,x
+            sta START_OF_LINE,x             ; shift 1 left
+            inx
+            dey
+            bne -                           ; keep scrolling line
+
+pull_next_char:
+            ldx R1
+            lda marquee,x
+            beq restart                     ; msg done
+            sta START_OF_LINE+39
+            inc R1                          ; next char
+            jsr busy_wait
+
+            jmp scroll
+
+restart:
+            lda #0
+            sta R1                          ; reset msg index
+            jmp scroll
+
+
+marquee:
+            !scr "this is a scrolling text - hard scroll - "
+            !scr "rtl (right-to-left) - "
+            !scr "one character at a time."
+            !fill 10, $20
+            !byte 0
+
+            !src <lib/misc/busy-wait.acme>

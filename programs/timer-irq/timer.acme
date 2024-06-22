@@ -1,0 +1,41 @@
+; CIA Timer interrupt
+;
+; Change the top-left character on the screen periodically.
+;
+; CIA #1 Timer B is set to cause an IRQ interrupt
+; to occur every 1/60 second.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            * = $c000
+
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/rom.acme>
+
+            !addr SCR = $0400
+            DELAY = 60
+
+
+; Set CIA #1 Timer B vector
+main:
+            sei
+            lda #<timer_irq
+            sta CINV
+            lda #>timer_irq
+            sta CINV+1
+            cli
+
+            rts
+
+; Update the top-left character every second.
+timer_irq:
+            dec delay
+            bne +
+            lda #DELAY
+            sta delay
+            inc SCR                         ; top-left char
++           jmp ROM_IRQ_HANDLER             ; KERNAL std int routine
+
+
+delay:      !byte 60

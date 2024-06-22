@@ -1,0 +1,64 @@
+; Sprite demo
+;
+; Display the C64 balloon sprite and move it accros X.
+;
+; X position:
+; $d000 bits #0-#7 sprite #0
+; $d010 all sprites MSB
+;
+; Known issue:
+; - Long lingering time right of the screen
+
+            ;ACME 0.97
+            !cpu 6510
+            * = $c000
+
+            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/registers/m-registers.acme>
+            !src <lib/mem/m-mem.acme>
+
+            DELAY = 255*40
+
+main:
+            jsr $ff81                       ; clear screen
+
+            +copy_bytes_8 .sprite_data, $0340, 63
+
+            lda #255
+            sta $d015                       ; activate sprite #0
+
+            lda #1
+            sta $d027                       ; sprite #0 color
+
+            lda #100
+            sta $d001                       ; sprite #0 y position
+
+            lda #13                         ; sprite block
+            sta $07f8                       ; sprite #0 pointer to 13*64=832=$0340
+
+            lda #>DELAY
+            sta R5
+            lda #<DELAY
+            sta R6
+
+            ; Move horizontally
+            ; Notice how we STX before BNE.
+            ; This avoids a glitch when transitioning left/right.
+            lda #0
+            and $d000
+-           inc $d000                       ; move sprite #0 1 pixel right
+            bne +
+
+            ; Switch left/right
+            lda $d010                       ; read sprites x pos MSB register
+            eor #%00000001                  ; flip sprite #0 x pos MSB
+            sta $d010
+
++           jsr busy_wait
+            jmp -
+
+
+.sprite_data:
+            !bin <programs/sprites/balloon.bin>
+
+            !src <lib/misc/busy-wait.acme>

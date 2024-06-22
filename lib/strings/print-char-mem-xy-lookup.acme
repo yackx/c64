@@ -1,0 +1,34 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/main.acme>
+
+            BASE = DEFAULT_SCREEN_MEM
+
+
+; Print a character using direct screen memory access and lookup table.
+;
+; IN:       X = row
+;           Y = column
+;           A = character (screen code)
+;
+; CYCLES:   33/36
+print_char_xy:
+            pha
+
+            lda .y_ba_lsb,y
+            sta .row_addr
+            lda .y_ba_msb,y
+            sta .row_addr+1
+
+            pla
+
+            .row_addr = *+1
+            sta $0000,x                     ; Self-modifying
+            
+            rts
+
+; Lookup table for screen memory addresses.
+; MSB and LSB are stored separately to ease lookup.
+.y_ba_lsb:  !for .y, 0, 24 { !byte <addr(BASE + .y * 40) }
+.y_ba_msb:  !for .y, 0, 24 { !byte >addr(BASE + .y * 40) }

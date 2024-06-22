@@ -1,0 +1,58 @@
+; Print a decimal number using the KERNAL CHROUT routine.
+;
+; Achieved by successive substractions of 100, then 10, then 1.
+; This routine does not use BCD.
+;
+; IN:       A = Number to print
+; USES:     A, X, Y
+
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/kernal.acme>
+
+
+print_int_8:
+            ldx #0                          ; Index .units
+            ldy #0                          ; Always 0
+            sty .digit
+            sty .printed
+.loop:
+            cmp .units,x                    ; Number smaller than unit?
+            bcc .print_digit                ; Print it
+            sec
+            sbc .units,x                    ; Decrease number by current unit
+            inc .digit                      ; Increase .digit
+            jmp .loop
+
+.print_digit:
+            pha
+
+            lda .printed                    ; Some digit already printed?
+            bne .actual_print               ; Yes, print digit (not a leading zero)
+            lda .digit
+            bne .actual_print               ; Not a zero, print it
+            cpx #2                          ; Zero, last digit?
+            bne .next_digit                 ; No, skip it
+
+.actual_print:
+            inc .printed                    ; Set flag that some digit was printed
+            lda .digit
+            clc
+            adc #'0'
+            jsr CHROUT
+ 
+.next_digit:
+            pla
+            sty .digit                      ; Reset .digit
+            inx                             ; Next unit
+            cpx #3                          ; All .units done?
+            bne .loop
+
+            rts
+
+
+.printed:   !byte 0                         ; 1 = some digit printed already
+.digit:     !byte 0                         ; Current .digit
+.units:     !byte 100, 10, 1                ; Successive .units

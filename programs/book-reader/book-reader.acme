@@ -1,0 +1,169 @@
+; A book reader.
+;
+; See README.md for more information and instructions on how to
+; build the book disk image.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !addr SCREEN_MEM = DEFAULT_SCREEN_MEM
+
+            !src <lib/misc/upstart.acme>
+            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/screen/color.acme>
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/kernal.acme>
+            !src <lib/charset/petscii.acme>
+            !src <lib/charset/m-charset.acme>
+            !src <lib/screen/m-screen.acme>
+            !src <lib/strings/m-strout.acme>
+
+
+main:
+            jsr CINT
+            jsr clear_screen
+            jsr screen_intro
+            jsr read_info
+
+
+load_page:
+            jsr clear_screen
+            jsr read_page
+            jsr footer
+
+.key        jsr keypress
+
+            cmp #PETSCII_F5
+            beq next_page
+
+            cmp #PETSCII_F3
+            beq prev_page
+
+            cmp #PETSCII_F1
+            bne +
+            jsr screen_intro
+            jmp load_page
+
++           cmp #'G'
+            bne +
+            jsr display_goto
+            jmp load_page
+
++           cmp #'C'
+            bne +
+            jsr screen_color_theme
+            jmp load_page
+
++           cmp #'Q'
+            bne .key
+            rts
+
+next_page:  lda curr_page
+            cmp max_page
+            beq .key
+            inc curr_page
+            jmp +
+
+prev_page:  lda curr_page
+            beq .key
+            dec curr_page
+
++           jsr on_change_curr_page
+            jmp load_page
+
+
+read_page:
+            lda #PETSCII_REVOFF
+            jsr CHROUT
+            
+            lda #<page_filename
+            sta read_file_param_filename_addr
+            lda #>page_filename
+            sta read_file_param_filename_addr+1
+            lda #page_filename_end - page_filename
+            sta read_file_param_filename_len
+
+            lda #<read_page_chr_vect
+            sta read_file_param_char_vect
+            lda #>read_page_chr_vect
+            sta read_file_param_char_vect+1
+
+            jsr read_file
+
+            rts
+
+
+read_page_chr_vect:
+            jsr CHROUT
+
+            rts
+
+
+footer:
+            lda theme_color_muted
+            jsr display_color_bar
+
+            +set_cursor_at 0, 24
+
+            lda curr_page
+            jsr print_int_8
+
+            lda #'/'
+            jsr CHROUT
+
+            lda max_page
+            jsr print_int_8
+
+            rts
+
+
+clear_screen:
+            lda #PETSCII_CLR
+            jsr CHROUT
+
+            +switch_lower_case
+            
+            lda theme_color_border
+            sta BORDER_COLOR
+            lda theme_color_background
+            sta BACKGROUND_COLOR
+
+            lda theme_color_primary
+            jsr chrout_petscii_to_color
+            
+            rts
+
+
+on_change_curr_page:
+            lda curr_page
+            jsr convert_hex
+            lda convert_hex_buffer
+            sta hex_page
+            lda convert_hex_buffer+1
+            sta hex_page+1
+            rts
+
+
+curr_page:  !byte 1
+max_page:   !byte 39
+
+page_filename:
+            !pet "page"
+hex_page:   !pet "01"
+            !pet ",u"                       ; "PAGExx.USR" on disk
+page_filename_end:
+
+            !src <lib/mem/fill-pages.acme>
+            !src <lib/baseconv/convert-hex.acme>
+            !src <lib/baseconv/print-int-8.acme>
+            !src <lib/io/keyb/keypress.acme>
+            !src <lib/strings/strout.acme>
+
+            !src <programs/book-reader/utils.acme>
+            !src <programs/book-reader/intro.acme>
+            !src <programs/book-reader/color-theme.acme>
+            !src <programs/book-reader/footer-bar.acme>
+            !src <programs/book-reader/file-reader.acme>
+            !src <programs/book-reader/page-flipper.acme>
+            !src <programs/book-reader/read-info.acme>
+            !src <lib/screen/scr-clr-petscii.acme>

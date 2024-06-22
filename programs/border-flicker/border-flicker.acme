@@ -1,0 +1,12 @@
+; Make a classic border flickering effect
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/vic-ii.acme>
+            !src <lib/misc/upstart.acme>
+
+main:
+            inc BORDER_COLOR                ; Next border color
+            nop                             ; Slow down
+            jmp main                        ; Endless loop

@@ -1,0 +1,50 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/registers/pseudo-registers.acme>
+            ;!src <lib/registers/m-registers.acme>
+            !src <lib/strings/m-strout.acme>
+            !src <lib/charset/petscii.acme>
+            !src <lib/misc/upstart.acme>
+
+
+main:
+            lda #0
+            sta R5
+.loop:
+            lda R5
+            tax
+            lda values,x
+            jsr print_hex
+            +m_strout msg_mul_10
+
+            lda R5
+            tax
+            lda values,x
+            jsr mul_10
+
+            lda R3
+            jsr print_hex
+            lda #' '
+            jsr CHROUT
+            lda R4
+            jsr print_hex
+            lda #PETSCII_RETURN
+            jsr CHROUT
+
+            inc R5
+            lda R5
+            cmp #values_end-values
+            bne .loop
+
+            rts
+
+
+values:     !byte 0, 1, 2, 10, 26, 50, 255
+values_end:
+msg_mul_10: !pet " * 0a = ", 0
+
+
+            !src <lib/calc/mul-10.acme>
+            !src <lib/baseconv/print-hex.acme>
+            !src <lib/strings/strout.acme>
