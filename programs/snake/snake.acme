@@ -10,6 +10,7 @@
             !src <lib/screen/color.acme>
             !src <lib/screen/codes.acme>
             !src <lib/charset/petscii.acme>
+            !src <lib/mmap/kernal.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
 
@@ -52,11 +53,12 @@
 ; This allows to introduce a variable delay used
 ; to seed the random number generator.
 intro_scr:
-            ; Clear screen
-            jsr $ff81
+            jsr CINT
+
             ; Lowercase
             lda #$0f
             sta $d01
+
             ; Messages
             +m_print_color_msg_struct_at s_title
             +m_print_color_msg_struct_at s_info1
@@ -64,8 +66,8 @@ intro_scr:
             +m_print_color_msg_struct_at s_start
 -
             ; KERNAL SCANKEY & GETIN
-            jsr $ff9f
-            jsr $ffe4
+            jsr SCNKEY
+            jsr GETIN
             cmp #$20
             bne -                           ; wait for space
 
@@ -74,7 +76,7 @@ intro_scr:
 
             ; Back to uppercase
             lda #142
-            jsr $ffd2
+            jsr CHROUT
 
             jmp main_scr
 
@@ -97,7 +99,7 @@ s_start:    !byte 22, 9, COLOR_LGREEN
 ; ===========================================================================
 
 main_scr:
-            jsr $ff81                       ; clear screen
+            jsr CINT
             jsr init_snake
             jsr gen_food
             jsr display_food
@@ -203,9 +205,8 @@ timer_handler:
 
 ; Handle keyboard input to change snake direction.
 handle_cursor:
-            ; KERNAL SCANKEY & GETIN
-            jsr $ff9f
-            jsr $ffe4
+            jsr SCNKEY
+            jsr GETIN
             beq +                           ; no key pressed
 
             ldx #0
@@ -237,9 +238,9 @@ game_over:
             sta $d020
 
             ; Wait for key
--           jsr $ff9f                       ; SCANKEY
-            jsr $ffe4                       ; GETIN
-            beq -                           ; wait for key
+-           jsr SCNKEY
+            jsr GETIN
+            beq -
 
             ; Reset screen border to light blue
             lda #14
