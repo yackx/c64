@@ -146,4 +146,4 @@ Programs in this repository are located at `$c000` by convention or use BASIC up
 
 The `Makefile` will also look for a local `Makefile` in the target directory. If found, it will be invoked. This allows for instance to add files to the generic disk image.
 
-![C64 rules intro screen](/demo/c64-rules.gif)
+![C64 rules intro screen](/programs/c64-rules/c64-rules.gif)
