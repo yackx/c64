@@ -65,13 +65,13 @@ intro_scr:
             +m_print_color_msg_struct_at s_start
 
             ; Press space to start
-            +m_keypress $20
+            +m_keypress ' '
 
             ; Seed random number generator
             jsr init_rnd_sid
 
-            ; Back to uppercase
-            lda #142
+            ; Uppercase
+            lda PETSCII_UPPERCASE
             jsr CHROUT
 
             jmp main_scr
@@ -94,6 +94,10 @@ s_start:    !byte 22, 9, COLOR_LGREEN
 ; SCREEN - MAIN
 ; ===========================================================================
 
+; Main screen.
+;
+; Prepare the screen and start the game.
+; A timer is set to handle the game loop.
 main_scr:
             jsr CINT
             jsr init_snake
