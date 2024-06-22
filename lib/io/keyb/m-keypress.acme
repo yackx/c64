@@ -1,0 +1,28 @@
+; Wait for keypress
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/kernal.acme>
+
+
+; Wait for a specific keypress
+;
+; IN:       @char   ASCII code of the key to wait for
+; USES:     A X Y
+!macro m_keypress @char {
+-           jsr SCNKEY
+            jsr GETIN
+            cmp #@char
+            bne -
+}
+
+
+; Wait for any keypress
+;
+; USES:     A X Y
+!macro m_keypress_any {
+-           jsr SCNKEY
+            jsr GETIN
+            beq -
+}

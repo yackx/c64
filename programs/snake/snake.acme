@@ -13,6 +13,8 @@
             !src <lib/mmap/kernal.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
+            !src <lib/io/keyb/m-keypress.acme>
+
 
             !addr SCREEN_ADDR = $0400
 
@@ -64,12 +66,9 @@ intro_scr:
             +m_print_color_msg_struct_at s_info1
             +m_print_color_msg_struct_at s_info2
             +m_print_color_msg_struct_at s_start
--
-            ; KERNAL SCANKEY & GETIN
-            jsr SCNKEY
-            jsr GETIN
-            cmp #$20
-            bne -                           ; wait for space
+
+            ; Press space to start
+            +m_keypress $20
 
             ; Seed random number generator
             jsr init_rnd_sid
@@ -216,8 +215,7 @@ handle_cursor:
             cpx #4
             beq handle_cursor               ; not a cursor key
             bne .find_key                   ; try next cursor key
-.key_found:
-            lda dir_idx,x                   ; find corresponding direction
+.key_found: lda dir_idx,x                   ; find corresponding direction
             sta direction                   ; store it
 +
             rts
@@ -237,10 +235,8 @@ game_over:
             lda #2
             sta $d020
 
-            ; Wait for key
--           jsr SCNKEY
-            jsr GETIN
-            beq -
+            ; Wait for keypress
+            +m_keypress_any
 
             ; Reset screen border to light blue
             lda #14
