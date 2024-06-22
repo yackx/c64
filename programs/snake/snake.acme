@@ -58,10 +58,6 @@
 intro_scr:
             jsr CINT
 
-            ; Lowercase
-            lda #$0f
-            sta $d01
-
             ; Messages
             +m_print_color_msg_struct_at s_title
             +m_print_color_msg_struct_at s_info1
