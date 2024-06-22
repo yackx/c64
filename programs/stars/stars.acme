@@ -17,7 +17,7 @@
 
 main:
             lda #%00010000                  ; white pixels on black background
-            jsr clear_screen
+            jsr fill_screen
             jsr color_screen
             jsr set_hires
             jsr init_rnd
@@ -87,4 +87,4 @@ fill_random:
             rts
 
 
-            !src <lib/screen/clear-screen.acme>
+            !src <lib/screen/fill-screen.acme>

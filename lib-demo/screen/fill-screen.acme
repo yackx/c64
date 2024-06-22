@@ -1,0 +1,15 @@
+; Fill the screen
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+            !src <lib/screen/codes.acme>
+
+
+main:
+            lda #SCR_CODE_HEART
+            jsr fill_screen
+            rts
+
+            !src <lib/screen/fill-screen.acme>

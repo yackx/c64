@@ -1,17 +1,17 @@
-; Clear screen.
+; Fill screen memory with a character or color.
 ;
-; This routine efficiently perform a single one-page loop.
+; This routine efficiently performs a single one-page loop.
 ;
-; IN:       A = color
+; IN:       A = character or color
 ;               for example #%00010000 = white pixels on black background
 ;
-; USES:     A, X
+; USES:     X
 
             ; ACME 0.97
             !cpu 6510
 
 
-clear_screen:
+fill_screen:
             ldx #0
 -           sta $0400,x
             sta $0500,x
