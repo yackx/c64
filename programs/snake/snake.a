@@ -362,7 +362,8 @@ erase_tail:
             sta POS_Y
             jsr display_char
             dex
-            bpl -
+            cpx #$ff
+            bne -
 
             rts
 
