@@ -7,6 +7,7 @@
 
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
+            !src <lib/screen/color.a>
             !src <lib/registers/m-registers.a>
             !src <lib/strings/m-print-color-msg-xy.a>
 
@@ -82,14 +83,14 @@ intro_scr:
             jmp main_scr
 
 
-s_title:    !byte 8, 8, 1
+s_title:    !byte 8, 8, COLOR_WHITE
             !byte 14                        ; lower case
             !pet "B o r i n g   S N A K E", 0
-s_info1:    !byte 17, 5, 14
+s_info1:    !byte 17, 5, COLOR_LBLUE 
             !pet "ASM code available on GitHub", 0
-s_info2:    !byte 18, 5, 14
+s_info2:    !byte 18, 5, COLOR_LBLUE
             !pet "https://github.com/yackx/c64", 0
-s_start:    !byte 22, 9, 13
+s_start:    !byte 22, 9, COLOR_LGREEN
             !pet "Press space to start", 0
 
             !src <lib/strings/print-color-msg-xy.a>
