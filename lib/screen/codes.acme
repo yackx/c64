@@ -1,0 +1,11 @@
+; Screen codes
+;
+; See https://www.pagetable.com/c64ref/charset/
+
+            ; ACME 0.97
+            !cpu 6510
+
+            SCR_CODE_WHITE_SPACE    = 32
+            SCR_CODE_CIRCLE         = 81
+            SCR_CODE_HEART          = 83
+            SCR_CODE_CIRCLE_INV     = 209

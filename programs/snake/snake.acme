@@ -8,6 +8,7 @@
             !src <lib/misc/upstart.acme>
             !src <lib/registers/pseudo-registers.acme>
             !src <lib/screen/color.acme>
+            !src <lib/screen/codes.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
 
@@ -22,10 +23,10 @@
             POS_Y       = R6
 
             ; Screen characters
-            CHAR_HEAD   = 209
-            CHAR_BODY   = 81
-            CHAR_BLANK  = 32
-            CHAR_FOOD   = 83
+            CHAR_HEAD   = SCR_CODE_CIRCLE_INV
+            CHAR_BODY   = SCR_CODE_CIRCLE
+            CHAR_BLANK  = SCR_CODE_WHITE_SPACE
+            CHAR_FOOD   = SCR_CODE_HEART
 
             ; Snake direction
             LEFT        = %00000001
