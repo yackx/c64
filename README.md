@@ -103,10 +103,10 @@ export DCC6502=dcc6502
 export PATH=`pwd`:$PATH
 ```
 
-You must set `ACME` environment variable to the root of this project to allow lib include directive to work.
+You **must** set `ACME` environment variable to the root of this project to allow the lib include directive to work.
 
-> **NOTE**
-> If you store `export` statements in a file, remember to `source` it, not to run it.
+> [!IMPORTANT]
+> If you store `export` statements in a file, remember to `source` it, not to execute it.
 
 ## Extra 👍
 
