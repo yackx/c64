@@ -8,9 +8,9 @@
             !src <lib/misc/upstart.a>
             !src <lib/registers/pseudo-registers.a>
             !src <lib/registers/m-registers.a>
-            !src <lib/strings/m-strout.a>
+            !src <lib/strings/m-print-color-msg-xy.a>
 
-            !addr SCREEN = $0400
+            !addr SCREEN_ADDR = $0400
 
             DELAY = 15                      ; 1/60th sec
             INIT_LENGTH = 4
@@ -49,23 +49,6 @@
 ; SCREEN - INTRO
 ; ===========================================================================
 
-; Print a line of text at a given cursor position.
-; @struct:
-;   0: color
-;   1: x
-;   2: y
-;   3-: message
-;   end: 0
-!macro m_print_at_pos @struct {
-            lda @struct
-            sta $0286
-            clc
-            ldy @struct+1
-            ldx @struct+2
-            jsr $fff0                       ; set cursor position
-            +m_strout @struct+3
-}
-
 ; Intro screen.
 ;
 ; Wait for space to start.
@@ -78,10 +61,10 @@ intro_scr:
             lda #$0f
             sta $d01
             ; Messages
-            +m_print_at_pos s_title
-            +m_print_at_pos s_info1
-            +m_print_at_pos s_info2
-            +m_print_at_pos s_start
+            +m_print_color_msg_struct_at s_title
+            +m_print_color_msg_struct_at s_info1
+            +m_print_color_msg_struct_at s_info2
+            +m_print_color_msg_struct_at s_start
 -
             ; KERNAL SCANKEY & GETIN
             jsr $ff9f
@@ -99,17 +82,17 @@ intro_scr:
             jmp main_scr
 
 
-s_title:    !byte 1, 8, 8
+s_title:    !byte 8, 8, 1
             !byte 14                        ; lower case
             !pet "B o r i n g   S N A K E", 0
-s_info1:    !byte 14, 5, 17
+s_info1:    !byte 17, 5, 14
             !pet "ASM code available on GitHub", 0
-s_info2:    !byte 14, 5, 18
+s_info2:    !byte 18, 5, 14
             !pet "https://github.com/yackx/c64", 0
-s_start:    !byte 13, 9, 22
+s_start:    !byte 22, 9, 13
             !pet "Press space to start", 0
 
-            !src <lib/strings/strout.a>
+            !src <lib/strings/print-color-msg-xy.a>
 
 
 ; ===========================================================================
@@ -485,18 +468,18 @@ delay       !byte 1
 ; To compute the x,y position of the head,
 ; and to avoid slow arithmetics, we declare 2 index tables
 ; representing the first col of each row on the screen:
-; SCREEN, SCREEN+40, SCREEN+80, etc.
+; SCREEN_ADDR, SCREEN_ADDR+40, SCREEN_ADDR+80, etc.
 ;
 ; We split LSB and MSB to use ZP index.
 ; $0400, $0428, $0450 become:
 ; row_lsb = 00 28 50 ... 18 ...
 ; row_msb = 04 04 04 ... 05 ...
 row_lsb:    !for .i, 0, 24 {
-            !byte <(SCREEN + .i*40)
+            !byte <(SCREEN_ADDR + .i*40)
             }
 
 row_msb:    !for .i, 0, 24 {
-            !byte >(SCREEN + .i*40)
+            !byte >(SCREEN_ADDR + .i*40)
             }
 
 ; Keyboard / direction mapping
