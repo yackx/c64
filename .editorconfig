@@ -1,0 +1,9 @@
+root = true
+
+[*.{a,acme}]
+indent_style = space
+indent_size = 4
+
+[Makefile]
+indent_style = tab
+
