@@ -23,7 +23,8 @@ In this repository:
   - [Awesome references](/doc/references.md)
 - [scripts](/scripts/) - Python and bash utility scripts for this repository
 
-Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
+> [!TIP]
+> Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
 
 ## Prerequisites 💪
 
