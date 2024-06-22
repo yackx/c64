@@ -9,6 +9,7 @@
             !src <lib/registers/pseudo-registers.acme>
             !src <lib/screen/color.acme>
             !src <lib/screen/codes.acme>
+            !src <lib/charset/petscii.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
 
@@ -35,10 +36,10 @@
             DOWN        = %00001000
 
             ; Keys
-            KEY_UP      = $91
-            KEY_DOWN    = $11
-            KEY_LEFT    = $9d
-            KEY_RIGHT   = $1d
+            KEY_UP      = PETSCII_CURSOR_UP
+            KEY_DOWN    = PETSCII_CURSOR_DOWN
+            KEY_LEFT    = PETSCII_CURSOR_LEFT
+            KEY_RIGHT   = PETSCII_CURSOR_RIGHT
 
 
 ; ===========================================================================
