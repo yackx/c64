@@ -34,12 +34,6 @@
             UP          = %00000100
             DOWN        = %00001000
 
-            ; WASD
-            ;LEFT       = $57
-            ;UP         = $41
-            ;DOWN       = $53
-            ;RIGHT      = $44
-
             ; Keys
             KEY_UP      = $91
             KEY_DOWN    = $11
