@@ -10,6 +10,7 @@
             !src <lib/screen/color.acme>
             !src <lib/screen/codes.acme>
             !src <lib/charset/petscii.acme>
+            !src <lib/mmap/basic-vector.acme>
             !src <lib/mmap/main.acme>
             !src <lib/mmap/kernal.acme>
             !src <lib/registers/m-registers.acme>
@@ -151,9 +152,9 @@ init_snake:
 set_timer:
             sei
             lda #<timer_handler
-            sta $314
+            sta CINV
             lda #>timer_handler
-            sta $315
+            sta CINV+1
             cli
             rts
 
@@ -162,11 +163,11 @@ set_timer:
 init_kb:
             ; keyboard buffer size
             lda #1
-            sta $0289
+            sta XMAX
 
             ; No key repeat
             lda #$40
-            sta $028a
+            sta RPTFLA
 
             rts
 

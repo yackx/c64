@@ -10,10 +10,10 @@
 
             * = $c000
 
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/rom.acme>
+            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/basic-vector.acme>
 
-            !addr SCR = $0400
+            !addr SCREEN_ADDR = $0400
             DELAY = 60
 
 
@@ -34,8 +34,8 @@ timer_irq:
             bne +
             lda #DELAY
             sta delay
-            inc SCR                         ; top-left char
-+           jmp ROM_IRQ_HANDLER             ; KERNAL std int routine
+            inc SCREEN_ADDR                 ; top-left char
++           jmp IRQ_HANDLER                 ; KERNAL std int routine
 
 
 delay:      !byte 60

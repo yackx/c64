@@ -8,9 +8,9 @@
 
             !src <lib/misc/upstart.acme>
             !src <lib/raster/m-raster.acme>
-            !src <lib/mmap/main.acme>
+            !src <lib/mmap/basic-vector.acme>
             !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/rom.acme>
+            !src <lib/mmap/kernal.acme>
 
 
 main:
@@ -22,7 +22,7 @@ irq_handler:
             lda #$01
             sta VIC2_IRQ                    ; ACK any raster IRQs
             jsr $1003                       ; Play the music
-            jmp CINV_ACTUAL
+            jmp IRQ_HANDLER
 
 
             * = $1000

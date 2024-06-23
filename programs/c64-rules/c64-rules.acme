@@ -58,6 +58,7 @@
             !src <lib/registers/pseudo-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
             !src <lib/misc/math.acme>
+            !src <lib/mmap/basic-vector.acme>
             !src <lib/raster/m-raster.acme>
             !src <lib/mem/m-mem.acme>
 

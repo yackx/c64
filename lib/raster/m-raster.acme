@@ -2,6 +2,8 @@
             !cpu 6510
 
 
+; FIXME - This macro does not SEI/CLI around the raster IRQ setup
+; Consider 2 versions safe/unsafe to allow for both
 !macro set_raster_irq @line, @vector {
             lda #@line
             sta $d012

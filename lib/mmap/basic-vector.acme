@@ -1,0 +1,10 @@
+; BASIC Indirect Vector Table
+; 
+; $0300-$03FF (768-1023) 
+
+!ifdef DEF_MEM_MAP_BASIC_VECTOR !eof
+DEF_MEM_MAP_BASIC_VECTOR = 1
+
+!addr {
+            CINV = $0314                    ; IRQ interrupt routine vector
+}

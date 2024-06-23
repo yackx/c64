@@ -8,6 +8,8 @@
 DEF_MEM_MAP_KERNAL = 1
 
 !addr {
+            IRQ_HANDLER = $ea31             ; IRQ handler
+
             ; Screen
             CINT = $ff81                    ; Clear screen
             PLOT = $fff0                    ; Read/set cursor position

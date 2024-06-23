@@ -4,7 +4,10 @@
 
             ;ACME 0.97
             !cpu 6510
+
+            !src <lib/mmap/basic-vector.acme>
             !src <lib/raster/m-raster.acme>
+
             * = $c000
 
             !addr SCREEN = $0400
