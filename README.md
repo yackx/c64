@@ -86,7 +86,7 @@ VICE ships with utilities that can be launched from the command line:
 
 ## (No) hardware ⌨️
 
-Nothing beats the feel of real hardware, but emulators are certainly convenient.
+Nothing beats the feeling of real hardware, but emulators are certainly convenient.
 
 Deploying programs to an actual C64 (or anything close like a FPGA) is an option, but for simplicity, we will target and work with an emulator, a macro assembler from this era and a modern editor.
 
