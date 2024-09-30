@@ -64,6 +64,8 @@ To use the routines in this repository, the following tools are assumed:
 
 - [ACME](https://github.com/meonwax/acme) - Cross-platform assembler.
 - [VICE](https://vice-emu.sourceforge.io/) - Multi-platform emulator for C64 and other Commodore products.
+- [c1541](https://vice-emu.sourceforge.io/) - Disk drive emulator.
+- [petcat](https://vice-emu.sourceforge.io/) - ASCII/PETSCII converter.
 - [dcc6502](https://github.com/tcarmelveilleux/dcc6502/blob/master/dcc6502.c) - Disassembler. Compile it yourself or use a package manager like `brew` on macOS.
 - Any decent editor, preferably with syntax highlighting for ACME (vim, VSC, ...).
 - `make` command.
