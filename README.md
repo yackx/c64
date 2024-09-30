@@ -8,20 +8,24 @@
 
 In this repository:
 
+- [src](/src/) contains the source code of the routines and programs (see below)
+- [doc](/doc/)
+  - [Addressing modes](/doc/addressing_modes.txt) summary
+  - assemblers, editor code completion, IDE...
+  - [Awesome references](/doc/references.md)
+- [scripts](/scripts/) - Python and bash utility scripts for this repository
+
+The [src](/src/) directory contains:
+
 - [lib](/lib/) - Reusable routines and macros written for ACME cross-assembler
 - [lib-demo](/lib-demo/) - Sample code (routines in action)
-- [programs](/programs) - Illustrations of basic techniques
+- [programs](/programs) - Illustrations of simple techniques
   - [Boring Snake](/programs/snake)
   - [c64 rules demo](/programs/c64-rules/)
   - [Pacmunch](/programs/pacmunch/)
   - one part in one day of [Advent of Code](/programs/aoc/)
   - a simple [book reader]()
   - and some other random experiments
-- [doc](/doc/)
-  - [Addressing modes](/doc/addressing_modes.txt) summary
-  - assemblers, editor code completion, IDE...
-  - [Awesome references](/doc/references.md)
-- [scripts](/scripts/) - Python and bash utility scripts for this repository
 
 > [!TIP]
 > Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
@@ -96,14 +100,14 @@ By default, the `Makefile` will look for tools and utilities in your `PATH`:
 You can override the default values with environment variables. For instance on my macOS:
 
 ```bash
-export ACME=`pwd`/c64
+export ACME=`pwd`/c64/src
 export C1541=/Applications/vice-gtk3-3.5/bin/c1541
 export X64="open /Applications/vice-gtk3-3.5/x64sc.app"
 export DCC6502=dcc6502
 export PATH=`pwd`:$PATH
 ```
 
-You **must** set `ACME` environment variable to the root of this project to allow the lib include directive to work.
+You **must** set `ACME` environment variable to the `src` folder of this project to allow the lib include directive to work.
 
 > [!IMPORTANT]
 > If you store `export` statements in a file, remember to `source` it, not to execute it.
@@ -115,11 +119,11 @@ You **must** set `ACME` environment variable to the root of this project to allo
 
 ## Run 🏃‍♀️
 
-Invoke `make`from the root of the repository to assemble, create a symbol table and a default disk image.
+Invoke `make` from the root of the repository to assemble, create a symbol table and a default disk image.
 
 ```bash
 # Assemble and package `many.a`
-make TARGET=programs/sprites/many
+make TARGET=src/programs/sprites/many
 ```
 
 This will create:
@@ -133,7 +137,7 @@ Then run the program with:
 
 ```bash
 # Launch emulator and auto-load
-make TARGET=programs/sprites/many run
+make TARGET=src/programs/sprites/many run
 ```
 
 Programs in this repository are located at `$c000` by convention or use BASIC upstart for convenience.
