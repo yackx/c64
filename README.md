@@ -8,23 +8,23 @@
 
 In this repository:
 
-- [src](/src/) contains the source code of the routines and programs (see below)
-- [doc](/doc/)
+- [src](/src) contains the source code of the routines and programs (see below)
+- [doc](/doc)
   - [Addressing modes](/doc/addressing_modes.txt) summary
   - assemblers, editor code completion, IDE...
   - [Awesome references](/doc/references.md)
-- [scripts](/scripts/) - Python and bash utility scripts for this repository
-- [ybas](/ybas/) - A simple BASIC converter to use labels and avoid line numbers
+- [scripts](/scripts) - Python and bash utility scripts for this repository
+- [ybas](/ybas) - A simple BASIC converter to use labels and avoid line numbers
 
-The [src](/src/) directory contains:
+The [src](/src) directory contains:
 
-- [lib](/lib/) - Reusable routines and macros written for ACME cross-assembler
-- [lib-demo](/lib-demo/) - Sample code (routines in action)
+- [lib](/lib) - Reusable routines and macros written for ACME cross-assembler
+- [lib-demo](/lib-demo) - Sample code (routines in action)
 - [programs](/programs) - Illustrations of simple techniques
   - [Boring Snake](/programs/snake)
-  - [c64 rules demo](/programs/c64-rules/)
-  - [Pacmunch](/programs/pacmunch/)
-  - one part in one day of [Advent of Code](/programs/aoc/)
+  - [c64 rules demo](/programs/c64-rules)
+  - [Pacmunch](/programs/pacmunch)
+  - one part in one day of [Advent of Code](/programs/aoc)
   - a simple [book reader]()
   - and some other random experiments
 
