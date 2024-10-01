@@ -14,6 +14,7 @@ In this repository:
   - assemblers, editor code completion, IDE...
   - [Awesome references](/doc/references.md)
 - [scripts](/scripts/) - Python and bash utility scripts for this repository
+- [ybas](/ybas/) - A simple BASIC converter to use labels and avoid line numbers
 
 The [src](/src/) directory contains:
 

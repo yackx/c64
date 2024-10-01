@@ -4,3 +4,6 @@
 *.d
 
 *.pyc
+
+.venv/
+venv/
