@@ -1,4 +1,7 @@
+# Generic Makefile for all programs in this repository.
 # See instructions in README.md
+# Example usage:
+# make TARGET=src/program/hello run
 
 C1541 ?= c1541
 X64 ?= x64sc
