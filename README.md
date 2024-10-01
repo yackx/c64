@@ -15,6 +15,7 @@ In this repository:
   - [Awesome references](/doc/references.md)
 - [scripts](/scripts) - Python and bash utility scripts for this repository
 - [ybas](/ybas) - A simple BASIC converter to use labels and avoid line numbers
+- [Makefile](/Makefile) - Build script to cross compile, build disks and run programs
 
 The [src](/src) directory contains:
 
