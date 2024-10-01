@@ -116,11 +116,6 @@ You **must** set `ACME` environment variable to the `src` folder of this project
 > [!IMPORTANT]
 > If you store `export` statements in a file, remember to `source` it, not to execute it.
 
-## Extra 👍
-
-- [Code completion](doc/completion.md)
-- [IDE](doc/ide.md)
-
 ## Run 🏃‍♀️
 
 Invoke `make` from the root of the repository to assemble, create a symbol table and a default disk image.
@@ -153,5 +148,17 @@ Programs in this repository are located at `$c000` by convention or use BASIC up
 > The `Makefile` will automatically detect the PC directive and adjust the disassembler command accordingly.
 
 The `Makefile` will also look for a local `Makefile` in the target directory. If found, it will be invoked. This allows for instance to add files to the generic disk image.
+
+## Extra 👍
+
+- [Code completion](doc/completion.md)
+- [IDE](doc/ide.md)
+
+## c128 ⌨️
+
+This repository introduces a limited amount of material for the Commodore 128.
+
+- Add an environment variable `X128` to point to the C128 emulator.
+- Use the alternate `Makefile` for C128: `make -f Makefile.c128 TARGET=...`
 
 ![C64 rules intro screen](/src/programs/c64-rules/c64-rules.gif)
