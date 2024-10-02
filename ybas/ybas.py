@@ -27,6 +27,23 @@ def write_output(*, basic: [str], path: str):
 def convert(ybas_program: [str]) -> [str]:
     program = []
     labels = {}
+
+    # Store all labels
+    basic_line_number = 10
+    for i, line in enumerate(ybas_program):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if line == line.lstrip() and stripped.endswith(':'):
+            # Label
+            label = stripped[:-1]
+            if label in labels.keys():
+                raise ValueError(f'Duplicate label {label} found on line {i+1}')
+            labels[label] = basic_line_number
+        else:
+            basic_line_number += 10
+
+    # Convert program
     basic_line_number = 10
     for i, line in enumerate(ybas_program):
         stripped = line.strip()
@@ -34,10 +51,7 @@ def convert(ybas_program: [str]) -> [str]:
             continue  # Empty line
         if line == line.lstrip() and stripped.endswith(':'):
             # Label
-            label = stripped[:-1]
-            if label in labels.keys():
-                raise ValueError(f'Duplicate label {label} found on line {i+1}')
-            labels[label] = basic_line_number
+            continue
         else:
             try:
                 # Replace label by line number
@@ -48,6 +62,7 @@ def convert(ybas_program: [str]) -> [str]:
             # Output + increment line number
             program.append(f'{basic_line_number} {stripped}')
             basic_line_number += 10
+
     return program
 
 
