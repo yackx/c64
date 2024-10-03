@@ -154,6 +154,10 @@ The `Makefile` will also look for a local `Makefile` in the target directory. If
 - [Code completion](doc/completion.md)
 - [IDE](doc/ide.md)
 
+## XC=BASIC 🚀
+
+As an alternative to asm, a few sample programs are provided to get started with [XC=BASIC](https://xc-basic.net/).
+
 ## c128 ⌨️
 
 This repository introduces a limited amount of material for the Commodore 128.
