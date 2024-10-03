@@ -84,6 +84,12 @@ def ascii_to_screen_codes_lower(ascii_string, *, load_address=None):
             screen_code = ascii_code - 96
         elif 32 <= ascii_code <= 63 or 65 <= ascii_code <= 90:
             screen_code = ascii_code
+        elif ascii_code == 13:
+            screen_code = 141
+        elif 64 <= ascii_code <= 95:
+            screen_code = ascii_code - 32
+        else:
+            raise ValueError(f'Invalid ASCII code: {ascii_code}')
         screen_codes.append(screen_code)
     return screen_codes
 
