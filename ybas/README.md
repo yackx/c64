@@ -2,6 +2,8 @@
 
 **A simple BASIC converter to use labels and avoid line numbers.**
 
+This is a very simple and limited script. If you are looking something more advanced, consider [XC=BASIC](https://xc-basic.net/).
+
 ## At a glance
 
 The following program:
