@@ -3,6 +3,7 @@
 # Local Makefile that adds files to the disk image
 
 C1541 ?= c1541
+
 BOOK_DIR = thoreau
 
 .PRECIOUS: %

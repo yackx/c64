@@ -1,35 +1,27 @@
-"""Convert a text to a series of PETSCII or screen code files.
+"""Convert a long to a series of screen code files.
 
 The text is typically a book or an article.
-Each output file represents a page of the book.
-
-- The asm version of the book reader (book-reader.acme) uses petscii files.
-- The XC=BASIC version (book-reader.bas) uses screen codes.
+Each output file represents a page of the book and
+is prefixed with a two-byte load address (e.g. 0x0400).
 """
 import argparse
 import os
 import sys
 import textwrap
 
-sys.path.append('../../')
+sys.path.append('../../../../')
 
-from scripts.ascii_converter import ascii_to_petscii_lower
+from scripts.ascii_converter import ascii_to_screen_codes_lower
 
-# TODO Rename
-BOOK_INFO = 'info.bin'
-# TODO Rename
-BOOK_INFO_2 = 'book_info.txt'
-PAGE_COUNT_FILE = 'info.bin'
+LOAD_ADDRESS = 0x0400
+BOOK_INFO_2 = 'info.txt'
+PAGE_COUNT_FILE = 'page_count.txt'
 
 
-def convert(lines: [str], *, width: int) -> [int]:
-    single_str = ''.join(line + ('\r' if len(line) < width else '') for line in lines)
-    return ascii_to_petscii_lower(single_str)
-
-def get_filename(*, output_mode, numbering, page_number) -> str:
-    file_ext = 'scr' if output_mode == 'screen_code' else 'pet'
-    file_base = f'page{page_number:02x}' if numbering == 'hex2' else f'page{page_number:03d}'
-    return f'{file_base}.{file_ext}'
+def convert(lines: [str], width: int) -> [int]:
+    padded_lines = [line.ljust(width) for line in lines]
+    single_str = ''.join(padded_lines)
+    return ascii_to_screen_codes_lower(single_str)
 
 
 def build(*, book_dir: str, book_file: str, screen_width: int):
@@ -45,25 +37,26 @@ def build(*, book_dir: str, book_file: str, screen_width: int):
     while current_line_number < len(wrapped_lines):
         page = wrapped_lines[current_line_number:current_line_number + 24]
         codes = convert(page, width=screen_width)
-        file_name = f'page{current_page_number:02x}.pet'
+        file_name = f'page{current_page_number:03d}.scr'
         with open(os.path.join(book_dir, file_name), 'wb') as f_out:
+            # Load address
+            f_out.write((LOAD_ADDRESS & 0xff).to_bytes(1, 'big'))
+            f_out.write((LOAD_ADDRESS >> 8).to_bytes(1, 'big'))
+            # Page content
             f_out.write(bytes(codes))
 
         current_line_number += 24
         current_page_number += 1
 
     # Write the number of pages to a file
-    with open(os.path.join(book_dir, BOOK_INFO), 'wb') as f_out:
-        f_out.write((current_page_number - 1).to_bytes(1, 'big'))
+    with open(os.path.join(book_dir, PAGE_COUNT_FILE), 'w') as f_out:
+        f_out.write(str(current_page_number - 1) + '\n')
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description=
-        "Convert a text to a series of PETSCII or screen code files. "
-        "Currently, the ACME version of the book reader (book-reader.acme) uses PETSCII files, "
-        "while the XC=BASIC version (book-reader.bas) uses screen codes. "
-        "A load address must be specified for screen codes (typically screen memory address 0x0400)."
+        "Convert a text to a series of screen code files."
     )
     parser.add_argument('-d', '--book-dir', type=str, required=True, help='Book directory')
     parser.add_argument('-f', '--book-file', type=str, required=True, help='Book file name')

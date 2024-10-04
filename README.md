@@ -120,6 +120,9 @@ You **must** set `ACME` environment variable to the `src` folder of this project
 
 Invoke `make` from the root of the repository to assemble, create a symbol table and a default disk image.
 
+> **WARNING**
+> Some programs have a dedicated and specific `Makefile` in their directory. Always consult the README in the program directory when available.
+
 ```bash
 # Assemble and package `many.a`
 make TARGET=src/programs/sprites/many
@@ -156,7 +159,7 @@ The `Makefile` will also look for a local `Makefile` in the target directory. If
 
 ## XC=BASIC 🚀
 
-As an alternative to asm, a few sample programs are provided to get started with [XC=BASIC](https://xc-basic.net/).
+As an alternative to asm, [a few programs](/src/programs/xc-basic) are provided to get started with [XC=BASIC](https://xc-basic.net/).
 
 ## c128 ⌨️
 
