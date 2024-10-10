@@ -9,9 +9,11 @@
 
 ; Multiply A by 10.
 ;
+; The multiplication is done by shifting A left twice,
+; adding A to the result, and then shifting the result once more.
+;
 ; IN:       A
 ; OUT:      R3 R4
-
 mul_10:
             pha
             sta ZP_LO_BYTE                  ; Store A
