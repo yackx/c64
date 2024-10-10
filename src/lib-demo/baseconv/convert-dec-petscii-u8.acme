@@ -1,7 +1,6 @@
             ;ACME 0.97
             !cpu 6510
 
-            ; !src <lib/strings/m-print.acme>
             !src <lib/registers/pseudo-registers.acme>
             !src <lib/strings/m-strout.acme>
             !src <lib/misc/upstart.acme>
