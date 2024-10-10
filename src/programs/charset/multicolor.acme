@@ -26,23 +26,22 @@
 
 
 main:
-                                            ; Clear screen
             jsr CINT
 
-                                            ; Blank charset memory.
-                                            ; Most characters in the set are blank
+            ; Blank charset memory.
+            ; Most characters in the set are blank.
             +fill_pages >CHAR_SET_LOC, 8, 0
 
-                                            ; Point to custom charset
+            ; Point to custom charset
             lda #CHAR_PTR_BITMASK
             jsr set_charset_loc
 
-                                            ; Multicolor mode
+            ; Multicolor mode
             lda VIC2_CR2
             ora #%00010000
             sta VIC2_CR2
 
-                                            ; Multicolor characters
+            ; Multicolor characters
             lda #BG_COLOR
             sta BORDER_COLOR
             sta BACKGROUND_COLOR
@@ -51,21 +50,19 @@ main:
             lda #MULTI_COLOR_2
             sta BGCOL2
 
-                                            ; Fill color RAM
+            ; Fill color RAM
             +fill_pages $d8, 4, CHAR_COLOR
 
-                                            ; Copy custom characters
+            ; Copy custom characters
             +copy_bytes_8 characters, CUST_CHARS, NB_OF_CHARS*8
 
-                                            ; Fill screen with patterns
+            ; Fill screen with patterns
             ldy #0                          ; char
---
-            ldx #0                          ; column
+--          ldx #0                          ; column
             tya
             clc
             adc #$30                        ; char to PETSCII
--
-            jsr CHROUT
+-           jsr CHROUT
             inx
             cpx #40 * 2                     ; pattern: 2 lines / char
             bne -
