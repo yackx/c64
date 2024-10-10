@@ -4,18 +4,18 @@
 ; https://www.pagetable.com/c64ref/c64mem
 ; https://area51.dev/c64/kernal/memorymap/
 
-!ifdef DEF_MEM_MAP !eof
-DEF_MEM_MAP = 1
+!ifdef DEF_MEM_MAP_MAIM !eof
+DEF_MEM_MAP_MAIN = 1
 
 !addr {
             R6510 = $01                     ; 6510 On-Chip I/O Port
             FA = $ba                        ; Current device number
-            COLOR = $0286                   ; Current color    
+            COLOR = $0286                   ; Current color
             XMAX = $0289                    ; Maximum Keyboard Buffer Size
             RPTFLA = $028a                  ; Keyboard Repeat Flag
             RPTFLG = RPTFLA
             DEFAULT_SCREEN_MEM = $0400      ; Default screen memory
-            
+
             ; $0400-$07FF, 1024-2047
             ; Default screen memory
             DEFAULT_SPRITE_PTR_AREA = $07f8 ; Default area sprite pointers
