@@ -3,9 +3,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/mmap.acme>
 
             !src <lib/misc/upstart.acme>
 
@@ -28,9 +26,9 @@ main:
 
             ; Modify the first pixels of the screen.
             ; A small line will be drawn.
-            lda #$ff                        
+            lda #$ff
             sta $2000
-            
+
             ; Switch to bitmap mode.
             lda #$3b
             sta VIC2_CR1

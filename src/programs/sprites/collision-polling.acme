@@ -16,12 +16,9 @@
 
             * = $c000
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/screen/color.acme>
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/kernal.acme>
             !src <lib/mem/m-mem.acme>
 
             SPRITE_COUNT = 2
@@ -94,11 +91,11 @@ init_sprite:
 
 animate_sprite_0:
 -           inc SP0X                        ; move sprite #0 1 pixel right
-            
+
             lda SPRITE_SPRITE_COLLISION_REG
             lsr                             ; poll collisiton sprite #0
             bcs process_collision
-            
+
             jsr busy_wait
             jmp -
 

@@ -1,9 +1,9 @@
+            ; ACME 0.97
             !cpu 6510
-            !src <lib/misc/upstart.acme>
+
+            !src <lib/mmap/mmap.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/kernal.acme>
+            !src <lib/misc/upstart.acme>
 
 
 main:

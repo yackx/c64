@@ -6,12 +6,10 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/misc/upstart.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/raster/m-raster.acme>
-            !src <lib/mmap/basic-vector.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/kernal.acme>
 
+            !src <lib/misc/upstart.acme>
 
 main:
             +init_raster_irq 0, irq_handler

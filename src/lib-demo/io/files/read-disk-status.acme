@@ -6,9 +6,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
-            !src <lib/mmap/kernal.acme>
-            !src <lib/mmap/main.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/strings/m-strout.acme>
 
             * = $c000

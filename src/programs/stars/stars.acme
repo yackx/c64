@@ -5,11 +5,8 @@
 
             * = $c000
 
+            !src <lib/mmap/mmap.acme>
             !src <lib/screen/color.acme>
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/sid.acme>
-            !src <lib/mmap/kernal.acme>
 
             HIRES = $2000
             HIRES_END = $4000

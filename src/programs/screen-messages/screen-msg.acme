@@ -8,9 +8,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/registers/m-registers.acme>
-            !src <lib/mmap/kernal.acme>
             !src <lib/misc/upstart.acme>
 
 

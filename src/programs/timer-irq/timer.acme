@@ -10,8 +10,7 @@
 
             * = $c000
 
-            !src <lib/mmap/kernal.acme>
-            !src <lib/mmap/basic-vector.acme>
+            !src <lib/mmap/mmap.acme>
 
             !addr SCREEN_ADDR = $0400
             DELAY = 60

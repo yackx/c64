@@ -8,13 +8,11 @@
 
             !addr SCREEN_MEM = DEFAULT_SCREEN_MEM
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/screen/color.acme>
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/kernal.acme>
+            !src <lib/screen/m-screen.acme>
             !src <lib/charset/petscii.acme>
             !src <lib/charset/m-charset.acme>
-            !src <lib/screen/m-screen.acme>
             !src <lib/strings/m-strout.acme>
             !src <lib/misc/upstart.acme>
 

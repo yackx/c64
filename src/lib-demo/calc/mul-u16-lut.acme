@@ -14,10 +14,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/screen/color.acme>
             !src <lib/strings/m-print.acme>
             !src <lib/strings/m-strout.acme>
@@ -39,9 +36,9 @@ main:
             iny
             cpy #HOW_MANY
             bne -
-            
+
             +m_strout msg_ok
-            
+
             rts
 
 fail:
@@ -67,7 +64,7 @@ fail:
 
             lda #COLOR_RED
             sta BORDER_COLOR
-            
+
             rts
 
 

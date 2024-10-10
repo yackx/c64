@@ -6,19 +6,16 @@
                                             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
-            !src <lib/mem/m-mem.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/misc/upstart.acme>
 
-                                            ; Charset location
+            ; Charset location
             !addr CHAR_SET_LOC = $3800
-                                            ; Charset offset '0'
+            ; Charset offset '0'
             IDX_OFFSET = $30 * 8
-                                            ; Custom charset start address
+            ; Custom charset start address
             !addr CUST_CHARS = CHAR_SET_LOC + IDX_OFFSET
-                                            ; Mask for setting charset (depends on CHAR_SET_LOC)
+            ; Mask for setting charset (depends on CHAR_SET_LOC)
             CHAR_PTR_BITMASK = $0e
 
             BG_COLOR = 0

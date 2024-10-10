@@ -5,13 +5,10 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/screen/color.acme>
             !src <lib/screen/codes.acme>
             !src <lib/charset/petscii.acme>
-            !src <lib/mmap/basic-vector.acme>
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/kernal.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
             !src <lib/io/keyb/m-keypress.acme>

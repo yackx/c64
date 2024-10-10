@@ -6,8 +6,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/kernal.acme>
-            !src <lib/mmap/main.acme>
+            !src <lib/mmap/mmap.acme>
 
 
 single_keypress:
