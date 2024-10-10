@@ -22,8 +22,12 @@ DEF_MEM_MAP = 1
 
             ; $D000-$DFFF, 53248-57343
             ; I/O Area or Character ROM
-            ; depends on the value of bits #0-#2 of the processor port at $0001.
+            ; depends on the value of bits #0-#2
+            ; of the processor port at $0001.
+            ; CIA #1; inputs (keyboard, joystick, mouse),
+            ; datasette, IRQ control
             CHARROM = $d000                 ; Character ROM
-
+            CIAPRA = $dc00                  ; Port A +keyb matrix col +joy#2
+            CIAPRB = $dc01                  ; Port B +keyb matrix row +joy#1
             COLOR_RAM = $d800               ; Color RAM
 }
