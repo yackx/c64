@@ -54,13 +54,13 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/misc/upstart.acme>
             !src <lib/mmap/zp-free.acme>
             !src <lib/strings/m-print-color-msg-xy.acme>
             !src <lib/misc/math.acme>
             !src <lib/mmap/basic-vector.acme>
             !src <lib/raster/m-raster.acme>
             !src <lib/mem/m-mem.acme>
+            !src <lib/misc/upstart.acme>
 
             ; Raster lines
             RASTER_BADGE_OFFSET = 12

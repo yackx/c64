@@ -1,13 +1,14 @@
             ;ACME 0.97
             !cpu 6510
+
             * = $c000
 
             DELAY       = 7                 ; 1/60th sec
 
-            !src <lib/misc/upstart.acme>
             !src <lib/mmap/zp-free.acme>
             !src <lib/strings/m-strout.acme>
             !src <lib/strings/m-print.acme>
+            !src <lib/misc/upstart.acme>
 
 
 main:

@@ -20,8 +20,8 @@
             DEVICE = 8
             SECONDARY = 2
 
-            !src <lib/misc/upstart.acme>
             !src <lib/mmap/zp-free.acme>
+            !src <lib/misc/upstart.acme>
 
 main:
             lda #<SCREEN_MEM

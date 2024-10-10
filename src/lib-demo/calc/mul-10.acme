@@ -2,7 +2,6 @@
             !cpu 6510
 
             !src <lib/mmap/zp-free.acme>
-            ;!src <lib/registers/m-registers.acme>
             !src <lib/strings/m-strout.acme>
             !src <lib/charset/petscii.acme>
             !src <lib/misc/upstart.acme>

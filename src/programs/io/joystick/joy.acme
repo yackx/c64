@@ -1,16 +1,16 @@
 ; Test joysticks
 
             ;ACME 0.97
-           
+
             !cpu 6510
 
-            !src <lib/misc/upstart.acme>
             !src <lib/mmap/zp-free.acme>
             !src <lib/mmap/main.acme>
             !src <lib/mmap/kernal.acme>
             !src <lib/screen/color.acme>
             !src <lib/strings/m-strout.acme>
             !src <lib/screen/m-screen.acme>
+            !src <lib/misc/upstart.acme>
 
             !addr SCREEN_RAM = $0400
             !addr SCREEN_COLOR_RAM = $d800

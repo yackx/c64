@@ -5,10 +5,10 @@
             ;ACME 0.97
             !cpu 6510
 
+            !src <lib/mmap/zp-free.acme>
             !src <lib/mmap/main.acme>
             !src <lib/mmap/vic-ii.acme>
             !src <lib/screen/color.acme>
-            !src <lib/mmap/zp-free.acme>
 
             !src <lib/misc/upstart.acme>
 
@@ -23,7 +23,7 @@
             PIXELS_PER_CHAR = 8             ; Encounter one char every 8 pixels
             MUNCHED_CHAR = ' '              ; White space
             END_ROW = 200
-            
+
             CURRENT_CHAR = R1
             CURR_CYCLE_SPRITE_SKIP = R5
             CURR_SPRITE_FRAME = R6
@@ -86,7 +86,7 @@ setup_counters:
 
             lda #SPRITE_FRAME_COUNT
             sta CURR_SPRITE_FRAME           ; init sprite frame counter
-            
+
             ldy #0                          ; current pixel in char
 
             rts
@@ -131,12 +131,12 @@ x_left:     nop                             ; slow things down
 
 ; Sprite #0 on the right part of the screen (x-coord > 255)
 x_right:    inc $d000                       ; move one pixel to the right
-            
+
             lda $d000
             cmp #10+320-255+20              ; reached right border?
             bne cycle_sprite
 
-.right_border_reached:            
+.right_border_reached:
             lda #0                          ; border reached
             sta $d000                       ; sprite #0: x=0
             sta $d010                       ; sprite #0: x bit #8
@@ -152,10 +152,10 @@ x_right:    inc $d000                       ; move one pixel to the right
 cycle_sprite:
             dec CURR_CYCLE_SPRITE_SKIP      ; skip some cycles
             bne munch
-            
+
             lda #CYCLE_SPRITE_SKIPS         ; reset cycle skip counter
             sta CURR_CYCLE_SPRITE_SKIP
-            
+
             dec CURR_SPRITE_FRAME           ; next frame
             beq +
             inc DEFAULT_SPRITE_PTR_AREA

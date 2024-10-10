@@ -3,8 +3,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/misc/upstart.acme>
             !src <lib/mmap/zp-free.acme>
+            !src <lib/misc/upstart.acme>
 
             !addr DEST = $3800
             CHAR_PTR_BITMASK = $0e
