@@ -3,7 +3,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/mmap/zp-free.acme>
 
             * = $c000
 

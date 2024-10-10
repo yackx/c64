@@ -9,7 +9,7 @@
             !addr SCREEN_MEM = DEFAULT_SCREEN_MEM
 
             !src <lib/misc/upstart.acme>
-            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/mmap/zp-free.acme>
             !src <lib/screen/color.acme>
             !src <lib/mmap/main.acme>
             !src <lib/mmap/kernal.acme>

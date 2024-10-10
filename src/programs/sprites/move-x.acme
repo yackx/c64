@@ -13,7 +13,7 @@
             !cpu 6510
             * = $c000
 
-            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/mmap/zp-free.acme>
             !src <lib/registers/m-registers.acme>
             !src <lib/mem/m-mem.acme>
 

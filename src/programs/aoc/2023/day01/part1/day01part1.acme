@@ -9,7 +9,7 @@
             !cpu 6510
 
             !src <lib/misc/upstart.acme>
-            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/mmap/zp-free.acme>
 
             !addr CURRENT_VECT = R1
             !addr ONE_BEFORE_INPUT = input-1

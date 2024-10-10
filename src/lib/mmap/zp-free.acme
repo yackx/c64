@@ -1,13 +1,12 @@
-; Pseudo-registers.
+; Free addresses in zero-page.
 ;
-; Located in safe and unused ZP addresses,
-; and intended to circumvent the limited availability
-; of the A X Y registers.
+; Located in safe, well-known and unused ZP addresses,
+; they are labeled Rx as if they were extra registers.
 ;
 ; R1+R2 and R3+R4 are contiguous.
 
-!ifdef DEF_PSEUDO_REGISTERS !eof
-DEF_PSEUDO_REGISTERS = 1
+!ifdef DEF_ZP_FREE !eof
+DEF_ZP_FREE = 1
 
 !addr {
             R1 = $fb

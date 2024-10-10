@@ -3,7 +3,7 @@
             * = $c000
 
             !src <lib/misc/upstart.acme>
-            !src <lib/registers/pseudo-registers.acme>
+            !src <lib/mmap/zp-free.acme>
             !src <lib/strings/m-strout.acme>
 
 
