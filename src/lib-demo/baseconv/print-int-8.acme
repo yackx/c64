@@ -3,31 +3,27 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/misc/upstart.acme>
             !src <lib/strings/m-print.acme>
+            !src <lib/misc/upstart.acme>
 
 
 main:
-            lda #numbers_end - numbers
-            sta target
-            ldx #0
-
--           lda index
-            tax
-            lda numbers,x
+            ldy #0
+-           tya
+            pha
+            lda numbers,y
             jsr print_int_8
+            pla
+            tay
             +new_line
-            inc index
-            lda index
-            target = *+1
-            cmp #0
+            iny
+            cpy #HOW_MANY
             bne -
 
             rts
 
 
 numbers:    !byte 213, 42, 6, 0, 102
-numbers_end:
-index:      !byte 0
+            HOW_MANY = * - numbers
 
             !src <lib/baseconv/print-int-8.acme>
