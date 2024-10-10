@@ -17,11 +17,11 @@
 ; IN:       A = factor A
 ;           X = factor X
 ;
-; OUT:      PRODUCT_LO = R3 = low byte of product
-;           PRODUCT_HI = R4 = high byte of product
-;           A = PRODUCT_HI
-;           FACTOR_A = R5 = factor A
-;           FACTOR_X = R6 = factor X
+; OUT:      R3 = low byte of product
+;           R4 = high byte of product
+;           A = R4
+;           R5 = factor A
+;           R6 = factor X
 ;
 ; USES:     R5, R6, X
 
@@ -30,11 +30,12 @@
 
             !src <lib/registers/pseudo-registers.acme>
 
+!addr {
             FACTOR_A = R5
             FACTOR_X = R6
             PRODUCT_LO = R3
             PRODUCT_HI = R4
-
+}
 
 mul_u16_lut:
             sta FACTOR_A
