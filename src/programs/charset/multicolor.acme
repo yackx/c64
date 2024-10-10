@@ -7,6 +7,7 @@
             !cpu 6510
 
             !src <lib/mmap/mmap.acme>
+            !src <lib/mem/m-mem.acme>
             !src <lib/misc/upstart.acme>
 
             ; Charset location
