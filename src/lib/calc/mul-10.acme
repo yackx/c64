@@ -3,9 +3,6 @@
 
             !src <lib/registers/pseudo-registers.acme>
 
-            !addr ZP_LO_BYTE = R3
-            !addr ZP_HI_BYTE = R4
-
 
 ; Multiply A by 10.
 ;
@@ -16,25 +13,25 @@
 ; OUT:      R3 R4
 mul_10:
             pha
-            sta ZP_LO_BYTE                  ; Store A
+            sta R3                          ; Store A
             lda #0
-            sta ZP_HI_BYTE
+            sta R4
             pla
 
             asl
-            rol ZP_HI_BYTE                  ; A * 2
+            rol R4                          ; A * 2
             
             asl
-            rol ZP_HI_BYTE                  ; A * 4
+            rol R4                          ; A * 4
 
             clc
-            adc ZP_LO_BYTE
+            adc R3
             bcc +
-            inc ZP_HI_BYTE                  ; A * 5
+            inc R4                          ; A * 5
 
 +           asl
-            rol ZP_HI_BYTE                  ; A * 10
+            rol R4                          ; A * 10
 
-            sta ZP_LO_BYTE
+            sta R3
 
             rts
