@@ -3,8 +3,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/misc/upstart.acme>
             !src <lib/strings/m-print.acme>
+            !src <lib/misc/upstart.acme>
 
 
 main:
@@ -21,6 +21,6 @@ main:
 
 numbers:
             !byte $00, $01, $0a, $0f, $10, $aa, $ff
-            HOW_MANY = 7
+            HOW_MANY = * - numbers
 
             !src <lib/baseconv/print-hex.acme>
