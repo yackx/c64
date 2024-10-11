@@ -13,8 +13,13 @@ convert_dec_petscii_to_u8_params:
 ; Example: user enters the digits 1, 2 and 3.
 ; The PETSCII values in convert_dec_petscii_to_u8_params
 ; are 49, 50, 51.
-; X = 3.
+; X = 3 (how many).
 ; After invoking this routine, A = 123.
+;
+; IN:       convert_dec_petscii_to_u8_params
+;           X
+; OUT:      A
+; USES:     R3 R4
 convert_dec_petscii_to_u8:
             stx .len
             ldx #0
@@ -24,7 +29,7 @@ convert_dec_petscii_to_u8:
             beq .done
             lda .value
             jsr mul_10
-            
+
             lda R4
             bne .invalid
 

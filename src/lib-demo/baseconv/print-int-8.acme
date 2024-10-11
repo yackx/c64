@@ -1,4 +1,4 @@
-; Print a decimal number
+; Print decimal numbers.
 
             ;ACME 0.97
             !cpu 6510

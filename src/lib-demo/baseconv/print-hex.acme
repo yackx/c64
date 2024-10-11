@@ -1,4 +1,4 @@
-; Demo - print hex numbers
+; Print hex numbers
 
             ;ACME 0.97
             !cpu 6510
