@@ -11,37 +11,45 @@ main:
             lda #0
             sta R5
 .loop:
-            lda R5
-            tax
+            ; Print number
+            ldx R5
             lda values,x
             jsr print_hex
+
+            ; Print mul
             +m_strout msg_mul_10
 
-            lda R5
-            tax
+            ; Multiply by 10
+            ldx R5
             lda values,x
-            jsr mul_10
+            jsr mul_10                      ; result in R3 R4
 
+            ; Print result (2 hex)
             lda R3
             jsr print_hex
             lda #' '
             jsr CHROUT
             lda R4
             jsr print_hex
+
+            ; New line
             lda #PETSCII_RETURN
             jsr CHROUT
 
+            ; Done?
             inc R5
             lda R5
-            cmp #values_end-values
+            cmp #HOW_MANY
             bne .loop
 
             rts
 
 
+index:      !byte 0
 values:     !byte 0, 1, 2, 10, 26, 50, 255
-values_end:
-msg_mul_10: !pet " * 0a = ", 0
+            HOW_MANY = * - values
+
+msg_mul_10: !pet " mul 0a = ", 0
 
 
             !src <lib/calc/mul-10.acme>

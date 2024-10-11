@@ -10,7 +10,9 @@
 ; adding A to the result, and then shifting the result once more.
 ;
 ; IN:       A
-; OUT:      R3 R4
+; OUT:      R3 (LSB)
+;           R4 (MSB)
+; USES:     A
 mul_10:
             pha
             sta R3                          ; Store A
@@ -20,7 +22,7 @@ mul_10:
 
             asl
             rol R4                          ; A * 2
-            
+
             asl
             rol R4                          ; A * 4
 
