@@ -6,103 +6,64 @@
             !src <lib/misc/upstart.acme>
 
 
-; @impl
-; Lots of copy-paste for readability. This is just a demo.
+!macro .convert .digit1, .digit2, .digit3 {
+            lda #.digit1
+            sta convert_dec_petscii_to_u8_params
+            lda #.digit2
+            sta convert_dec_petscii_to_u8_params+1
+            lda #.digit3
+            sta convert_dec_petscii_to_u8_params+2
+            ldx #3
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+}
+
+!macro .convert .digit1, .digit2 {
+            lda #.digit1
+            sta convert_dec_petscii_to_u8_params
+            lda #.digit2
+            sta convert_dec_petscii_to_u8_params+1
+            ldx #2
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+}
+
+!macro .convert .digit1 {
+            lda #.digit1
+            sta convert_dec_petscii_to_u8_params
+            ldx #1
+            jsr convert_dec_petscii_to_u8
+            jsr print_hex_safe_c
+            jsr validity_check
+}
+
+
 main:
+            ; Edge case - length=0
             ldx #0
             jsr convert_dec_petscii_to_u8
             jsr print_hex_safe_c
             jsr validity_check
 
-            lda #'0'
-            sta convert_dec_petscii_to_u8_params
-            ldx #1
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
+            ; Valid
+            +.convert '0'
+            +.convert '1'
+            +.convert '1', '5'
+            +.convert '1', '6'
+            +.convert '9', '9'
+            +.convert '1', '0', '0'
+            +.convert '2', '5', '5'
 
-            lda #'1'
-            sta convert_dec_petscii_to_u8_params
-            ldx #1
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
+            ; Invalid
+            +.convert '2', '5', '6'
+            +.convert '9', '9', '9'
 
-            lda #'1'
-            sta convert_dec_petscii_to_u8_params
-            lda #'5'
-            sta convert_dec_petscii_to_u8_params+1
-            ldx #2
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-
-            lda #'1'
-            sta convert_dec_petscii_to_u8_params
-            lda #'6'
-            sta convert_dec_petscii_to_u8_params+1
-            ldx #2
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-
-            lda #'9'
-            sta convert_dec_petscii_to_u8_params
-            lda #'9'
-            sta convert_dec_petscii_to_u8_params+1
-            ldx #2
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-
-            lda #'1'
-            sta convert_dec_petscii_to_u8_params
-            lda #'0'
-            sta convert_dec_petscii_to_u8_params+1
-            lda #'0'
-            sta convert_dec_petscii_to_u8_params+2
-            ldx #3
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-
-            lda #'2'
-            sta convert_dec_petscii_to_u8_params
-            lda #'5'
-            sta convert_dec_petscii_to_u8_params+1
-            lda #'5'
-            sta convert_dec_petscii_to_u8_params+2
-            ldx #3
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-
-            lda #'2'
-            sta convert_dec_petscii_to_u8_params
-            lda #'5'
-            sta convert_dec_petscii_to_u8_params+1
-            lda #'6'
-            sta convert_dec_petscii_to_u8_params+2
-            ldx #3
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-
-            lda #'9'
-            sta convert_dec_petscii_to_u8_params
-            lda #'9'
-            sta convert_dec_petscii_to_u8_params+1
-            lda #'9'
-            sta convert_dec_petscii_to_u8_params+2
-            ldx #3
-            jsr convert_dec_petscii_to_u8
-            jsr print_hex_safe_c
-            jsr validity_check
-    
             rts
 
 
-; Print A in hexa, safekeeping carry flag.
+; Print A in hexadecimal, safekeeping carry flag.
 print_hex_safe_c:
             bcs +
             jsr print_hex
@@ -122,9 +83,9 @@ validity_check:
             rts
 
 
-.msg_valid: 
+.msg_valid:
             !pet " valid", 13, 0
-.msg_invalid: 
+.msg_invalid:
             !pet " invalid", 13, 0
 
 
