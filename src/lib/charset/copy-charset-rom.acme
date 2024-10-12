@@ -10,8 +10,8 @@
 ; Character set at $d000 will be copied to the page
 ; specified in Y.
 ;
-; IN:   Y = destination page MSB
-; USE:  A X Y R1 R2
+; IN:       Y = destination page MSB
+; USE:      A X Y R1 R2
 copy_charset_to_ram:
             sei
 

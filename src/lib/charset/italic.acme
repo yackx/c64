@@ -2,9 +2,9 @@
 ;
 ; Shift the top 4 lines of each char 1 pixel right.
 ;
-; IN    R3 Charset ptr LSB
-;       R4 Charset ptr MSB
-; USE   A X Y R3 R4
+; IN:       R3 Charset ptr LSB
+;           R4 Charset ptr MSB
+; USES:     A X Y R3 R4
 
             ;ACME 0.97
             !cpu 6510
@@ -12,7 +12,6 @@
             !src <lib/mmap/zp-free.acme>
 
 
-!zone make_italic
 make_italic:
             ldy #0                          ; memory page index
             ldx #8                          ; loop 8 times (8x255 = 2Kb)
@@ -32,7 +31,7 @@ make_italic:
             dex                             ; 8 pages reached?
             bne .loop
 
-            +pull_r4
-            +pull_r3
+;            +pull_r4
+;            +pull_r3
 
             rts

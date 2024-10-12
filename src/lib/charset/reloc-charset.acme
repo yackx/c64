@@ -13,8 +13,8 @@
 ; %110, 6: $3000-$37FF, 12288-14335.
 ; %111, 7: $3800-$3FFF, 14336-16383.
 ;
-; IN    A = Memory setup register mask (#1-#3 at VIC2_MEM_PTR)
-; USE   A
+; IN:       A = Memory setup register mask (#1-#3 at VIC2_MEM_PTR)
+; USE:      A
 
             ;ACME 0.97
             !cpu 6510
