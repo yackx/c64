@@ -1,0 +1,54 @@
+; Copy the ROM character set to RAM to allow customization.
+;
+; '@' is sligthtly modified for illustration purpose.
+; If you want to replace the character set completely,
+; Skip the ROM to RAM copy part and store you own charset
+; at the target location in RAM.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/mmap.acme>
+            !src <lib/misc/upstart.acme>
+
+            !addr CHARSET_DEST = $3000
+
+main:
+            sei
+
+            ; Make the char ROM visible at $D000
+            lda R6510
+            and #%11111011
+            sta R6510
+
+            ; Copy the character set
+            ldx #>CHARROM                   ; source page
+            ldy #>CHARSET_DEST              ; destination page
+            lda #8                          ; 8 pages
+            jsr copy_mem_pages
+
+            ; Make I/O area visible
+            lda R6510
+            ora #%00000100
+            sta R6510
+
+            cli
+
+            ; Set charset base address to $3000
+            ; Relative to VIC bank (bits #1-#3)
+            lda VIC2_MEM_PTR
+            and #%11110000
+            ora #%00001100
+            sta VIC2_MEM_PTR                ; xxxx110_
+
+            ; Let '@' appear as italic by shifting its top
+            ; 4 bytes one bit to the right.
+            ; '@' is the first character in the charset.
+            ldx #3
+-           lsr CHARSET_DEST,x
+            dex
+            bne -
+
+            rts
+
+            !src <lib/mem/copy-mem-pages.acme>

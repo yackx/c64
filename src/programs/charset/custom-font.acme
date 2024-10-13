@@ -1,4 +1,4 @@
-; Demo - Use a custom charset
+; Load a font and switch charset to RAM.
 
             ;ACME 0.97
             !cpu 6510
@@ -9,7 +9,6 @@
 
             !addr DEST = $3800
             CHAR_PTR_BITMASK = $0e
-
 
 main:
             ; Copy custom font
