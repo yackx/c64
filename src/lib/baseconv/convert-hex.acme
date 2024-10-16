@@ -1,4 +1,4 @@
-; Convert a value to hexadecimal.
+; Convert ann uint8 in A to PETSCII hexadecimal.
 ;
 ; IN:       A = value to convert
 ; OUT:      convert_hex_buffer (2 bytes buffer HI LO)
