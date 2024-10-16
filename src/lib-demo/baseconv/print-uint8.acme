@@ -12,7 +12,7 @@ main:
 -           tya
             pha
             lda numbers,y
-            jsr print_int_8
+            jsr print_uint8
             pla
             tay
             +new_line
@@ -26,4 +26,4 @@ main:
 numbers:    !byte 213, 42, 6, 0, 102
             HOW_MANY = * - numbers
 
-            !src <lib/baseconv/print-int-8.acme>
+            !src <lib/baseconv/print-uint8.acme>

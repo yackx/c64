@@ -13,7 +13,7 @@
             !src <lib/mmap/kernal.acme>
 
 
-print_int_8:
+print_uint8:
             ldx #0                          ; Index .units
             ldy #0                          ; Always 0
             sty .digit
@@ -42,7 +42,7 @@ print_int_8:
             clc
             adc #'0'
             jsr CHROUT
- 
+
 .next_digit:
             pla
             sty .digit                      ; Reset .digit
