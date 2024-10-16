@@ -1,3 +1,16 @@
+; Convert a decimal value in PETSCII to a byte.
+;
+; Example: user enters the digits 1, 2 and 3.
+; The PETSCII values in convert_dec_petscii_to_u8_params
+; are 49, 50, 51 and X = 3 (how many).
+; After invoking this routine, A = 123.
+;
+; IN:       convert_dec_petscii_to_u8_params
+;           X
+; OUT:      A
+; USES:     R3 R4
+
+
             ;ACME 0.97
             !cpu 6510
 
@@ -7,19 +20,6 @@
 convert_dec_petscii_to_u8_params:
             !fill 3, 0
 
-
-; Convert a decimal value in PETSCII to a byte.
-;
-; Example: user enters the digits 1, 2 and 3.
-; The PETSCII values in convert_dec_petscii_to_u8_params
-; are 49, 50, 51.
-; X = 3 (how many).
-; After invoking this routine, A = 123.
-;
-; IN:       convert_dec_petscii_to_u8_params
-;           X
-; OUT:      A
-; USES:     R3 R4
 convert_dec_petscii_to_u8:
             stx .len
             ldx #0

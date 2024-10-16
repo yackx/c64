@@ -1,13 +1,15 @@
+; Print the value in A in hexadecimal.
+;
+; IN:       A = value to print
+; USES:     A X
+
+
             ;ACME 0.97
             !cpu 6510
 
             !src <lib/mmap/kernal.acme>
 
 
-; Print the value in A in hexadecimal.
-;
-; IN:       A = value to print
-; USES:     A X
 print_hex:
             pha
 
