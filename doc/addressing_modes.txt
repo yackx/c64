@@ -162,6 +162,8 @@ Typical usage: array indexing.
 
 EA = address at ($nnnn)
 
+This addressing mode is only used by the JMP instruction.
+
 given:
         mem $2037 = $31 ; EA LSB
         mem $2038 = $88 ; EA MSB
