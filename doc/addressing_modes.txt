@@ -100,7 +100,7 @@ then:
         A = $BB
 
 
-*** Y-Indexed Zero Page ***                                              $nn,y
+*** Y-Indexed Zero Page ***                                              $nn,Y
 
 EA = $00nn + Y
 
