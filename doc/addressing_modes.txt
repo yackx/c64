@@ -245,3 +245,5 @@ ZP Indirect Y-Indexed   LDA ($nn),Y     $B1    2        5+
 ----------------------------------------------------------
 
 +1 if page boundary crossed
+
+See https://www.pagetable.com/c64ref/6502
