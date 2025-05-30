@@ -25,7 +25,7 @@ The [src](/src) directory contains:
 
 The programs include Boring Snake, Pacmunch, c64 rules demo, a book simple book reader and one bite of Advent of Code, plus manay random experiments.
 
-> [!TIP]
+> [!NOTE]
 > Assume **PAL** for all VIC-II routines.
 
 ## Prerequisites 💪
