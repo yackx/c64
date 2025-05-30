@@ -4,33 +4,29 @@
 
 **ASM routines and examples for the Commodore 64**
 
+> [!TIP]
+> Feel free to roam around the repository in no particular order but **read this page first**.
+
 ## Content 👀
 
 In this repository:
 
-- [src](/src) contains the source code of the routines and programs (see below)
-- [doc](/doc)
-  - [Addressing modes](/doc/addressing_modes.txt) summary
-  - assemblers, editor code completion, IDE...
-  - [Awesome references](/doc/references.md)
+- [src](/src) - Source code of the routines including demo programs
+- [doc](/doc) - Documentation and references: addressing modes, assemblers, IDE, Awesome references ✨
 - [scripts](/scripts) - Python and bash utility scripts for this repository
 - [ybas](/ybas) - A simple BASIC converter to use labels and avoid line numbers
 - [Makefile](/Makefile) - Build script to cross compile, build disks and run programs
 
 The [src](/src) directory contains:
 
-- [lib](/lib) - Reusable routines and macros written for ACME cross-assembler
-- [lib-demo](/lib-demo) - Sample code (routines in action)
-- [programs](/programs) - Illustrations of simple techniques
-  - [Boring Snake](/programs/snake)
-  - [c64 rules demo](/programs/c64-rules)
-  - [Pacmunch](/programs/pacmunch)
-  - one part in one day of [Advent of Code](/programs/aoc)
-  - a simple [book reader]()
-  - and some other random experiments
+- [lib](/src/lib) - Reusable routines and macros written for ACME cross-assembler
+- [lib-demo](/src/lib-demo) - Sample code (routines in action)
+- [programs](/src/programs) - Illustrations of simple programming techniques
+
+The programs include Boring Snake, Pacmunch, c64 rules demo, a book simple book reader and one bite of Advent of Code, plus manay random experiments.
 
 > [!TIP]
-> Assume **PAL** for all VIC-II routines. Feel free to roam around the repository in no particular order but **read this page first**.
+> Assume **PAL** for all VIC-II routines.
 
 ## Prerequisites 💪
 
