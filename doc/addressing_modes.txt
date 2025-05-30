@@ -57,6 +57,7 @@ then:
         A = $05
 
 ! MOS 6502 !
+
 The value at the specified address, ignoring the addressing mode's X offset,
 is read and discarded before the final address is read. This may cause side
 effects in I/O registers.
