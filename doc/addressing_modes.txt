@@ -1,6 +1,6 @@
-+------------------------------------------------------------------------+
-+                      MOS 6510 ADDRESSING MODES                         +
-+------------------------------------------------------------------------+
++----------------------------------------------------------------------------+
++                          MOS 6510 ADDRESSING MODES                         +
++----------------------------------------------------------------------------+
 
 
 EA  = Effective Address                     NC = No Carry
@@ -16,11 +16,10 @@ The address or register it refers to is implied by the opcode itself.
         BRK   NOP   ASL   ROL   ...
 
 
-*** Immediate ***                                                   #$nn
+*** Immediate ***                                                         #$nn
 
-Specify a value directly in the instruction.
-The operand is contained in the second byte of the instruction,
-with no further memory addressing required.
+Specify a value directly in the instruction. The operand is contained in the
+second byte of the instruction, with no further memory addressing required.
 
 when:
         LDA #$05
@@ -28,7 +27,7 @@ then:
         A = $05
 
 
-*** Absolute ***                                                   $nnnn
+*** Absolute ***                                                         $nnnn
 
 EA = $nnnn
 
@@ -45,7 +44,7 @@ then:
         A = $05
 
 
-*** X-Indexed Absolute ***                                       $nnnn,X
+*** X-Indexed Absolute ***                                             $nnnn,X
 
 EA = $nnnn + X
 
@@ -58,25 +57,25 @@ then:
         A = $05
 
 ! MOS 6502 !
-The value at the specified address, ignoring the addressing mode's
-X offset, is read and discarded before the final address is read.
-This may cause side effects in I/O registers.
+The value at the specified address, ignoring the addressing mode's X offset,
+is read and discarded before the final address is read. This may cause side
+effects in I/O registers.
 
 
-*** Y-Indexed Absolute ***                                       $nnnn,Y
+*** Y-Indexed Absolute ***                                             $nnnn,Y
 
 EA = $nnnn + Y
 
 Same as X-indexed absolute but with Y.
 
 
-*** Zero-page ***                                                    $nn
+*** Zero-page ***                                                          $nn
 
 EA = $00nn
 
 The instruction refers to a memory location in the first 256 bytes of memory
-(zero page). Allows for shorter code and execution times by only fetching
-the 2nd byte of the instruction and assuming a zero high address byte.
+(zero page). Allows for shorter code and execution times by only fetching the
+2nd byte of the instruction and assuming a zero high address byte.
 
 given:
         mem $0056 = $1D
@@ -86,11 +85,11 @@ then:
         A = $1D
 
 
-*** X-Indexed Zero Page ***                                        $nn,X
+*** X-Indexed Zero Page ***                                              $nn,X
 
 EA = $00nn + X
 
-Allows to add an offset to a zero-page address.
+Adds an offset to a zero-page address.
 
 given:
         mem $0012 = $BB
@@ -101,10 +100,9 @@ then:
         A = $BB
 
 
-*** Y-Indexed Zero Page ***                                        $nn,y
+*** Y-Indexed Zero Page ***                                              $nn,y
 
-Same as X-indexed ZP but with Y.
-(Not for LDA)
+Same as X-indexed ZP but with Y. (Not for LDA.)
 
 given:
         mem $0012 = $BB
@@ -115,7 +113,7 @@ then:
         X = $BB
 
 
-*** Indexed Indirect ***                                         ($nn,X)
+*** Indexed Indirect ***                                               ($nn,X)
 
 aka X-Indexed Zero Page Indirect
 
@@ -128,10 +126,10 @@ Results in a vector ($06). If ZP $06 contains 00 80, EA is $8000.
 
 * More details *
 
-The 2nd byte of the instruction is added to the contents of X,
-discarding the carry. The result points to a memory location on ZP whose
-contents is the EA LSB. The next memory location in ZP contains the EA MSB.
-Both memory locations specifying the LSB and MSB of the EA must be in ZP.
+The 2nd byte of the instruction is added to the contents of X, discarding the
+carry. The result points to a memory location on ZP whose contents is the
+EA LSB. The next memory location in ZP contains the EA MSB. Both memory
+locations specifying the LSB and MSB of the EA must be in ZP.
 
 given:
         X = $E9
@@ -153,7 +151,7 @@ then:
         A = $81         ; content at $3104
 
 
-*** Indirect Indexed ***                                         ($nn),Y
+*** Indirect Indexed ***                                               ($nn),Y
 
 aka Zero Page Indirect Y-Indexed
 
@@ -167,9 +165,9 @@ If ZP $02 and $03 contain 00 80, EA is $8004.
 * More details *
 
 The 2nd byte of the instruction points to a memory location in ZP.
-The contents of this memory location is added to the contents of Y,
-the result being the EA LSB. The carry from this addition is added to the
-contents of the next ZP memory location, the result being the EA MSB.
+The contents of this memory location is added to the contents of Y, the result
+being the EA LSB. The carry from this addition is added to the contents of the
+next ZP memory location, the result being the EA MSB.
 
 given:
         Y = $E9
@@ -199,7 +197,7 @@ then:
 Usage: array indexing (frequent).
 
 
-*** Absolute Indirect ***                                        ($nnnn)
+*** Absolute Indirect ***                                              ($nnnn)
 
 EA = address at ($nnnn)
 
@@ -214,9 +212,9 @@ Program will jump to EA = $8831
 
 ! MOS 6502 !
 
-The indirect jump instruction does not increment the page address when
-the indirect pointer crosses a page boundary. JMP ($xxFF) will fetch
-the address from $xxFF and $xx00 (not $xx+1-$00).
+The indirect jump instruction does not increment the page address when the
+indirect pointer crosses a page boundary. JMP ($xxFF) will fetch the address
+from $xxFF and $xx00 (not $xx+1-$00).
 
 
 *** Relative ***
