@@ -102,6 +102,8 @@ then:
 
 *** Y-Indexed Zero Page ***                                              $nn,y
 
+EA = $00nn + Y
+
 Same as X-indexed ZP but with Y. (Not for LDA.)
 
 given:
@@ -117,52 +119,26 @@ then:
 
 aka X-Indexed Zero Page Indirect
 
-* At a glance *
-
-        LDX #$04
-        LDA ($02,X)
-
-Results in a vector ($06). If ZP $06 contains 00 80, EA is $8000. 
-
-* More details *
-
 The 2nd byte of the instruction is added to the contents of X, discarding the
 carry. The result points to a memory location on ZP whose contents is the
 EA LSB. The next memory location in ZP contains the EA MSB. Both memory
 locations specifying the LSB and MSB of the EA must be in ZP.
 
 given:
-        X = $E9
+        mem $06 = $00
+        mem $07 = $80
+        mem $8000 = $AB
+        X = 4
 when:
-        LDA ($51,X)
-
-results in:
-
-        $nn + X (NC)    => ($51 + $E9) (NC)
-                        =  $13A (NC)
-                        =  $ 3A
-
-if:
-        mem $003A = $04 ; EA LSB
-        mem $003B = $31 ; EA MSB
-and:
-        mem $3104 = $81 ; EA
+        LDA ($02,X)
 then:
-        A = $81         ; content at $3104
+        EA = $8000
+        A = $AB
 
 
 *** Indirect Indexed ***                                               ($nn),Y
 
 aka Zero Page Indirect Y-Indexed
-
-* At a glance *
-
-        LDY #$04
-        LDA ($02),Y
-
-If ZP $02 and $03 contain 00 80, EA is $8004.
-
-* More details *
 
 The 2nd byte of the instruction points to a memory location in ZP.
 The contents of this memory location is added to the contents of Y, the result
@@ -170,42 +146,28 @@ being the EA LSB. The carry from this addition is added to the contents of the
 next ZP memory location, the result being the EA MSB.
 
 given:
-        Y = $E9
-        mem $00A4 = $51
-        mem $00A5 = $3F
+        mem $02 = $00
+        mem $03 = $80
+        mem $8004 = $AB
 when:
-        LDA ($A4),Y
-
-results in:
-
-        ($nn) + Y (C)   => ($51 + $E9) (C)
-                        =  $13A (C)
-                        =  $3A
-                        => EA LSB
-    
-        ($nn) + 1 + C   => ($3F + C) 
-                        =  $3F + $01
-                        =  $40 
-                        => EA MSB
-
-                        => EA $403A
-if:
-        $4003 = $BB
+        LDA ($02),Y
 then:
-        A = $BB
+        EA = $8004
+        A = $AB
 
-Usage: array indexing (frequent).
+Typical usage: array indexing.
 
 
 *** Absolute Indirect ***                                              ($nnnn)
 
 EA = address at ($nnnn)
 
+given:
         mem $2037 = $31 ; EA LSB
         mem $2038 = $88 ; EA MSB
-    
+when:
         JMP ($2037)     ; EA $8831
-
+then:
         PC = $8831
 
 Program will jump to EA = $8831
