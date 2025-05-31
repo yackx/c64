@@ -1,6 +1,6 @@
 # Commodore 64 MOS 6502/6510 assembly routines
 
-![C64 badge](/doc/logo.png)
+![C64 badge](/assets/logo.png)
 
 **ASM routines and examples for the Commodore 64**
 
