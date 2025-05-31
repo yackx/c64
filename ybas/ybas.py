@@ -1,4 +1,5 @@
-# A simple script to convert a ybas Commodore BASIC program to a vanilla BASIC program.
+# A simple script to convert a ybas Commodore BASIC program
+# to a vanilla BASIC program.
 #
 # See README.md for more information.
 
