@@ -117,7 +117,7 @@ You **must** set `ACME` environment variable to the `src` folder of this project
 Invoke `make` from the root of the repository to assemble, create a symbol table and a default disk image.
 
 > **WARNING**
-> Some programs have a dedicated and specific `Makefile` in their directory. Always consult the README in the program directory when available.
+> Some programs have a dedicated and specific `Makefile` in their directory. Always check out the README file in the program directory when available.
 
 ```bash
 # Assemble and package `many.a`
