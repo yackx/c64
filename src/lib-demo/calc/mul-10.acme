@@ -8,6 +8,10 @@
 
 
 main:
+            ; Print header
+            +m_strout msg_header
+            +m_strout msg_h_sep
+
             lda #0
             sta R5
 .loop:
@@ -29,6 +33,7 @@ main:
             jsr print_hex
             lda #' '
             jsr CHROUT
+            jsr CHROUT
             lda R4
             jsr print_hex
 
@@ -49,7 +54,9 @@ index:      !byte 0
 values:     !byte 0, 1, 2, 10, 26, 50, 255
             HOW_MANY = * - values
 
-msg_mul_10: !pet " mul 0a = ", 0
+msg_header: !pet "operation   lsb msb", 13, 0
+msg_h_sep:  !pet "-------------------", 13, 0
+msg_mul_10: !pet " mul 0a  = ", 0
 
 
             !src <lib/calc/mul-10.acme>
