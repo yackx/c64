@@ -162,6 +162,6 @@ As an alternative to asm, [a few programs](/src/programs/xc-basic) are provided 
 This repository introduces a limited amount of material for the Commodore 128.
 
 - Add an environment variable `X128` to point to the C128 emulator.
-- Use the alternate `Makefile` for C128: `make -f Makefile.c128 TARGET=...`
+- Use the alternate `Makefile` for C128: `make -f c128.mk TARGET=...`
 
 ![C64 rules intro screen](/src/programs/c64-rules/c64-rules.gif)
