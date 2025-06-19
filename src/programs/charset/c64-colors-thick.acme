@@ -25,7 +25,9 @@
 
             !src <lib/mmap/zp-free.acme>
             !src <lib/mmap/basic-vector.acme>
+            !src <lib/mmap/kernal.acme>
             !src <lib/mem/m-mem.acme>
+            !src <lib/screen/color.acme>
             !src <lib/raster/m-raster.acme>
             !src <lib/misc/upstart.acme>
 
@@ -40,12 +42,10 @@
             RASTER_LINE_2 = RASTER_LINE_1 + RASTER_OFFSET
             RASTER_LINE_3 = RASTER_LINE_1 + RASTER_OFFSET*2
 
-            BG_COLOR = 0
-
 
 main:
             ; Clear screen
-            jsr $ff81
+            jsr CINT
 
             ; Blank charset memory - most characters are blank
             +fill_pages >CHAR_SET_LOC, 8, 0
@@ -63,9 +63,9 @@ main:
             +copy_bytes_8 charset, CHAR_SET_LOC, 8*NB_OF_CHARS
 
             ; Background color
-            lda #BG_COLOR
-            sta $d020
-            sta $d021
+            lda #COLOR_BLACK
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
 
             ; Print lines
             lda #$40
