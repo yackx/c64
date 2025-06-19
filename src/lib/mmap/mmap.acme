@@ -7,3 +7,4 @@ DDEF_MEM_MAP_ALL = 1
             !src <lib/mmap/sid.acme>
             !src <lib/mmap/vic-ii.acme>
             !src <lib/mmap/basic-vector.acme>
+            !src <lib/mmap/cia.acme>

@@ -1,0 +1,6 @@
+!ifdef DEF_MEM_MAP_CIA !eof
+DEF_MEM_MAP_CIA = 1
+
+!addr {
+            CIAICR = $dc0d                  ; Interrupt Control Register
+}
