@@ -43,13 +43,6 @@
             BG_COLOR = 0
 
 
-// @TODO Delete me
-!macro set_border_color @color {
-            lda #@color
-            sta $d020
-}
-
-
 main:
             ; Clear screen
             jsr $ff81
@@ -101,7 +94,6 @@ main:
 
 
 irq_handler_1:
-            ;+set_border_color 1
             +set_raster_irq RASTER_LINE_2, irq_handler_2
 
             lda stripe_colors
@@ -109,12 +101,10 @@ irq_handler_1:
             lda stripe_colors+1
             sta $d023
 
-            ;+set_border_color 0
             +ack_short_kernal
 
 
 irq_handler_2:
-            ;+set_border_color 1
             +set_raster_irq RASTER_LINE_3, irq_handler_3
 
             lda stripe_colors+2
@@ -122,19 +112,16 @@ irq_handler_2:
             lda stripe_colors+3
             sta $d023
 
-            ;+set_border_color 0
             +ack_short_kernal
 
 
 irq_handler_3:
-            ;+set_border_color 1
             +set_raster_irq RASTER_LINE_1, irq_handler_1
 
             lda stripe_colors+4
             sta $d022
             sta $d023
 
-            +set_border_color 0
             +ack_short_kernal
 
 
