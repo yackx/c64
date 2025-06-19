@@ -4,7 +4,7 @@
 
 - [sta.c64.org](https://sta.c64.org/cbm64mem.html) - Memory map
 - [c64os.com](http://www.c64os.com/post/6502instructions) - Neat presentation of instruction set. Also PETSCII and screen codes, KERNAL tables.
-- [pagetable.com](https://www.pagetable.com/c64ref/6502/) - Instruction set, KERNAL API, ROM dissasembly, memory map, PETSCII chartset
+- [pagetable.com](https://www.pagetable.com/c64ref/6502/) - Instruction set, KERNAL API, ROM dissasembly, memory map, PETSCII charset
 - [sta.c64.org](https://sta.c64.org/cbm64disp.html) - Display modes
 - [oxyron.de](http://www.oxyron.de/html/opcodes02.html) - Simple table, illegal opcodes, bugs
 - [AAY Helpfiles](http://www.the-dreams.de/aay.html) - Opcodes, VIC/SID/CIA-registers, ROM-Listing, zeropage, memory maps... (HTML + ASCII formats) [mirror](http://unusedino.de/ec64/technical/aay/c64/)
