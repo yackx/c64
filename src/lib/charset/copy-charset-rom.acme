@@ -1,4 +1,4 @@
-            ;ACME 0.97
+                                                                ;ACME 0.97
             !cpu 6510
 
             !src <lib/mmap/zp-free.acme>
@@ -7,11 +7,11 @@
 
 ; Copy the character set from ROM to RAM.
 ;
-; Character set at $d000 will be copied to the page
+; Character set at CHARROM will be copied to the page
 ; specified in Y.
 ;
 ; IN:       Y = destination page MSB
-; USE:      A X Y R1 R2
+; USE:      A X Y
 copy_charset_to_ram:
             sei
 
