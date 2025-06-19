@@ -1,15 +1,20 @@
+            ;ACME 0.97
+            !cpu 6510
+
+
 ; Copy memory pages.
 ;
 ; IN:       X = source page MSB
 ;           Y = destination page MSB
 ;           A = number of pages to copy
 ; USES:     A, X, Y
-
-
-            ;ACME 0.97
-            !cpu 6510
-
-
+;
+; Example:
+;
+;   X=$04, Y=$06, A=2
+;   jsr copy_mem_pages
+;
+; will copy 2 pages $0400-$05FF to $0600$07FF.
 copy_mem_pages:
             stx .src
             sty .dest
@@ -26,8 +31,8 @@ copy_mem_pages:
             bne -
             dex
             beq +
-            inc .src
-            inc .dest
+            inc .src                        ; Next source page
+            inc .dest                       ; Next destination page
             jmp -
 
 +           rts
