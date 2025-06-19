@@ -11,6 +11,7 @@ DEF_MEM_MAP_MAIN = 1
             R6510 = $01                     ; 6510 On-Chip I/O Port
             FA = $ba                        ; Current device number
             COLOR = $0286                   ; Current color
+            CURRENT_COLOR = COLOR
             XMAX = $0289                    ; Maximum Keyboard Buffer Size
             RPTFLA = $028a                  ; Keyboard Repeat Flag
             RPTFLG = RPTFLA
