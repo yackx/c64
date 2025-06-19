@@ -4,66 +4,68 @@
 
             ;ACME 0.97
             !cpu 6510
-            * = $c000
+
+            !src <lib/screen/color.acme>
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/vic-ii.acme>
+            !src <lib/mmap/kernal.acme>
+            !src <lib/mmap/cia.acme>
+            !src <lib/misc/upstart.acme>
+
 
 main:
             ; Clear screen
-            jsr $ff81
+            jsr CINT
 
             ; Background and border color
-            lda #0
-            sta $d020
-            sta $d021
+            lda #COLOR_BLACK
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
 
             ; Set current color
-            lda #1
-            sta $0286
+            lda #COLOR_WHITE
+            sta CURRENT_COLOR
 
-            ; @-Z
-            lda #'@'
-            sta current_char
-            lda #'Z'
-            sta stop_char
-            jsr print_chain
+            ; Print @-Z
+            ; current_chat and stop_char are already set
+            jsr print_seq
 
-            ; Blank character
+            ; Print blank character
             lda #' '
-            jsr $ffd2
+            jsr CHROUT
 
-            ; 0-9
+            ; Print 0-9
             lda #'0'
             sta current_char
             lda #'9'
             sta stop_char
-            jsr print_chain
+            jsr print_seq
 
             ; Blank lines
             lda #$0d
-            jsr $ffd2
-            jsr $ffd2
+            jsr CHROUT
+            jsr CHROUT
 
             rts
 
 
-print_chain:
--
-            lda current_char
-            jsr $ffd2
+print_seq:
+-           lda current_char
+            jsr CHROUT
             inc current_char
             cmp stop_char
             beq .done                       ; stop char reached?
-
-            inc $0286                       ; next color
-            lda $0286
+            inc CURRENT_COLOR               ; next color
+            lda CURRENT_COLOR
             and #$0f                        ; keep low nyb
             bne -                           ; color 0?
-            inc $0286                       ; skip color 0
+            inc CURRENT_COLOR               ; skip color 0
             jmp -
 .done:
             rts
 
 
 current_char:
-            !byte 0
+            !byte '@'
 stop_char:
-            !byte 0
+            !byte 'Z'
