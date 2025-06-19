@@ -1,9 +1,8 @@
 ; Copy the ROM character set to RAM to allow customization.
 ;
 ; '@' is sligthtly modified for illustration purpose.
-; If you want to replace the character set completely,
-; Skip the ROM to RAM copy part and store you own charset
-; at the target location in RAM.
+; To replace the character set completely, skip the ROM to RAM copy
+; and store you own charset in RAM.
 
             ;ACME 0.97
             !cpu 6510
