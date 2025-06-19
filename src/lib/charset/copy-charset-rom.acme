@@ -1,4 +1,4 @@
-                                                                ;ACME 0.97
+            ;ACME 0.97
             !cpu 6510
 
             !src <lib/mmap/main.acme>
