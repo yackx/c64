@@ -48,6 +48,13 @@ byte_to_bcd:
 .binary:    !byte 0
 
 
+!macro chrout_digit_a {
+            PETSCII_OFFSET = $30
+            clc
+            adc #PETSCII_OFFSET
+            jsr CHROUT
+}
+
 ; Print BCD
 ;
 ; ex: binary 234 => bcd $34 $02.
@@ -55,12 +62,8 @@ byte_to_bcd:
 ;
 ; IN        R3 R3+1
 print_bcd:
-            PETSCII_OFFSET = $30
-
             lda R3+1                        ; $02 => "2"
-            clc
-            adc #PETSCII_OFFSET
-            jsr CHROUT
+            +chrout_digit_a
 
             lda R3+0                        ; $34 => "3"
             and #%11110000                  ; $34 = %00110100 => %00110000
@@ -68,14 +71,10 @@ print_bcd:
             ror
             ror
             ror
-            clc
-            adc #PETSCII_OFFSET
-            jsr CHROUT
+            +chrout_digit_a
 
             lda R3+0                        ; $34 => "4"
             and #%00001111                  ; $34 = %00110100 => %00000100
-            clc
-            adc #PETSCII_OFFSET
-            jsr CHROUT
+            +chrout_digit_a
 
             rts
