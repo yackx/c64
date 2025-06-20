@@ -54,9 +54,11 @@ byte_to_bcd:
 ;
 ; IN        R3 R3+1
 print_bcd:
+            PETSCII_OFFSET = $30
+
             lda R3+1                       ; $02 => "2"
             clc
-            adc #$30
+            adc #PETSCII_OFFSET
             jsr $ffd2
 
             lda R3+0                       ; $34 => "3"
@@ -66,13 +68,13 @@ print_bcd:
             ror
             ror
             clc
-            adc #$30
+            adc #PETSCII_OFFSET
             jsr $ffd2
 
             lda R3+0                       ; $34 => "4"
             and #%00001111                  ; $34 = %00110100 => %00000100
             clc
-            adc #$30
+            adc #PETSCII_OFFSET
             jsr $ffd2
 
             rts
