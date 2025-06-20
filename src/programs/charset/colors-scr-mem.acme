@@ -4,10 +4,9 @@
 
             ;ACME 0.97
             !cpu 6510
-            * = $c000
 
             !src <lib/mmap/zp-free.acme>
-
+            !src <lib/misc/upstart.acme>
 
             !addr SCR_MEM = $0400
             !addr COLOR_RAM = $d800
