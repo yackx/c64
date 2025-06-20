@@ -27,7 +27,7 @@ main:
             sta CURRENT_COLOR
 
             ; Print @-Z
-            ; current_chat and stop_char are already set
+            ; current_char and stop_char are already set
             jsr print_seq
 
             ; Print blank character
