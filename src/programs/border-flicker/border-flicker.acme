@@ -1,4 +1,6 @@
-; Make a classic border flickering effect
+; Classic border flickering effect.
+;
+; The loop must be slowed down to avoid tearing.
 
             ;ACME 0.97
             !cpu 6510
