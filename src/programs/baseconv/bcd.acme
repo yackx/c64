@@ -3,54 +3,63 @@
             ;ACME 0.97
             !cpu 6510
 
+            !src <lib/mmap/zp-free.acme>
             !src <lib/misc/upstart.acme>
 
 
 main:
+            lda #234                        ; example binary value
             jsr byte_to_bcd
             jsr print_bcd
             rts
 
 
-; Convert an 8 bit binary value to BCD
+; Convert an 8 bit binary value to BCD.
 ;
 ; Andrew Jacobs, 28-Feb-2004
 ; https://codebase64.org/doku.php?id=base:more_hexadecimal_to_decimal_conversion
 ;
-; IN       BINARY
-; OUT      BCD
+; IN        A
+; OUT       R3 R3+1
 byte_to_bcd:
+            sta .binary
             sed
             lda #0
-            sta BCD+0
-            sta BCD+1
+            sta R3
+            sta R3+1
             ldx #8                          ; number of bits
--           asl BINARY
-            lda BCD+0
-            adc BCD+0
-            sta BCD+0
-            lda BCD+1
-            adc BCD+1
-            sta BCD+1
+-           asl .binary
+            lda R3+0
+            adc R3+0
+            sta R3+0
+            lda R3+1
+            adc R3+1
+            sta R3+1
             dex
             bne -
             cld
+
+            lda R3+0
+            ldy R3+1
+
             rts
+
+.binary:    !byte 0
 
 
 ; Print BCD
 ;
-; ex: BINARY 234 => BCD $34 $02
-; Converting a value to PETSCI requires adding $30
+; ex: binary 234 => bcd $34 $02.
+; Converting a value to PETSCII requires adding $30.
 ;
-; IN       BCD
+; IN        R3 R3+1
 print_bcd:
-            lda BCD+1                       ; $02 => "2" (no need for mask or shift)
+            lda R3+1                       ; $02 => "2"
             clc
             adc #$30
             jsr $ffd2
 
-            lda BCD+0                       ; $34 => "3"
+            lda R3+0                       ; $34 => "3"
             and #%11110000                  ; $34 = %00110100 => %00110000
             ror                             ; shift right 4 bits
             ror
@@ -60,14 +69,10 @@ print_bcd:
             adc #$30
             jsr $ffd2
 
-            lda BCD+0                       ; $34 => "4"
+            lda R3+0                       ; $34 => "4"
             and #%00001111                  ; $34 = %00110100 => %00000100
             clc
             adc #$30
             jsr $ffd2
 
             rts
-
-
-BINARY:     !byte 234                       ; example value
-BCD:        !fill 0, 2                      ; will be $34 $02 after conversion
