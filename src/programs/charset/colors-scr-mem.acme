@@ -1,6 +1,6 @@
 ; Print characters in color.
 ;
-; We access the screen and the color memory directly.
+; This routine accesses the screen and the color memory directly.
 
             ;ACME 0.97
             !cpu 6510

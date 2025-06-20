@@ -1,6 +1,6 @@
 ; Print characters in color.
 ;
-; We use KERNAL CHROUT and current color to print characters.
+; This routine uses KERNAL CHROUT and current color to print characters.
 
             ;ACME 0.97
             !cpu 6510
