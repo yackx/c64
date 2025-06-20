@@ -5,34 +5,36 @@
             ;ACME 0.97
             !cpu 6510
 
+            !src <lib/screen/color.acme>
+            !src <lib/mmap/main.acme>
             !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/vic-ii.acme>
+            !src <lib/mmap/kernal.acme>
             !src <lib/misc/upstart.acme>
 
-            !addr SCR_MEM = $0400
-            !addr COLOR_RAM = $d800
-            !addr SCR_VECT = R1
-            !addr COLOR_RAM_VECT = R3
+            !addr SCREEN_MEM = DEFAULT_SCREEN_MEM
+
 
 main:
             ; Clear screen
-            jsr $ff81
+            jsr CINT
 
             ; Background and border color
-            lda #0
-            sta $d020
-            sta $d021
+            lda #COLOR_BLACK
+            sta BORDER_COLOR
+            sta BACKGROUND_COLOR
 
             ; Store screen memory vector in ZP
-            lda #<SCR_MEM
-            sta SCR_VECT
-            lda #>SCR_MEM
-            sta SCR_VECT+1
+            lda #<SCREEN_MEM
+            sta R1
+            lda #>SCREEN_MEM
+            sta R1+1
 
             ; Store color RAM vector in ZP
             lda #<COLOR_RAM
-            sta COLOR_RAM_VECT
+            sta R3
             lda #>COLOR_RAM
-            sta COLOR_RAM_VECT+1
+            sta R3+1
 
             ; Starting index
             ldy #0
@@ -40,37 +42,34 @@ main:
             ; Screen encoding as we access the screen memory directly
             !ct scr
 
-            ; @-Z
-            lda #'@'
-            sta current_char
-            lda #'z'
-            sta stop_char
-            jsr print_chain
+            ; Print @-Z
+            ; current_char and stop_char are already set
+            jsr print_seq
 
-            iny                             ; leave blank char
+            ; Leave blank char
+            iny                           
 
-            ; 0-9
+            ; Print 0-9
             lda #'0'
             sta current_char
             lda #'9'
             sta stop_char
-            jsr print_chain
+            jsr print_seq
 
             ; Blank lines
             lda #$0d
-            jsr $ffd2
-            jsr $ffd2
+            jsr CHROUT
+            jsr CHROUT
 
             rts
 
 
-print_chain:
--
-            lda current_color
-            sta (COLOR_RAM_VECT),y          ; set color
+print_seq:
+-           lda current_color
+            sta (R3),y                      ; set color
 
             lda current_char
-            sta (SCR_VECT),y                ; print char
+            sta (R1),y                      ; print char
 
             iny                             ; next screen byte
             cmp stop_char
@@ -81,7 +80,7 @@ print_chain:
             inc current_color               ; next color
             lda current_color
             and #%00001111
-            bne -                           ; color back?
+            bne -                           ; color black?
             inc current_color               ; skip color
             jmp -
 .done:
@@ -89,8 +88,8 @@ print_chain:
 
 
 current_char:
-            !byte 0
+            !scr '@'
+stop_char:
+            !scr 'z'
 current_color:
             !byte 1
-stop_char:
-            !byte 0
