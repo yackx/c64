@@ -11,21 +11,31 @@
 
             !src <lib/misc/upstart.acme>
 
-            !addr SCREEN_RAM = $0400
-            !addr SCREEN_COLOR_RAM = $d800
+            !addr SCREEN_RAM = DEFAULT_SCREEN_MEM
 
             COLOR_NEUTRAL = COLOR_LBLUE
             COLOR_ACTIVE = COLOR_WHITE
 
 
-!macro scr_char_at @x, @y, @char {
+; Display @scr_code at @x, @y on the screen.
+!macro scr_char_at @x, @y, @scr_code {
             +set_cursor_at @x, @y
-            lda #@char
+            lda #@scr_code
             sta SCREEN_RAM + @x + @y * 40
 }
 
-!macro src_color_at_plus_x @x, @y {
-            sta SCREEN_COLOR_RAM + @x + @y*40,x
+
+; Test the next direction of the joystick and highlight it.
+;
+; joy_reg is LSR'ed to get the next direction.
+; X = display offset (0 for joystick #1, 17 for joystick #2).
+!macro test_next_direction @out_x, @out_y {
+            lsr joy_reg
+            bcs +
+            lda #COLOR_ACTIVE
+            bcc ++
++           lda #COLOR_NEUTRAL
+++          sta COLOR_RAM + @out_x + @out_y*40,x
 }
 
 
@@ -51,7 +61,6 @@ init_screen:
                 +scr_char_at 13, 11, 'e'
             }
             +scr_char_at 11, 11, 81
-
 
             ; Joystick #2
             !ct scr {
@@ -84,15 +93,6 @@ read_joysticks:
             rts
 
 
-!macro test_next_direction @out_x, @out_y {
-            lsr joy_reg
-            bcs +
-            lda #COLOR_ACTIVE
-            bcc ++
-+           lda #COLOR_NEUTRAL
-++          +src_color_at_plus_x @out_x, @out_y
-}
-
 display_joystick:
 .test_n:    +test_next_direction 11, 9
 .test_s:    +test_next_direction 11, 13
@@ -104,4 +104,3 @@ display_joystick:
 
 ; Copy of the joystick register (#1 or #2)
 joy_reg:    !byte 0
-
