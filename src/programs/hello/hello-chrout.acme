@@ -1,9 +1,14 @@
-; Print "hello 64" to the screen using the KERNAL routine at $ffd2
+; Print a hello to the screen using the KERNAL routine at $ffd2.
+;
+; Notice how a JMP instruction is avoided and replaced by BNE
+; by loading the next character into the accumulator as the last
+; instruction of the loop.
 
+            ;ACME 0.97
             !cpu 6510
-            * = $c000
 
             !src <lib/mmap/kernal.acme>
+            !src <lib/misc/upstart.acme>
 
 
 main:
@@ -11,8 +16,8 @@ main:
             beq +
 -           jsr CHROUT
             inx
-+           lda hello,x
++           lda .msg,x
             bne -
             rts
 
-hello:      !pet "hello 64", 13, 0
+.msg:       !pet "hello 64", 13, 0
