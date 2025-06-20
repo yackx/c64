@@ -13,7 +13,10 @@
             COLOR_BROWN     = $9
             COLOR_LRED      = $a
             COLOR_GRAY1     = $b
+            COLOR_GREY1     = COLOR_GRAY1
             COLOR_GRAY2     = $c
+            COLOR_GREY2     = COLOR_GRAY2
             COLOR_LGREEN    = $d
             COLOR_LBLUE     = $e
             COLOR_GRAY3     = $f
+            COLOR_GREY3     = COLOR_GRAY3
