@@ -4,6 +4,7 @@
             !cpu 6510
 
             !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/kernal.acme>
             !src <lib/misc/upstart.acme>
 
 
@@ -56,12 +57,12 @@ byte_to_bcd:
 print_bcd:
             PETSCII_OFFSET = $30
 
-            lda R3+1                       ; $02 => "2"
+            lda R3+1                        ; $02 => "2"
             clc
             adc #PETSCII_OFFSET
-            jsr $ffd2
+            jsr CHROUT
 
-            lda R3+0                       ; $34 => "3"
+            lda R3+0                        ; $34 => "3"
             and #%11110000                  ; $34 = %00110100 => %00110000
             ror                             ; shift right 4 bits
             ror
@@ -69,12 +70,12 @@ print_bcd:
             ror
             clc
             adc #PETSCII_OFFSET
-            jsr $ffd2
+            jsr CHROUT
 
-            lda R3+0                       ; $34 => "4"
+            lda R3+0                        ; $34 => "4"
             and #%00001111                  ; $34 = %00110100 => %00000100
             clc
             adc #PETSCII_OFFSET
-            jsr $ffd2
+            jsr CHROUT
 
             rts
