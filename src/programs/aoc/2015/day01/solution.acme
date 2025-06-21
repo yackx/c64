@@ -1,0 +1,99 @@
+; ===========================================================================
+; Advent of Code 2015 / Day 1 / Part 1
+; ===========================================================================
+;
+; https://adventofcode.com/2015/day/1
+;
+; The result is stored in `floor` as a 16-bit signed integer.
+; It is also stored in X and Y registers for convenience.
+;
+; Overflow is ignored (puzzle size is small enough).
+
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/zp-free.acme>
+            !src <lib/misc/upstart.acme>
+
+  
+            UP = '('
+            DOWN = ')'
+
+            ; 16 bits signed integer
+            ; 1 or -1
+            UP_VALUE = $0001
+            DOWN_VALUE = $ffff
+
+
+main:
+            ; R1+0, R1+1 = Input pointer, Y indexed
+            lda #<input
+            sta R1+0
+            lda #>input
+            sta R1+1
+
+            ; Reset floor to 0
+            lda #0
+            sta floor
+            sta floor+1
+
+            ; Input index (ZP)
+            ldy #0
+.loop:
+            lda (R1),y
+            beq .done
+.test_char
+            cmp #UP
+            beq .go_up
+.go_down:
+            lda #<DOWN_VALUE
+            sta .i16+0
+            lda #>DOWN_VALUE
+            sta .i16+1
+            jsr add_delta
+            jmp .next_char
+.go_up:
+            lda #<UP_VALUE
+            sta .i16+0
+            lda #>UP_VALUE
+            sta .i16+1
+            jsr add_delta
+.next_char:
+            iny
+            bne .loop
+            inc R1+1
+            jmp .loop
+.done:
+            ldx floor+1                     ; Store result in X and Y
+            ldy floor                       ; for convenience
+
+            rts
+
+
+; Add .i16 to floor
+add_delta:
+            clc
+            lda floor
+            adc .i16+0
+            sta floor
+
+            lda floor+1
+            adc .i16+1
+            sta floor+1
+            bvs .overflow
+
+            rts
+
+.overflow:
+            rts
+
+
+floor:      !byte 0, 0
+.i16:       !byte 0, 0
+
+            ; Align to page boundary for proper indexing
+            !align $ff, 0, 0
+input:      !bin <programs/aoc/2015/day01/sample.txt>
+            ; End marker
+            !byte 0

@@ -1,4 +1,4 @@
-; Display a message by accessing the screen memory
+; Display a message by accessing the screen memory.
 ;
 ; The message is stored using the !scr pseudo-op
 ; as opposed to !pet used with CHROUT.
