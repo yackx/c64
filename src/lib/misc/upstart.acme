@@ -4,25 +4,35 @@
 ;
 ;   2012 SYS2061
 ;
-; that will execute the asm code right after this source inclusion.
+; that will execute the asm code followinf this routine inclusion.
 ;
 ; Example:
 ;
-;      !src <common/basic-upstart.acme>
+;      !src <lib/misc/upstart.acme>
 ;      main:
 ;      lda #0
 ;      sta $d020
 ;      rts
 ;
-; To run the program, simply issue the `RUN` command from BASIC.
+; To run the program, issue the `RUN` command from BASIC or
+; `LOAD "foobar",8,1`.
 ; The Makefile configures the emulator to autoload the program at startup,
-; so it will be executed right after `make TARGET=foo/bar run` without
+; so it will be executed right after `make TARGET=foobar run` without
 ; further action.
 
             ;ACME 0.97
 
             !cpu 6510
+
+            ; Load address = BASIC start address
             * = $0801
+
+            ; Pointer to next BASIC line
+            !byte $0b, $08
+            
             ; 2012 SYS2061
-            !byte $0b, $08, $dc, $07, $9e, $32, $30, $36
-            !byte $31, 00, 00, 00
+            !byte $dc, $07                  ; 2012
+            !byte $9e                       ; SYS
+            !byte $32, $30, $36, $31        ; 2061
+            !byte 00                        ; end of BASIC line
+            !byte 00, 00                    ; end of BASIC program
