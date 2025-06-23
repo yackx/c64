@@ -1,7 +1,7 @@
 ; Convert an uint8 to PETSCII hexadecimal.
 ;
 ; IN:       A = value to convert
-; OUT:      convert_hex_buffer (2 bytes buffer HI LO)
+; OUT:      uint8_to_petscii_buffer (2 bytes buffer HI LO)
 ; USES:     A X
 
 
@@ -11,7 +11,7 @@
             !src <lib/mmap/kernal.acme>
 
 
-convert_hex:
+uint8_to_petscii:
             pha
 
             ; HI nibble
@@ -22,19 +22,19 @@ convert_hex:
             lsr
             tax
             lda .hex,x
-            sta convert_hex_buffer
+            sta uint8_to_petscii_buffer
 
             ; LO nibble
             pla
             and #$0f
             tax
             lda .hex,x
-            sta convert_hex_buffer+1
+            sta uint8_to_petscii_buffer+1
 
             rts
 
 
 .hex:       !pet "0123456789abcdef"
 
-convert_hex_buffer:
+uint8_to_petscii_buffer:
             !byte 0, 0

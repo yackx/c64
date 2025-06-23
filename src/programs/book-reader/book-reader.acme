@@ -134,10 +134,10 @@ clear_screen:
 
 on_change_curr_page:
             lda curr_page
-            jsr convert_hex
-            lda convert_hex_buffer
+            jsr uint8_to_petscii
+            lda uint8_to_petscii_buffer
             sta hex_page
-            lda convert_hex_buffer+1
+            lda uint8_to_petscii_buffer+1
             sta hex_page+1
             rts
 
@@ -152,7 +152,7 @@ hex_page:   !pet "01"
 page_filename_end:
 
             !src <lib/mem/fill-pages.acme>
-            !src <lib/baseconv/convert-hex.acme>
+            !src <lib/baseconv/uint8_to_petscii.acme>
             !src <lib/baseconv/print-uint8.acme>
             !src <lib/io/keyb/single-keypress.acme>
             !src <lib/strings/strout.acme>
