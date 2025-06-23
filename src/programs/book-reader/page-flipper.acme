@@ -40,12 +40,12 @@ display_goto:
             
 .output_key:
             jsr CHROUT
-            sta convert_dec_petscii_to_u8_params,x
+            sta petscii_to_uint8_params,x
             inx
             jmp .key
 
 .process_input:
-            jsr convert_dec_petscii_to_u8
+            jsr petscii_to_uint8
             bcs .invalid                    ; C = input overflows u8
             beq .invalid                    ; 0 = input is 0 (invalid)
 
@@ -71,5 +71,5 @@ display_goto:
             !pet "Invalid page number [RETURN]", 0
 
 
-            !src <lib/baseconv/convert-dec-petscii-u8.acme>
+            !src <lib/baseconv/petscii-to-uint8.acme>
 }

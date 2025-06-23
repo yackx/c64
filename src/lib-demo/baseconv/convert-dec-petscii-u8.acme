@@ -8,33 +8,33 @@
 
 !macro .convert .digit1, .digit2, .digit3 {
             lda #.digit1
-            sta convert_dec_petscii_to_u8_params
+            sta petscii_to_uint8_params
             lda #.digit2
-            sta convert_dec_petscii_to_u8_params+1
+            sta petscii_to_uint8_params+1
             lda #.digit3
-            sta convert_dec_petscii_to_u8_params+2
+            sta petscii_to_uint8_params+2
             ldx #3
-            jsr convert_dec_petscii_to_u8
+            jsr petscii_to_uint8
             jsr print_hex_safe_c
             jsr validity_check
 }
 
 !macro .convert .digit1, .digit2 {
             lda #.digit1
-            sta convert_dec_petscii_to_u8_params
+            sta petscii_to_uint8_params
             lda #.digit2
-            sta convert_dec_petscii_to_u8_params+1
+            sta petscii_to_uint8_params+1
             ldx #2
-            jsr convert_dec_petscii_to_u8
+            jsr petscii_to_uint8
             jsr print_hex_safe_c
             jsr validity_check
 }
 
 !macro .convert .digit1 {
             lda #.digit1
-            sta convert_dec_petscii_to_u8_params
+            sta petscii_to_uint8_params
             ldx #1
-            jsr convert_dec_petscii_to_u8
+            jsr petscii_to_uint8
             jsr print_hex_safe_c
             jsr validity_check
 }
@@ -43,7 +43,7 @@
 main:
             ; Edge case - length=0
             ldx #0
-            jsr convert_dec_petscii_to_u8
+            jsr petscii_to_uint8
             jsr print_hex_safe_c
             jsr validity_check
 
@@ -89,6 +89,6 @@ validity_check:
             !pet " invalid", 13, 0
 
 
-            !src <lib/baseconv/convert-dec-petscii-u8.acme>
+            !src <lib/baseconv/petscii-to-uint8.acme>
             !src <lib/baseconv/print-hex.acme>
             !src <lib/strings/strout.acme>

@@ -1,12 +1,12 @@
 ; Convert a decimal value in PETSCII to a byte.
 ;
 ; Example: user enters the digits 1, 2 and 3.
-; The PETSCII values in convert_dec_petscii_to_u8_params
+; The PETSCII values in petscii_to_uint8_params
 ; are 49, 50, 51 and X = 3 (how many).
 ; After invoking this routine, A = 123.
 ;
-; IN:       convert_dec_petscii_to_u8_params
-;           X
+; IN:       petscii_to_uint8_params (max 3 chars)
+;           X = how many digits (0-3)
 ; OUT:      A
 ; USES:     R3 R4
 
@@ -15,12 +15,12 @@
             !cpu 6510
 
 
-!zone zone_convert_dec_petscii_to_u8 {
+!zone zone_petscii_to_uint8 {
 
-convert_dec_petscii_to_u8_params:
+petscii_to_uint8_params:
             !fill 3, 0
 
-convert_dec_petscii_to_u8:
+petscii_to_uint8:
             stx .len
             ldx #0
             stx .value
@@ -33,7 +33,7 @@ convert_dec_petscii_to_u8:
             lda R4
             bne .invalid
 
-            lda convert_dec_petscii_to_u8_params,x
+            lda petscii_to_uint8_params,x
             sec
             sbc #'0'
             clc
