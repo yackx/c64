@@ -56,7 +56,7 @@ timer_handler:
             jmp $ea31                       ; KERNAL std routine
 
 
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>
             !src <lib/strings/strout.acme>
 
 

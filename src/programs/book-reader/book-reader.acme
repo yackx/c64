@@ -152,8 +152,8 @@ hex_page:   !pet "01"
 page_filename_end:
 
             !src <lib/mem/fill-pages.acme>
-            !src <lib/baseconv/uint8_to_petscii.acme>
-            !src <lib/baseconv/print-uint8.acme>
+            !src <lib/conv/uint8_to_petscii.acme>
+            !src <lib/conv/print-uint8.acme>
             !src <lib/io/keyb/single-keypress.acme>
             !src <lib/strings/strout.acme>
 

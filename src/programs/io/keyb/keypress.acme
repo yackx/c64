@@ -28,4 +28,4 @@ main:
 
             jmp -
 
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>

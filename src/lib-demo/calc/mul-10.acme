@@ -60,5 +60,5 @@ msg_mul_10: !pet " mul 0a  = ", 0
 
 
             !src <lib/calc/mul-10.acme>
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>
             !src <lib/strings/strout.acme>

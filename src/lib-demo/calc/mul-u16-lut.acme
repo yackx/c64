@@ -85,5 +85,5 @@ msg_ok:     !pet "ok", 0
 
 
             !src <lib/calc/mul-u16-lut.acme>
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>
             !src <lib/strings/strout.acme>

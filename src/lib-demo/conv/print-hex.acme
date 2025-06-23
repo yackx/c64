@@ -1,4 +1,4 @@
-; Print decimal numbers.
+; Print hex numbers
 
             ;ACME 0.97
             !cpu 6510
@@ -9,12 +9,8 @@
 
 main:
             ldy #0
--           tya
-            pha
-            lda numbers,y
-            jsr print_uint8
-            pla
-            tay
+-           lda numbers,y
+            jsr print_hex
             +new_line
             iny
             cpy #HOW_MANY
@@ -23,7 +19,8 @@ main:
             rts
 
 
-numbers:    !byte 213, 42, 6, 0, 102
+numbers:
+            !byte $00, $01, $0a, $0f, $10, $aa, $ff
             HOW_MANY = * - numbers
 
-            !src <lib/baseconv/print-uint8.acme>
+            !src <lib/conv/print-hex.acme>

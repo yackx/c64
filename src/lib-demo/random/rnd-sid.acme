@@ -41,7 +41,7 @@ main:
             rts
 
 
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>
             !src <lib/strings/strout.acme>
             !src <lib/random/rnd-sid.acme>
 

@@ -110,4 +110,4 @@ msg_other:  !pet "other error", 0
 
             !src <lib/io/files/load-file.acme>
             !src <lib/strings/strout.acme>
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>

@@ -89,6 +89,6 @@ validity_check:
             !pet " invalid", 13, 0
 
 
-            !src <lib/baseconv/petscii-to-uint8.acme>
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/petscii-to-uint8.acme>
+            !src <lib/conv/print-hex.acme>
             !src <lib/strings/strout.acme>

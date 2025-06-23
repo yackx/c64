@@ -37,7 +37,7 @@ main:
             !src <lib/random/rnd-sid-range8.acme>
             !src <lib/random/rnd-sid.acme>
             !src <lib/strings/strout.acme>
-            !src <lib/baseconv/print-hex.acme>
+            !src <lib/conv/print-hex.acme>
 
 .msg_start  !pet "press any key to start", 13, 0
 .msg_d41b   !pet "$d41b range 0 to 24:", 13, 0
