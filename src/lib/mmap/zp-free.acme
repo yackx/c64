@@ -3,7 +3,10 @@
 ; Located in safe, well-known and unused ZP addresses,
 ; they are labeled Rx as if they were extra registers.
 ;
-; R1+R2 and R3+R4 are contiguous.
+; R1+R2 and R3+R4 are contiguous, but R5 and R6 are not.
+;
+; Instead of R1 and R2, you might prefer R1+0 and R1+1
+; to explicitly show that the addresses are contiguous.
 
 !ifdef DEF_ZP_FREE !eof
 DEF_ZP_FREE = 1
