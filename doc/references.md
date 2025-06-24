@@ -16,6 +16,7 @@
 - [zimmers.net](http://www.zimmers.net/anonftp/pub/cbm/src/c64/) - Kernal ROM rev03 disassembly, BASIC dissassembly, BASIC program patch to support 2 drives, BASIC v2 commented source, source code for CP/M cartridge
 - [area51.dev](https://area51.dev/c64/kernal/memorymap/) - Synthetic memory map and tables
 - [sta.c64.org screen codes](https://sta.c64.org/cbm64scr.html) - Screen codes
+- [Books](http://69.60.118.202/commodore/books.htm#MACHINE_LANGUAGE_and_ASSEMBLY_LANGUAGE)
 
 ## Routine libraries
 
