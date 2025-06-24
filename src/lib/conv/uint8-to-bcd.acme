@@ -1,0 +1,98 @@
+; Convert unsigned 8-bits integer to BCD.
+;
+; This routine uses the Double Dabble algorithm:
+; https://en.wikipedia.org/wiki/Double_dabble
+;
+; Summary:
+;
+; 1. Initialize BCD output to 0.
+; 2. Shift the input value left with carry
+; 3. Shift each BCD digit left with carry.
+;    The 2nd and 3rd digits are shifted in a single operation.
+; 4. If a digit is greater than 5, add 3 to it.
+; 5. Repeat 8 times.
+;
+; Example:
+;
+; 0000 0000 0000   11110011   Initialization (234)
+; 0000 0000 0011   11001100   Shift
+; 0000 0000 0111   10011000   Shift
+; 0000 0000 0001   11100110   Shift
+; 0000 0000 1010   10011000   Add 3 to ONES, since it was 7
+; 0000 0001 0101   00110000   Shift
+; 0000 0001 1000   00110000   Add 3 to ONES, since it was 5
+; 0000 0011 0000   01100000   Shift
+; 0000 0110 0000   11000000   Shift
+; 0000 1001 0000   11000000   Add 3 to TENS, since it was 6
+; 0001 0010 0001   10000000   Shift
+; 0010 0100 0011   00000000   Shift
+;   2    4    3
+;       BCD
+;
+; IN:       A = value to convert
+; OUT:      uint8_to_bcd_out (2 bytes BCD)
+; USES:     A X R3
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/zp-free.acme>
+
+
+uint8_to_bcd_out:
+            !fill 2, 0
+
+uint8_to_bcd:
+            ; Save value to convert
+            sta R3
+
+            ; Initialize BCD output
+            lda #0
+            sta uint8_to_bcd_out+1
+            sta uint8_to_bcd_out
+
+            ; 8 shifts
+            ldx #8
+.loop:
+            ; Shift target left
+            clc
+            asl R3
+            rol uint8_to_bcd_out+1
+            rol uint8_to_bcd_out
+
+            ; Do not check for 5 or more after the last shift
+            dex
+            beq .done
+.u1:
+            ; Shift one's - Add 3 if needed
+            lda uint8_to_bcd_out+1
+            and #$0f
+            cmp #$05
+            bmi .u10
+            lda #$03
+            clc
+            adc uint8_to_bcd_out+1
+            sta uint8_to_bcd_out+1
+.u10:
+            ; Shift ten's - Add 3 if needed
+            lda uint8_to_bcd_out+1
+            and #$f0
+            cmp #$50
+            bmi .u100
+            lda #$30
+            clc
+            adc uint8_to_bcd_out+1
+            sta uint8_to_bcd_out+1
+.u100:
+            ; Shift hundred's - Add 3 if needed
+            lda uint8_to_bcd_out
+            and #$0f
+            cmp #$05
+            bmi .loop
+            lda #$03
+            clc
+            adc uint8_to_bcd_out
+            sta uint8_to_bcd_out
+            jmp .loop
+.done
+            rts

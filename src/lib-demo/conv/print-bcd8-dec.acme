@@ -1,0 +1,40 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/kernal.acme>
+            !src <lib/misc/upstart.acme>
+
+
+main:
+            ldx #0
+.loop:
+            lda .values,x
+            sta print_bcd8_dec_in
+            lda .values+1,x
+            sta print_bcd8_dec_in+1
+            jsr print_bcd8_dec
+            lda #13
+            jsr CHROUT
+            inx
+            inx
+            cpx #HOW_MANY
+            bne .loop
+
+            rts
+
+
+.values:
+            !byte $00, $00
+            !byte $00, $01
+            !byte $00, $06
+            !byte $00, $10
+            !byte $00, $23
+            !byte $01, $00
+            !byte $01, $02
+            !byte $01, $23
+            !byte $02, $34
+            !byte $02, $55
+            HOW_MANY = * - .values
+
+
+            !src <lib/conv/print-bcd8-dec.acme>

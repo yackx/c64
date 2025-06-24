@@ -15,7 +15,7 @@
             !cpu 6510
 
 
-!zone zone_petscii_to_uint8 {
+!zone conv {
 
 petscii_to_uint8_params:
             !fill 3, 0

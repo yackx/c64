@@ -1,0 +1,53 @@
+; Print unsigned 2 bytes BCD value.
+;
+; This routine prints a 3 digits BCD value with CHROUT.
+;
+; IN:       print_bcd8_dec_in (2 bytes BCD)
+; OUT:      CHROUT
+; USES:     A, X, Y
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/kernal.acme>
+
+!zone conv {
+
+print_bcd8_dec_in:
+            !fill 2, 0
+
+print_bcd8_dec:
+.u100:
+            lda print_bcd8_dec_in
+            beq .u10                        ; skip leading zero
+            jsr .print_digit
+.u10:            
+            lda print_bcd8_dec_in+1
+            lsr
+            lsr
+            lsr
+            lsr
+            bne +                           ; not a zero
+
+            ; 2nd digit is zero.
+            ; Print it if 1st digit is not zero.
+            cmp print_bcd8_dec_in
+            beq .u1                         ; 1st and 2nd digits are zero
+
+            ; 2nd digit is not a leading zero.
++           jsr .print_digit
+.u1:            
+            lda print_bcd8_dec_in+1
+            and #$0f
+            jsr .print_digit
+
+            rts
+
+.print_digit:
+            clc
+            adc #'0'
+            jsr CHROUT
+
+            rts 
+}

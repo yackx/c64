@@ -104,13 +104,13 @@ footer:
             +set_cursor_at 0, 24
 
             lda curr_page
-            jsr print_uint8
+            jsr print_uint8_dec
 
             lda #'/'
             jsr CHROUT
 
             lda max_page
-            jsr print_uint8
+            jsr print_uint8_dec
 
             rts
 
@@ -153,7 +153,7 @@ page_filename_end:
 
             !src <lib/mem/fill-pages.acme>
             !src <lib/conv/uint8_to_petscii.acme>
-            !src <lib/conv/print-uint8.acme>
+            !src <lib/conv/print-uint8-dec.acme>
             !src <lib/io/keyb/single-keypress.acme>
             !src <lib/strings/strout.acme>
 

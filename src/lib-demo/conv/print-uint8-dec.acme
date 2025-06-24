@@ -12,7 +12,7 @@ main:
 -           tya
             pha
             lda numbers,y
-            jsr print_uint8
+            jsr print_uint8_dec
             pla
             tay
             +new_line
@@ -23,7 +23,7 @@ main:
             rts
 
 
-numbers:    !byte 213, 42, 6, 0, 102
+numbers:    !byte 213, 10, 100, 42, 6, 0, 102
             HOW_MANY = * - numbers
 
-            !src <lib/conv/print-uint8.acme>
+            !src <lib/conv/print-uint8-dec.acme>

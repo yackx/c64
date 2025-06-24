@@ -1,0 +1,30 @@
+; Print an usigned byte number using the KERNAL CHROUT routine.
+;
+; This routine converts the number to BCD.
+;
+; IN:       A = Number to print
+; USES:     A, X, Y, R3
+
+
+            ;ACME 0.97
+            !cpu 6510
+
+
+!zone conv {
+
+print_uint8_dec:
+            jsr uint8_to_bcd
+
+            lda uint8_to_bcd_out
+            sta print_bcd8_dec_in
+            lda uint8_to_bcd_out+1
+            sta print_bcd8_dec_in+1
+
+            jsr print_bcd8_dec
+
+            rts
+}
+
+            
+            !src <lib/conv/uint8-to-bcd.acme>
+            !src <lib/conv/print-bcd8-dec.acme>
