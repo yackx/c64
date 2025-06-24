@@ -57,7 +57,7 @@ main:
             sta R2
             jsr strout
             lda error_code
-            jsr print_hex
+            jsr print_uint8_hex
             lda #$0d
             jsr CHROUT
 
@@ -110,4 +110,4 @@ msg_other:  !pet "other error", 0
 
             !src <lib/io/files/load-file.acme>
             !src <lib/strings/strout.acme>
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>

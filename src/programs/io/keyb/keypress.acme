@@ -23,9 +23,9 @@ main:
             beq -
 
             ; Print key code
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             jmp -
 
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>

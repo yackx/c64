@@ -39,24 +39,24 @@ timer_handler:
 
             +m_strout .msg_ti0
             lda $00a0
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             +m_strout .msg_ti1
             lda $00a1
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             +m_strout .msg_ti2
             lda $00a2
-            jsr print_hex
+            jsr print_uint8_hex
 
             jsr $e566                       ; cursor home
 +
             jmp $ea31                       ; KERNAL std routine
 
 
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>
             !src <lib/strings/strout.acme>
 
 

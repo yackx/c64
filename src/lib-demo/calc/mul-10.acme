@@ -18,7 +18,7 @@ main:
             ; Print number
             ldx R5
             lda values,x
-            jsr print_hex
+            jsr print_uint8_hex
 
             ; Print mul
             +m_strout msg_mul_10
@@ -30,12 +30,12 @@ main:
 
             ; Print result (2 hex)
             lda R3
-            jsr print_hex
+            jsr print_uint8_hex
             lda #' '
             jsr CHROUT
             jsr CHROUT
             lda R4
-            jsr print_hex
+            jsr print_uint8_hex
 
             ; New line
             lda #PETSCII_RETURN
@@ -60,5 +60,5 @@ msg_mul_10: !pet " mul 0a  = ", 0
 
 
             !src <lib/calc/mul-10.acme>
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>
             !src <lib/strings/strout.acme>

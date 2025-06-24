@@ -10,7 +10,7 @@
             !src <lib/mmap/kernal.acme>
 
 
-print_hex:
+print_uint8_hex:
             pha
 
             ; HI nibble

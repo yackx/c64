@@ -31,7 +31,7 @@ main:
             ldy #$ff
 -
             lda $d41b                       ; Get random number
-            jsr print_hex
+            jsr print_uint8_hex
             lda #' '
             jsr $ffd2                       ; CHROUT
 
@@ -41,7 +41,7 @@ main:
             rts
 
 
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>
             !src <lib/strings/strout.acme>
             !src <lib/random/rnd-sid.acme>
 

@@ -43,23 +43,23 @@ main:
 
 fail:
             tya
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             lda fact_a,y
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             lda fact_x,y
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             lda exp_lo,y
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             lda exp_hi,y
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
 
             lda #COLOR_RED
@@ -85,5 +85,5 @@ msg_ok:     !pet "ok", 0
 
 
             !src <lib/calc/mul-u16-lut.acme>
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>
             !src <lib/strings/strout.acme>

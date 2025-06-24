@@ -10,7 +10,7 @@
 main:
             ldy #0
 -           lda numbers,y
-            jsr print_hex
+            jsr print_uint8_hex
             +new_line
             iny
             cpy #HOW_MANY
@@ -23,4 +23,4 @@ numbers:
             !byte $00, $01, $0a, $0f, $10, $aa, $ff
             HOW_MANY = * - numbers
 
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>

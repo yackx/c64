@@ -15,7 +15,7 @@
             sta petscii_to_uint8_params+2
             ldx #3
             jsr petscii_to_uint8
-            jsr print_hex_safe_c
+            jsr print_uint8_hex_safe_c
             jsr validity_check
 }
 
@@ -26,7 +26,7 @@
             sta petscii_to_uint8_params+1
             ldx #2
             jsr petscii_to_uint8
-            jsr print_hex_safe_c
+            jsr print_uint8_hex_safe_c
             jsr validity_check
 }
 
@@ -35,7 +35,7 @@
             sta petscii_to_uint8_params
             ldx #1
             jsr petscii_to_uint8
-            jsr print_hex_safe_c
+            jsr print_uint8_hex_safe_c
             jsr validity_check
 }
 
@@ -44,7 +44,7 @@ main:
             ; Edge case - length=0
             ldx #0
             jsr petscii_to_uint8
-            jsr print_hex_safe_c
+            jsr print_uint8_hex_safe_c
             jsr validity_check
 
             ; Valid
@@ -64,12 +64,12 @@ main:
 
 
 ; Print A in hexadecimal, safekeeping carry flag.
-print_hex_safe_c:
+print_uint8_hex_safe_c:
             bcs +
-            jsr print_hex
+            jsr print_uint8_hex
             clc
             rts
-+           jsr print_hex
++           jsr print_uint8_hex
             sec
             rts
 
@@ -90,5 +90,5 @@ validity_check:
 
 
             !src <lib/conv/petscii-to-uint8.acme>
-            !src <lib/conv/print-hex.acme>
+            !src <lib/conv/print-uint8-hex.acme>
             !src <lib/strings/strout.acme>
