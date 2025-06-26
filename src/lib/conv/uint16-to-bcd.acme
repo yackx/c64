@@ -1,0 +1,134 @@
+; Convert an unsigned 16-bits integer to BCD.
+;
+; This routine uses the Double Dabble algorithm:
+; https://en.wikipedia.org/wiki/Double_dabble
+;
+; Summary:
+;
+; 1. Initialize BCD output to 0.
+; 2. Shift the input value left with carry
+; 3. Shift each BCD digit left with carry.
+;    Two digits in a byte are shifted in a single operation.
+; 4. If a digit is greater than 5, add 3 to it.
+; 5. Repeat 16 times.
+;
+; Example:
+;
+; 10^4 10^3 10^2 10^1 10^0    Original binary
+; 0000 0000 0000 0000 0000   1111111011011100   Initialization
+; 0000 0000 0000 0000 0001   1111110110111000   Shift left (1st)
+; 0000 0000 0000 0000 0011   1111101101110000   Shift left (2nd)
+; 0000 0000 0000 0000 0111   1111011011100000   Shift left (3rd)
+; 0000 0000 0000 0000 1010   1111011011100000   Add 3 to 100, since it was 7
+; 0000 0000 0000 0001 0101   1110110111000000   Shift left (4th)
+; 0000 0000 0000 0001 1000   1110110111000000   Add 3 to 100, since it was 5
+; 0000 0000 0000 0011 0001   1101101110000000   Shift left (5th)
+; 0000 0000 0000 0110 0011   1011011100000000   Shift left (6th)
+; 0000 0000 0000 1001 0011   1011011100000000   Add 3 to 101, since it was 6
+; 0000 0000 0001 0010 0111   0110111000000000   Shift left (7th)
+; 0000 0000 0001 0010 1010   0110111000000000   Add 3 to 100, since it was 7
+; 0000 0000 0010 0101 0100   1101110000000000   Shift left (8th)
+; 0000 0000 0010 1000 0100   1101110000000000   Add 3 to 101, since it was 5
+; 0000 0000 0101 0000 1001   1011100000000000   Shift left (9th)
+; 0000 0000 1000 0000 1001   1011100000000000   Add 3 to 102, since it was 5
+; 0000 0000 1000 0000 1100   1011100000000000   Add 3 to 100, since it was 9
+; 0000 0001 0000 0001 1001   0111000000000000   Shift left (10th)
+; 0000 0001 0000 0001 1100   0111000000000000   Add 3 to 100, since it was 9
+; 0000 0010 0000 0011 1000   1110000000000000   Shift left (11th)
+; 0000 0010 0000 0011 1011   1110000000000000   Add 3 to 100, since it was 8
+; 0000 0100 0000 0111 0111   1100000000000000   Shift left (12th)
+; 0000 0100 0000 1010 0111   1100000000000000   Add 3 to 101, since it was 7
+; 0000 0100 0000 1010 1010   1100000000000000   Add 3 to 100, since it was 7
+; 0000 1000 0001 0101 0101   1000000000000000   Shift left (13th)
+; 0000 1011 0001 0101 0101   1000000000000000   Add 3 to 103, since it was 8
+; 0000 1011 0001 1000 0101   1000000000000000   Add 3 to 101, since it was 5
+; 0000 1011 0001 1000 1000   1000000000000000   Add 3 to 100, since it was 5
+; 0001 0110 0011 0001 0001   0000000000000000   Shift left (14th)
+; 0001 1001 0011 0001 0001   0000000000000000   Add 3 to 103, since it was 6
+; 0011 0010 0110 0010 0010   0000000000000000   Shift left (15th)
+; 0011 0010 1001 0010 0010   0000000000000000   Add 3 to 102, since it was 6
+; 0110 0101 0010 0100 0100   0000000000000000   Shift left (16th)
+;    6    5    2    4    4
+;             BCD
+;
+; IN:       R3+0 R3+1 = value to convert
+; OUT:      uint16_to_bcd_out (5 bytes BCD)
+; USES:     A X R3+0 R3+1
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mem/m-mem.acme>
+            !src <lib/registers/m-registers.acme>
+            !src <lib/mmap/zp-free.acme>
+
+
+uint16_to_bcd_out:
+            !fill 5, 0
+
+uint16_to_bcd:
+            ; Initialize BCD output
+            +fill_bytes_8(uint16_to_bcd_out, 5, 0)
+
+            ; 16 shifts
+            ldx #16
+louter:
+.loop:
+            ; Shift original integer left
+            clc
+            asl R3+0
+            asl R3+1
+
+            ; Propagate the shift to BCD output
+            rol uint16_to_bcd_out+2
+            rol uint16_to_bcd_out+1
+            rol uint16_to_bcd_out+0
+
+            ; Do not check for 5 or more after the last shift
+            dex
+            beq .done
+
+            ; 5 digits BCD output
+            ldy #5
+
+            +push_x
+linner:
+.loop_bcd:            
+            ; Retrieve a BCD digit at uint16_to_bcd_out+x
+            lda .byte_offset,y
+            tax
+            lda uint16_to_bcd_out,x
+            
+            ; Mask hi/lo, AND #$0f or AND #$f0
+            and .bcd_mask,y
+            
+            ; 5 as hi/lo nibble, CMP #$05 or CMP #$50
+            cmp .five_as_nibble,y   
+
+            ; Less than 5: do not add 3
+            bmi +
+            
+            ; 3 as hi/lo nibble, ADC #$03 or ADC #$30
+            lda .three_as_nibble,y
+            clc
+            adc uint16_to_bcd_out,x
+            sta uint16_to_bcd_out,x
++
+            dey
+            bne .loop_bcd                   ; continue for all BCD digits
+            
+            +pull_x
+            jmp .loop                       ; continue for all shifts
+
+.done
+            rts
+
+
+; Lookup table for add 3.
+.bcd_mask:  !byte $0f, $f0, $0f, $f0, $0f
+.five_as_nibble: 
+            !byte $05, $50, $05, $50, $05
+.three_as_nibble: 
+            !byte $03, $30, $03, $30, $03
+.byte_offset: 
+            !byte 2, 2, 1, 1, 0

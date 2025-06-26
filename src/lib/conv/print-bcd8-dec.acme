@@ -1,6 +1,7 @@
-; Print unsigned 2 bytes BCD value.
+; Print unsigned 3 digits BCD value.
 ;
 ; This routine prints a 3 digits BCD value with CHROUT.
+; It does not perform any validation.
 ;
 ; IN:       print_bcd8_dec_in (2 bytes BCD)
 ; OUT:      CHROUT

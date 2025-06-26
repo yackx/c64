@@ -1,0 +1,87 @@
+; Print unsigned 5 digits BCD value.
+;
+; This routine prints a 5 digits BCD value with CHROUT.
+; It does not perform any validation.
+;
+; IN:       print_bcd16_dec_in (3 bytes for 5 digits BCD)
+; OUT:      CHROUT
+; USES:     A, X, Y
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/kernal.acme>
+
+!zone conv {
+
+print_bcd16_dec_in:
+            !fill 3, 0
+
+print_bcd16_dec:
+            ; Leading zero flag.
+            ; If 0, no digit has been printed yet.
+            lda #0
+            sta .leading_digit_printed
+
+.digit1:
+            lda print_bcd16_dec_in          ; LO nibble (HI is always 0)
+            beq .digit2
+.print1:
+            jsr .print_digit
+
+.digit2:            
+            lda print_bcd16_dec_in+1        ; HI nibble
+            lsr                             ; shift it to LO             
+            lsr
+            lsr
+            lsr
+            bne .print2
+
+            lda .leading_digit_printed
+            beq .digit3
+.print2:
+            jsr .print_digit
+
+.digit3:            
+            lda print_bcd16_dec_in+1        ; LO nibble
+            and #$0f                        ; mask HI
+            bne .print3
+
+            lda .leading_digit_printed
+            beq .digit4
+.print3:
+            jsr .print_digit
+
+.digit4:
+            lda print_bcd16_dec_in+2        ; HI nibble
+            lsr                             ; shift it to LO
+            lsr
+            lsr
+            lsr
+            bne .print4
+            beq .digit5
+.print4:    
+            jsr .print_digit
+
+.digit5:
+            lda print_bcd16_dec_in+2        ; LO nibble
+            and #$0f                        ; mask HI
+.print5:
+            ; Last digit is always printed, even if 0.
+            jsr .print_digit
+
+.done:
+            rts
+
+.print_digit:
+            clc
+            adc #'0'
+            jsr CHROUT
+            inc .leading_digit_printed
+
+            rts
+
+.leading_digit_printed:
+            !byte 0 
+}

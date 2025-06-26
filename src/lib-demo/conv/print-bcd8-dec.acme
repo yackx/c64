@@ -34,6 +34,8 @@ main:
             !byte $01, $23
             !byte $02, $34
             !byte $02, $55
+            !byte $02, $56
+            !byte $09, $99
             HOW_MANY = * - .values
 
 
