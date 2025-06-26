@@ -141,7 +141,7 @@ make TARGET=src/programs/sprites/many run
 Programs in this repository are located at `$c000` by convention or use BASIC upstart for convenience.
 
 - If the program contains a Program Counter (PC) directive, for instance `*=$c000`, type `SYS 49152` to run it from BASIC.
-- If the program includes `common/upstart.a`, a [neat trick](common/upstart.a) will cause the asm program to run with `RUN`. Thanks to Vice `-autostart` option, the emulator will automatically load and run the program.
+- If the program includes `misc/upstart.a`, a [neat trick](misc/upstart.a) will cause the asm program to run with `RUN`. Thanks to Vice `-autostart` option, the emulator will automatically load and run the program.
 
 > **NOTE**
 > The `Makefile` will automatically detect the PC directive and adjust the disassembler command accordingly.
