@@ -7,7 +7,7 @@
             !cpu 6510
 
             !src <lib/mmap/mmap.acme>
-            !src <lib/raster/m-raster.acme>
+            !src <lib/raster/m_raster.acme>
 
             !src <lib/misc/upstart.acme>
 

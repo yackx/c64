@@ -1,0 +1,59 @@
+; Single raster interrupt demo (busy wait)
+;
+; http://www.c64-wiki.com/index.php/Raster_interrupt
+
+            ;ACME 0.97
+            !cpu 6510
+            !src <lib/registers/m_registers.acme>
+            * = $c000
+
+            !addr .LINE = 98                ; interrupt shall occur at that line
+
+
+; - Set interrupt vector
+; - Enable raster interrupt
+init:
+            sei                             ; turn off interrupts -
+                                            ; otherwise incoming IRQ could occur as we
+                                            ; are modifying the IRQ vector
+
+            lda #%01111111
+            sta $dc0d                       ; switch off interrupt signals from CIA-1
+
+            and $d011
+            sta $d011                       ; scanline hi bit
+
+            lda #.LINE
+            sta $d012                       ; set rasterline where interrupt shall occur
+
+            lda #<.irq_handler              ; set raster interrupt vector
+            sta $0314
+            lda #>.irq_handler
+            sta $0315
+
+            lda #%00000001                  ; enable raster interrupts
+            sta $d01a
+
+            cli                             ; clear interrupt flag -
+                                            ; allow CPU to respond to interrupts
+            rts
+
+
+; Interrupt handler
+;
+; Display a banner on the screen border for a few raster cycles.
+; Busy wait.
+
+.irq_handler:
+            +push_ax
+            lda #7
+            sta $d020                       ; border color
+            ldx #$90                        ; wait for about 1/2ms
+-           dex
+            bne -
+            lda #5                          ; change back border color
+            sta $d020
+            +pull_xa
+            asl $d019                       ; ACK interrrupt
+            jmp $ea31                       ; jump into KERNAL's std interrupt service
+                                            ; routine to handle keyb scan, cursor etc.

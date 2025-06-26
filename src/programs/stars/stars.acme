@@ -84,4 +84,4 @@ fill_random:
             rts
 
 
-            !src <lib/screen/fill-screen.acme>
+            !src <lib/screen/fill_screen.acme>

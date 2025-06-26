@@ -14,7 +14,7 @@
         !cpu 6510
         * = $0810
 
-        !src <lib/mmap/zp-free.acme>
+        !src <lib/mmap/zp_free.acme>
 
         ; current scroll register mask (bits #2 to #0)
         !addr ZP_SCROLL_COUNT = $2a

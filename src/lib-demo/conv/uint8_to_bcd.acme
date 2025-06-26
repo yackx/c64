@@ -9,4 +9,4 @@ main:
             jsr uint8_to_bcd
             rts
 
-            !src <lib/conv/uint8-to-bcd.acme>
+            !src <lib/conv/uint8_to_bcd.acme>

@@ -9,9 +9,9 @@
             !src <lib/screen/color.acme>
             !src <lib/screen/codes.acme>
             !src <lib/charset/petscii.acme>
-            !src <lib/registers/m-registers.acme>
-            !src <lib/strings/m-print-color-msg-xy.acme>
-            !src <lib/io/keyb/m-keypress.acme>
+            !src <lib/registers/m_registers.acme>
+            !src <lib/strings/m_print_color_msg_xy.acme>
+            !src <lib/io/keyb/m_keypress.acme>
 
             !src <lib/misc/upstart.acme>
 
@@ -86,7 +86,7 @@ s_info2:    !byte 18, 5, COLOR_LBLUE
 s_start:    !byte 22, 9, COLOR_LGREEN
             !pet "Press space to start", 0
 
-            !src <lib/strings/print-color-msg-xy.acme>
+            !src <lib/strings/print_color_msg_xy.acme>
 
 
 ; ===========================================================================
@@ -106,7 +106,7 @@ main_scr:
             jsr set_timer
             jmp *
 
-            !src <lib/random/rnd-sid.acme>
+            !src <lib/random/rnd_sid.acme>
 
 
 ; ---------------------------------------------------------------------------

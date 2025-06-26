@@ -1,0 +1,20 @@
+; Demo - Copy memory pages
+;
+; This demo copies the two first screen memory pages after themselves.
+; You will see part of screen content being duplicated.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/misc/upstart.acme>
+
+
+main:
+            ldx #$04
+            ldy #$06
+            lda #2
+            jsr copy_mem_pages
+            rts
+
+
+            !src <lib/mem/copy_mem_pages.acme>

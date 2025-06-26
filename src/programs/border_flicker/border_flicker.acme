@@ -1,0 +1,14 @@
+; Classic border flickering effect.
+;
+; The loop must be slowed down to avoid tearing.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/vic_ii.acme>
+            !src <lib/misc/upstart.acme>
+
+main:
+            inc BORDER_COLOR                ; Next border color
+            nop                             ; Slow down
+            jmp main                        ; Endless loop

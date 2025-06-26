@@ -13,9 +13,9 @@
 
             * = $c000
 
-            !src <lib/mmap/zp-free.acme>
-            !src <lib/registers/m-registers.acme>
-            !src <lib/mem/m-mem.acme>
+            !src <lib/mmap/zp_free.acme>
+            !src <lib/registers/m_registers.acme>
+            !src <lib/mem/m_mem.acme>
 
             SPRITE_COUNT = 4
             DELAY_16 = 255*2                ; busy wait delay
@@ -140,4 +140,4 @@ move_sprite_x:
 .sprite_data:
             !bin <programs/sprites/balloon.bin>
 
-            !src <lib/misc/busy-wait.acme>
+            !src <lib/misc/busy_wait.acme>

@@ -4,7 +4,7 @@
             !cpu 6510
 
             !src <lib/mmap/mmap.acme>
-            !src <lib/strings/m-print.acme>
+            !src <lib/strings/m_print.acme>
             !src <lib/misc/upstart.acme>
 
 
@@ -28,4 +28,4 @@ main:
 
             jmp -
 
-            !src <lib/conv/print-uint8-hex.acme>
+            !src <lib/conv/print_uint8_hex.acme>

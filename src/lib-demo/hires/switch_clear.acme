@@ -1,0 +1,44 @@
+; Clear memory and switch to bitmap mode.
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/mmap.acme>
+
+            !src <lib/misc/upstart.acme>
+
+
+main:
+            ; Clear bitmap memory.
+            ; 32 pages, starting at $2000, filled with 0.
+            lda #0
+            ldx #32
+            ldy #$20
+            jsr fill_pages
+
+            ; Clear screen memory.
+            ; 4 pages, starting at $0400, filled with $10
+            ; (white pixels on black background).
+            lda #$10
+            ldx #4
+            ldy #$04
+            jsr fill_pages
+
+            ; Modify the first pixels of the screen.
+            ; A small line will be drawn.
+            lda #$ff
+            sta $2000
+
+            ; Switch to bitmap mode.
+            lda #$3b
+            sta VIC2_CR1
+            lda #$08
+            sta VIC2_CR2
+            lda #$18
+            sta VIC2_MEM_PTR
+
+            ; Halt.
+            jmp *
+
+
+            !src <lib/mem/fill_pages.acme>

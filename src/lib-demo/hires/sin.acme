@@ -4,7 +4,7 @@
             !cpu 6510
 
             !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic-ii.acme>
+            !src <lib/mmap/vic_ii.acme>
             !src <lib/misc/math.acme>
             !src <lib/misc/upstart.acme>
 
@@ -86,4 +86,4 @@ main:
 
 
             !src <lib/hires/plot.acme>
-            !src <lib/mem/fill-pages.acme>
+            !src <lib/mem/fill_pages.acme>

@@ -5,8 +5,8 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/basic-vector.acme>
-            !src <lib/raster/m-raster.acme>
+            !src <lib/mmap/basic_vector.acme>
+            !src <lib/raster/m_raster.acme>
 
             * = $c000
 

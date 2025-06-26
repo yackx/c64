@@ -1,10 +1,10 @@
 !ifdef DEF_MEM_MAP_ALL !eof
 DDEF_MEM_MAP_ALL = 1
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/zp_free.acme>
             !src <lib/mmap/main.acme>
             !src <lib/mmap/kernal.acme>
             !src <lib/mmap/sid.acme>
-            !src <lib/mmap/vic-ii.acme>
-            !src <lib/mmap/basic-vector.acme>
+            !src <lib/mmap/vic_ii.acme>
+            !src <lib/mmap/basic_vector.acme>
             !src <lib/mmap/cia.acme>

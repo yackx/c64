@@ -1,0 +1,63 @@
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/zp_free.acme>
+            !src <lib/mmap/main.acme>
+
+            !addr BASE_ADDR = DEFAULT_SCREEN_MEM
+            !addr ROW = R3
+            !addr ZP_ROW_VECTOR = R1
+
+
+; Print a character using direct screen memory access and lookup table.
+
+; IN:       X = row
+;           Y = column
+;           CAUTION - X Y coord and registers are swapped! 
+;           A = character (screen code)
+; USES:     R1, R2, R3
+; CYCLES:   69/70
+print_char_xy:
+            pha
+            stx ROW                         ; X contains row!
+            lda #0                          ; Force page alignment
+            sta ZP_ROW_VECTOR
+
+            txa                             ; A = row offset LSB
+
+            ; Multiply row by 4.
+            ; No carry can occur as max 39*4=154
+            asl
+            asl
+
+            ; Add row.
+            ; Row will be multiplied row by 5.
+            ; Sill no carry can occur as max 39*5=195
+            clc
+            adc ROW
+
+            ; Multiply row by 40 now.
+            ; Carry can occur from here so we ROL the MSB.
+            asl
+            rol ZP_ROW_VECTOR + 1
+            asl
+            rol ZP_ROW_VECTOR + 1
+            asl
+            rol ZP_ROW_VECTOR + 1
+
+            sta ZP_ROW_VECTOR
+
+            ; Add base address to vector
+            ; No need to CLC as carry is 0 as per ROL above.
+            ; No need to check for carry afterwards as the screen memory
+            ; cannot be placed that high.
+            lda #>BASE_ADDR
+            adc ZP_ROW_VECTOR + 1
+            sta ZP_ROW_VECTOR + 1
+
+            ; Retrieve screen code.
+            ; Offset by column.
+            pla
+            sta (ZP_ROW_VECTOR),y
+            
+            rts

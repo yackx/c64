@@ -27,7 +27,7 @@
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/zp_free.acme>
 
             !addr IAL = R1                  ; Indexed Address LSB
             !addr IAH = R2                  ; Indexed Address MSB

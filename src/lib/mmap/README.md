@@ -10,7 +10,7 @@ Example, at the beginning of a program:
             ;ACME 0.97
             !cpu 6510
 
-            !src <lib/mmap/zp-free.acme>
+            !src <lib/mmap/zp_free.acme>
             !src <lib/misc/upstart.acme>
 ```
 

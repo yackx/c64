@@ -2,8 +2,8 @@
             !cpu 6510
             * = $c000
 
-            !src <lib/mmap/zp-free.acme>
-            !src <lib/strings/m-strout.acme>
+            !src <lib/mmap/zp_free.acme>
+            !src <lib/strings/m_strout.acme>
             !src <lib/misc/upstart.acme>
 
 main:

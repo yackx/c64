@@ -6,8 +6,8 @@
 
             !src <lib/mmap/mmap.acme>
             !src <lib/screen/color.acme>
-            !src <lib/screen/m-screen.acme>
-            !src <lib/strings/m-strout.acme>
+            !src <lib/screen/m_screen.acme>
+            !src <lib/strings/m_strout.acme>
 
             !src <lib/misc/upstart.acme>
 
