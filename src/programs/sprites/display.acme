@@ -4,42 +4,50 @@
 
             ;ACME 0.97
             !cpu 6510
-            * = $c000
 
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/vic_ii.acme>
+            !src <lib/mmap/kernal.acme>
+            !src <lib/screen/color.acme>
             !src <lib/mem/m_mem.acme>
+            
+            !src <lib/misc/upstart.acme>
 
-; sprite pointers (8 bytes)
+; Sprite pointers (8 bytes)
 ; = start of text screen RAM + 1016
 ;
-; by default text screen is at 1024
+; By default text screen is at 1024
 ; so sprite #0 pointer is at 1016+1024 = 2040 = $07F8
 ;
 ; A = Sprite data address
-; sprite pointer address = A divided by 64.
+; Sprite pointer address = A divided by 64.
 ; (A must be divisible by 64)
 ;
 ; For example:
-; A = $0340 = 832 (dataset buffer)
+; A = $0340 = 832 (inside dataset buffer, at an address divisible by 64)
 ; A / 64 = 13
 
-main:
-            jsr $ff81                       ; clear screen
+            SPRITE_AREA = $0340
+            SPRITE_PTR = SPRITE_AREA / 64
 
-            +copy_bytes_8 .sprite_data, $0340, 63
+main:
+            jsr CINT                        ; clear screen
+
+            +copy_bytes_8 .sprite_data, SPRITE_AREA, 63
 
             lda #%00000001
-            sta $d015                       ; activate sprite #0
+            sta SPENA                       ; activate sprite #0
 
-            lda #1
-            sta $d027                       ; sprite #0 color
+            lda #COLOR_WHITE
+            sta SP0COLOR                    ; sprite #0 color
 
             lda #50
-            sta $d000                       ; sprite #0 X position
+            sta SP0X                        ; sprite #0 X position
             lda #100
-            sta $d001                       ; sprite #0 Y position
+            sta SP0Y                        ; sprite #0 Y position
 
-            lda #13                         ; sprite block
-            sta $07f8                       ; sprite #0 data at 13*64=832=$0340
+            lda #SPRITE_PTR                 ; sprite block
+            sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0 at 13*64=832=$0340
 
             rts
 
