@@ -3,74 +3,70 @@
 ; Display several C64 balloons sprites and move them accros X.
 ;
 ; x position:
-; $d000 bits #0-#7 sprite #0
-; $d002 bits #0-#7 sprite #1
+; SP0X bits #0-#7 sprite #0
+; SP1X bits #0-#7 sprite #1
 ; ...
-; $d010 all sprites MSB
+; MSIGX all sprites MSB
 
             ;ACME 0.97
             !cpu 6510
 
-            * = $c000
-
-            !src <lib/mmap/zp_free.acme>
             !src <lib/registers/m_registers.acme>
+            !src <lib/mmap/mmap.acme>
             !src <lib/mem/m_mem.acme>
 
-            SPRITE_COUNT = 4
-            DELAY_16 = 255*2                ; busy wait delay
-            SPRITE_BLOCK = 13               ; block*64 = data
+            !src <lib/misc/upstart.acme>
 
+            SPRITE_COUNT = 4
+            SPRITE_AREA = $0340
+            SPRITE_BLOCK = SPRITE_AREA / 64
+            DELAY_16 = 255*2                ; busy wait delay
 
 main:
-            jsr common
-            jsr init_sprites
-            jmp animate                     ; no jsr - endless
+            jsr init
+            jmp animate                     ; JMP for endless
 
 
-common:
-            ; clear screen
-            jsr $ff81
+init:
+            ; Clear screen
+            jsr CINT
 
-            ; copy data to sprite block (same for all sprites)
-            +copy_bytes_8 .sprite_data, $0340, 63
+            ; Copy data to sprite block (same for all sprites)
+            +copy_bytes_8 .sprite_data, SPRITE_AREA, 63
 
-            ; activate sprites #0->#n
+            ; Activate sprites
             lda #%00001111
-            sta $d015
+            sta SPENA
 
-            rts
-
-
-init_sprites:
-            ldx #SPRITE_COUNT
+            ; Initialiaze sprites
+            ldx #0                          ; sprite index
+            ldy #0                          ; sprites_init_pos index
 -           jsr init_sprite
-            dex
+            inx                             ; next sprite
+            cpx #SPRITE_COUNT
             bne -
+            
             rts
 
 
 init_sprite:
-            +push_ax
-            dex                             ; X=n => sprite #(n-1)
-
+            ; Color
             lda .sprites_colors,x
-            sta $d027,x                     ; sprite color
+            sta SP0COLOR,x
 
+            ; Pointer area (block = 64 bytes) 
             lda #SPRITE_BLOCK
-            sta $07f8,x                     ; sprite pointer to SPRITE_BLOCK*64=832=$0340
+            sta DEFAULT_SPRITE_PTR_AREA,x
 
-            txa                             ; X <- X*2
-            asl
-            tax
-
-            lda .sprites_init_pos,x
-            sta $d000,x
-            inx
-            lda .sprites_init_pos,x
-            sta $d000,x                     ; sprite y position
-
-            +pull_xa
+            ; Sprite position memory layout:
+            ; SP0X, SP0Y, SP1X, SP1Y, ...
+            ; Therefore Y is incremented by 2 for each sprite.
+            lda .sprites_init_pos,y
+            sta SP0X,y
+            iny
+            lda .sprites_init_pos,y
+            sta SP0X,y
+            iny
 
             rts
 
@@ -108,7 +104,7 @@ move_sprite_x:
             ; This avoids a glitch when transitioning left/right.
             stx .x_lsb
             .x_lsb = *+1                    ; self mod x pos for pixel #X
-            inc $d000                       ; move right 1 pixel
+            inc SP0X                        ; move right 1 pixel
             bne +
 
             ; Switch left/right by read-mod-write the x position.
@@ -116,10 +112,10 @@ move_sprite_x:
             ldx .sprite_idx
             lda .msb_x_pos_masks,x
             sta .x_msb_mask
-            lda $d010                       ; read sprites x pos MSB register
+            lda MSIGX                       ; read sprites x pos MSB register
             .x_msb_mask = *+1               ; self mod MSB
             eor #%00000000                  ; flip sprite #x MSB
-            sta $d010                       ; update MSB register
+            sta MSIGX                       ; update MSB register
 
 +           +pull_xa
             rts
@@ -127,7 +123,7 @@ move_sprite_x:
 
 .sprite_idx:
             !byte 0
-.sprites_colors
+.sprites_colors:
             !byte 1, 7, 14, 10
 .sprites_init_pos                           ; 7 bits only (x, y)
             !byte 15, 80

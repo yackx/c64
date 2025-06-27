@@ -28,12 +28,12 @@
 ; A / 64 = 13
 
             SPRITE_AREA = $0340
-            SPRITE_PTR = SPRITE_AREA / 64
+            SPRITE_BLOCK = SPRITE_AREA / 64
 
 main:
             jsr CINT                        ; clear screen
 
-            +copy_bytes_8 .sprite_data, SPRITE_AREA, 63
+            +copy_bytes_8 .data, SPRITE_AREA, 63
 
             lda #%00000001
             sta SPENA                       ; activate sprite #0
@@ -46,10 +46,9 @@ main:
             lda #100
             sta SP0Y                        ; sprite #0 Y position
 
-            lda #SPRITE_PTR                 ; sprite block
+            lda #SPRITE_BLOCK               ; sprite block
             sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0 at 13*64=832=$0340
 
             rts
 
-.sprite_data:
-            !bin <programs/sprites/balloon.bin>
+.data:      !bin <programs/sprites/balloon.bin>
