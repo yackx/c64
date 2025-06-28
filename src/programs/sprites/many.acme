@@ -1,12 +1,22 @@
 ; Sprite demo
 ;
-; Display several C64 balloons sprites and move them accros X.
+; Display several C64 balloons sprites and move them horizontally.
 ;
-; x position:
-; SP0X bits #0-#7 sprite #0
-; SP1X bits #0-#7 sprite #1
-; ...
-; MSIGX all sprites MSB
+; Each sprite's x position is stored in 9 bits:
+; 8 bits in SP?X plus 1 bit in MSIGX.
+;
+;   SP0X bits #0-#7 sprite #0
+;   SP1X bits #0-#7 sprite #1
+;   ...
+;
+;   MSIGX all sprites MSB
+;   bits #0 -> sprite #0
+;   bits #1 -> sprite #1
+;   ...
+;
+; This routine uses a raster interrupt to animate the sprites.
+; The interrupt vector remains unchanged but the raster line
+; is set to a different value each time the interrupt occurs.
 
             ;ACME 0.97
             !cpu 6510
@@ -14,23 +24,24 @@
             !src <lib/registers/m_registers.acme>
             !src <lib/mmap/mmap.acme>
             !src <lib/mem/m_mem.acme>
+            !src <lib/raster/m_raster.acme>
 
             !src <lib/misc/upstart.acme>
 
             SPRITE_COUNT = 4
             SPRITE_AREA = $0340
             SPRITE_BLOCK = SPRITE_AREA / 64
-            DELAY_16 = 255*2                ; busy wait delay
+
 
 main:
-            jsr init
-            jmp animate                     ; JMP for endless
+            jsr init_sprites
+            jsr init_animate
+            jsr init_irq
+            rts
 
 
-init:
-            ; Clear screen
-            jsr CINT
-
+; Initialiaze sprites.
+init_sprites:
             ; Copy data to sprite block (same for all sprites)
             +copy_bytes_8 .sprite_data, SPRITE_AREA, 63
 
@@ -38,102 +49,151 @@ init:
             lda #%00001111
             sta SPENA
 
-            ; Initialiaze sprites
-            ldx #0                          ; sprite index
-            ldy #0                          ; sprites_init_pos index
+            ; Set sprite positions and colors.
+            ; Y = sprite index
+            ; X = sprite position index 
+            ; Sprite position memory layout: SP0X, SP0Y, SP1X, SP1Y, ...
+            ; Therefore Y is incremented twice for each sprite.
+            ldy #0                          ; sprite index
+            ldx #0                          ; sprites_init_pos index
 -           jsr init_sprite
-            inx                             ; next sprite
-            cpx #SPRITE_COUNT
+            inx                             ; SP0X, SP0Y, SP1X, SP1Y, ...
+            inx                             ; => increment 2 for next pos         
+            iny                             ; next sprite
+            cpy #SPRITE_COUNT
             bne -
             
             rts
 
 
+; Initialize a sprite.
+; Y = sprite index
+; X = sprite position index (2 * sprite index)
 init_sprite:
             ; Color
-            lda .sprites_colors,x
-            sta SP0COLOR,x
+            lda .sprites_colors,y
+            sta SP0COLOR,y
 
             ; Pointer area (block = 64 bytes) 
             lda #SPRITE_BLOCK
-            sta DEFAULT_SPRITE_PTR_AREA,x
+            sta DEFAULT_SPRITE_PTR_AREA,y
 
-            ; Sprite position memory layout:
-            ; SP0X, SP0Y, SP1X, SP1Y, ...
-            ; Therefore Y is incremented by 2 for each sprite.
-            lda .sprites_init_pos,y
-            sta SP0X,y
-            iny
-            lda .sprites_init_pos,y
-            sta SP0X,y
-            iny
+            ; Position
+            ; X register = 2 * sprite index
+            lda .sprites_init_pos,x
+            sta SP0X,x
+            lda .sprites_init_pos+1,x
+            sta SP0Y,x
 
             rts
 
 
+; Initialize animation.
+init_animate:
+            ; Set indexes
+            lda #0
+            sta .sprite_idx
+            sta .sprite_pos_x_idx
+
+            ; Set MSB of X position
+            lda #0
+            sta MSIGX
+
+            rts
+
+
+; Initialize raster interrupt.
+init_irq:
+            sei
+
+            lda #%01111111
+            sta CIAICR                      ; switch off interrupt signals from CIA-1
+
+            and VIC2_CR1
+            sta VIC2_CR1                    ; scanline hi bit
+
+            lda .raster_lines+0
+            sta RASTER                      ; set rasterline where interrupt shall occur
+
+            lda #<animate                   ; set raster interrupt vector
+            sta CINV+0
+            lda #>animate
+            sta CINV+1
+
+            lda #%00000001                  ; enable raster interrupts
+            sta IRQMSK
+
+            cli
+
+            rts
+
+
+; Animate sprites.
+;
+; This interrupt handler handles exactly one sprite
+; then sets the next raster line and indexes for the next sprite.
+;
+; After all sprites have been animated, this handler is triggered one
+; more time to reset the indexes and start over.
 animate:
-            lda >DELAY_16
-            sta R5
-            lda <DELAY_16
-            sta R6                          ; busy wait params
+            ; Retrieve sprite index
+            ldy .sprite_idx
 
---          ldx #SPRITE_COUNT
--           jsr move_sprite_x
-            dex
-            bne -
-            jsr busy_wait
-            jmp --
+            ; All sprites have moved?
+            cpy #SPRITE_COUNT
+            beq .reset_indexes
 
-
-move_sprite_x:
-            +push_ax
-
-            dex                             ; X=n => sprite #(n-1)
-            stx .sprite_idx
-
-            ; Multiply sprite # by 2.
-            ; Each sprite x pos register is previous + 2
-            ; (#0 -> $d000, #1 -> $d002, ...).
-            txa                             ; X <- X*2
-            clc
-            rol
-            tax
-
-            ; Move horizontally.
-            ; Notice how we STX before BNE.
-            ; This avoids a glitch when transitioning left/right.
-            stx .x_lsb
-            .x_lsb = *+1                    ; self mod x pos for pixel #X
-            inc SP0X                        ; move right 1 pixel
+            ; Move one pixel right.
+            ldx .sprite_pos_x_idx
+            inc SP0X,x
             bne +
 
-            ; Switch left/right by read-mod-write the x position.
-            ; MSB register at $d010.
-            ldx .sprite_idx
-            lda .msb_x_pos_masks,x
-            sta .x_msb_mask
-            lda MSIGX                       ; read sprites x pos MSB register
-            .x_msb_mask = *+1               ; self mod MSB
-            eor #%00000000                  ; flip sprite #x MSB
-            sta MSIGX                       ; update MSB register
+            ; Switch MSB of the X position by read-mod-write.
+            lda MSIGX
+            eor .msb_x_pos_masks,y
+            sta MSIGX
++
+            inc .sprite_pos_x_idx
+            inc .sprite_pos_x_idx
+            inc .sprite_idx
 
-+           +pull_xa
-            rts
+            ; Set next raster line.
+            lda .raster_lines,x
+            sta RASTER
 
+            +ack_short_kernal
+
+.reset_indexes
+            ldx #0
+            stx .sprite_idx
+            stx .sprite_pos_x_idx
+
+            +ack_full_kernal
+
+
+.raster_lines:
+            ; One line for each sprite.
+            !byte 55, 75, 95, 115
+            ; Extra line to reset indexes.
+            !byte 130
 
 .sprite_idx:
-            !byte 0
+            !byte 0                         ; current sprite index
+.sprite_pos_x_idx:
+            !byte 0                         ; current sprite X position index
+
 .sprites_colors:
             !byte 1, 7, 14, 10
-.sprites_init_pos                           ; 7 bits only (x, y)
-            !byte 15, 80
-            !byte 70, 120
-            !byte 45, 160
-            !byte 200, 200
+.sprites_init_pos:
+            !byte 15, 60
+            !byte 70, 80
+            !byte 45, 100
+            !byte 200, 120
+
+; Mask for MSIGX (MSB of X position).
+; byte #0 -> sprite #0 etc
 .msb_x_pos_masks:
             !byte 1, 2, 4, 8, 16, 32, 64, 128
 
 .sprite_data:
             !bin <programs/sprites/balloon.bin>
-
-            !src <lib/misc/busy_wait.acme>
