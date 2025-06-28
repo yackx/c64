@@ -1,20 +1,6 @@
-; Sprite demo
-;
 ; Display the C64 balloon.
-
-            ;ACME 0.97
-            !cpu 6510
-
-            !src <lib/mmap/main.acme>
-            !src <lib/mmap/vic_ii.acme>
-            !src <lib/mmap/kernal.acme>
-            !src <lib/screen/color.acme>
-            !src <lib/mem/m_mem.acme>
-            
-            !src <lib/misc/upstart.acme>
-
-; Sprite pointers (8 bytes)
-; = start of text screen RAM + 1016
+;
+; Sprite pointers (8 bytes) = start of text screen RAM + 1016
 ;
 ; By default text screen is at 1024
 ; so sprite #0 pointer is at 1016+1024 = 2040 = $07F8
@@ -26,6 +12,17 @@
 ; For example:
 ; A = $0340 = 832 (inside dataset buffer, at an address divisible by 64)
 ; A / 64 = 13
+
+            ;ACME 0.97
+            !cpu 6510
+
+            !src <lib/mmap/main.acme>
+            !src <lib/mmap/vic_ii.acme>
+            !src <lib/mmap/kernal.acme>
+            !src <lib/screen/color.acme>
+            !src <lib/mem/m_mem.acme>
+            
+            !src <lib/misc/upstart.acme>
 
             SPRITE_AREA = $0340
             SPRITE_BLOCK = SPRITE_AREA / 64
