@@ -6,7 +6,6 @@
 ;
 ; Known issue:
 ; - Long lingering time right of the screen
-; - Top transition rough
 
             ;ACME 0.97
             !cpu 6510
@@ -72,6 +71,6 @@ sprite_data:
 
             !align $ff, 0, 0
 y_pos:
-            !for x, 0, 255 {
-            !byte sin(float(x) / 255 * PI) * 128 + 100 + 0.5
-            }
+        !for x, 0, 255 {
+            !byte sin(float(x) / 127 * PI) * 64 + 125 + 0.5
+        }
