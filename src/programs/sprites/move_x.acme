@@ -1,64 +1,62 @@
-; Sprite demo
-;
-; Display the C64 balloon sprite and move it accros X.
+; Display the C64 balloon sprite and move it horizontally.
 ;
 ; X position:
 ; $d000 bits #0-#7 sprite #0
 ; $d010 all sprites MSB
-;
-; Known issue:
-; - Long lingering time right of the screen
 
             ;ACME 0.97
             !cpu 6510
-            * = $c000
 
-            !src <lib/mmap/zp_free.acme>
-            !src <lib/registers/m_registers.acme>
+            !src <lib/mmap/mmap.acme>
+            !src <lib/screen/color.acme>
             !src <lib/mem/m_mem.acme>
 
-            DELAY = 255*40
+            !src <lib/misc/upstart.acme>
+
+            DELAY = 64*4
+            SPRITE_AREA = $0340
+            SPRITE_BLOCK = SPRITE_AREA / 64
 
 main:
-            jsr $ff81                       ; clear screen
+            jsr CINT                        ; clear screen
 
-            +copy_bytes_8 .sprite_data, $0340, 63
+            +copy_bytes_8 sprite_data, SPRITE_AREA, 63
 
-            lda #255
-            sta $d015                       ; activate sprite #0
+            lda #%00000001
+            sta SPENA                       ; activate sprite #0
 
-            lda #1
-            sta $d027                       ; sprite #0 color
+            lda #COLOR_WHITE
+            sta SP0COLOR                    ; sprite #0 color
 
-            lda #100
-            sta $d001                       ; sprite #0 y position
+            lda #SPRITE_BLOCK
+            sta DEFAULT_SPRITE_PTR_AREA     ; sprite #0 at 13*64=832=$0340
 
-            lda #13                         ; sprite block
-            sta $07f8                       ; sprite #0 pointer to 13*64=832=$0340
-
-            lda #>DELAY
+            lda >DELAY
             sta R5
-            lda #<DELAY
+            lda <DELAY
             sta R6
 
             ; Move horizontally
             ; Notice how we STX before BNE.
             ; This avoids a glitch when transitioning left/right.
             lda #0
-            and $d000
--           inc $d000                       ; move sprite #0 1 pixel right
+            sta SP0X                        ; clear sprite #0 x pos
+            lda #80
+            sta SP0Y
+
+.loop       inc SP0X                        ; move sprite #0 1 pixel right
             bne +
 
             ; Switch left/right
-            lda $d010                       ; read sprites x pos MSB register
+            lda MSIGX                       ; read sprites x pos MSB register
             eor #%00000001                  ; flip sprite #0 x pos MSB
-            sta $d010
+            sta MSIGX
 
 +           jsr busy_wait
-            jmp -
+            jmp .loop
 
 
-.sprite_data:
+sprite_data:
             !bin <programs/sprites/balloon.bin>
 
             !src <lib/misc/busy_wait.acme>
